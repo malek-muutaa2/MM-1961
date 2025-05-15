@@ -1,17 +1,11 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import { db } from "@/lib/db"
 import { users } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/login",
-  },
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -52,6 +46,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async session({ session, token }) {
       if (token.sub && session.user) {
@@ -63,4 +63,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token
     },
   },
-})
+}
+
+// Export functions for client usage
+export const { signIn, signOut } = NextAuth(authOptions)

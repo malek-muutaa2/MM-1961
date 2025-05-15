@@ -11,9 +11,6 @@ importers:
       '@auth/core':
         specifier: latest
         version: 0.39.1(nodemailer@7.0.3)
-      '@auth/drizzle-adapter':
-        specifier: latest
-        version: 1.9.1(nodemailer@7.0.3)
       '@aws-sdk/client-rds-data':
         specifier: latest
         version: 3.810.0
@@ -317,9 +314,6 @@ packages:
         optional: true
       nodemailer:
         optional: true
-
-  '@auth/drizzle-adapter@1.9.1':
-    resolution: {integrity: sha512-WQ4vtDxpo3jAPfSLJbrjFx++/lMO1HJbV7ZwzCUBEkhqYMTrqQBJhLb+vcusDu95wiekVOUCPe1y6QSNbMeeYA==}
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -5873,14 +5867,6 @@ snapshots:
       preact-render-to-string: 6.5.11(preact@10.24.3)
     optionalDependencies:
       nodemailer: 7.0.3
-
-  '@auth/drizzle-adapter@1.9.1(nodemailer@7.0.3)':
-    dependencies:
-      '@auth/core': 0.39.1(nodemailer@7.0.3)
-    transitivePeerDependencies:
-      - '@simplewebauthn/browser'
-      - '@simplewebauthn/server'
-      - nodemailer
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:
