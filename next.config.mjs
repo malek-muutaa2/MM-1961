@@ -1,11 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  // Ensure we handle the Neon serverless driver properly
-  webpack: (config) => {
-    return config;
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -15,6 +9,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

@@ -10,48 +10,21 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
-import { signIn } from "@/auth"
-import { useToast } from "@/hooks/use-toast"
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const router = useRouter()
-  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        toast({
-          title: "Error",
-          description: "Invalid email or password",
-          variant: "destructive",
-        })
-        setIsLoading(false)
-        return
-      }
-
-      // Redirect to the dashboard on successful login
-      router.push("/rafed-provider/upload")
-      router.refresh()
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      })
+    // Simulate loading for 1 second
+    setTimeout(() => {
       setIsLoading(false)
-    }
+      // Redirect to the Rafed Provider upload page instead of dashboard
+      router.push("/rafed-provider/upload")
+    }, 1000)
   }
 
   return (
@@ -60,15 +33,7 @@ export function LoginForm() {
         <CardContent className="pt-6 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Input id="email" type="email" placeholder="name@example.com" required autoComplete="email" />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -77,14 +42,7 @@ export function LoginForm() {
                 Forgot password?
               </Link>
             </div>
-            <Input
-              id="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input id="password" type="password" required autoComplete="current-password" />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col">

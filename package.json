@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "latest",
     "@aws-sdk/client-rds-data": "latest",
     "@cloudflare/workers-types": "latest",
     "@electric-sql/pglite": "latest",
@@ -75,9 +74,7 @@
     "lucide-react": "^0.454.0",
     "mysql2": "latest",
     "next": "15.2.4",
-    "next-auth": "latest",
     "next-themes": "latest",
-    "nodemailer": "latest",
     "pg": "latest",
     "postgres": "latest",
     "react": "^19",
@@ -93,7 +90,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "zod": "latest"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^22",

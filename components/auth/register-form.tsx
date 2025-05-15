@@ -11,7 +11,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { signIn } from "@/auth"
 
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -77,21 +76,13 @@ export function RegisterForm() {
         throw new Error(data.message || "Failed to register")
       }
 
-      // Sign in the user after successful registration
-      await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      })
-
       toast({
         title: "Success",
         description: "Account created successfully!",
       })
 
-      // Redirect to the dashboard
-      router.push("/rafed-provider/upload")
-      router.refresh()
+      // Redirect to the login page
+      router.push("/login")
     } catch (error: any) {
       toast({
         title: "Error",
