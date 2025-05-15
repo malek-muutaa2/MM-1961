@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { LoginForm } from "@/components/auth/login-form"
+import { LoginFormNextAuth } from "@/components/auth/login-form-nextauth"
 import { RegisterForm } from "@/components/auth/register-form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -19,7 +19,7 @@ export default function LoginPage() {
             <TabsTrigger value="register">Register</TabsTrigger>
           </TabsList>
           <TabsContent value="login">
-            <LoginForm />
+            <LoginFormNextAuth />
           </TabsContent>
           <TabsContent value="register">
             <RegisterForm />
