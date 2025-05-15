@@ -1,18 +1,21 @@
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { db } from "@/lib/db"
-import { users } from "@/lib/db/schema"
-import { comparePassword } from "@/lib/auth-utils"
+import { db } from "./db"
+import { users } from "./db/schema"
 import { eq } from "drizzle-orm"
+import { comparePassword } from "./auth-utils"
+
+// Ensure NEXTAUTH_URL is set in production
+if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
+  throw new Error("Please provide NEXTAUTH_URL environment variable")
+}
+
+// Ensure NEXTAUTH_SECRET is set
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error("Please provide NEXTAUTH_SECRET environment variable")
+}
 
 export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-  },
-  secret: process.env.STACK_SECRET_SERVER_KEY || "SUPER_SECRET_DO_NOT_USE_IN_PRODUCTION",
-  pages: {
-    signIn: "/login",
-  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -57,18 +60,38 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+    error: "/auth/error",
+  },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
+      try {
+        if (user) {
+          token.name = user.name
+        }
+        return token
+      } catch (error) {
+        console.error("JWT error:", error)
+        return token
       }
-      return token
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
+      try {
+        if (session?.user) {
+          session.user.name = token.name as string
+        }
+        return session
+      } catch (error) {
+        console.error("Session error:", error)
+        return session
       }
-      return session
     },
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  debug: process.env.NODE_ENV === "development",
 }
+
