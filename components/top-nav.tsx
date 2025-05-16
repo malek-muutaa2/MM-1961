@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { signOut } from "next-auth/react"
 
 // Sample notifications data
 const notifications = [
@@ -256,13 +255,7 @@ export function TopNav() {
                   <DropdownMenuItem>Preferences</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                 onClick={() =>
-                  signOut({
-                    callbackUrl: "/login",       // where to redirect after sign out
-                  })
-                }
-                >Log out</DropdownMenuItem>
+                <DropdownMenuItem>Log out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

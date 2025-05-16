@@ -58,15 +58,8 @@ export function LoginForm() {
           </Button>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link
-              href="#"
-              className="text-primary hover:underline"
-              onClick={(e) => {
-                e.preventDefault()
-                document.querySelector('[data-value="register"]')?.click()
-              }}
-            >
-              Register now
+            <Link href="#" className="text-primary hover:underline">
+              Contact your administrator
             </Link>
           </p>
         </CardFooter>
