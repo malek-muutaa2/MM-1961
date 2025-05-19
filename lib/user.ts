@@ -56,6 +56,18 @@ export const findUserById = async (userId: number): Promise<InferModel<typeof us
         return [];
     }
 };
+
+export const isTwoFactorEnabled = async (userId: number)  => {
+    try {
+        return await db.select({
+          userId: twoFactorAuth.userId,
+          isTwoFactorEnabled: twoFactorAuth.isTwoFactorEnabled,
+        }).from(twoFactorAuth).where(eq(twoFactorAuth.userId, userId));
+    } catch (e: any) {
+        console.log("findUserById error", e?.message);
+        return [];
+    }
+};
   export const Enable2fa = async (isActivate : boolean,userId : number) => {
     try {
         await db

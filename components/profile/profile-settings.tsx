@@ -8,11 +8,14 @@ import { NotificationPreferences } from "@/components/profile/notification-prefe
 import { IntegrationSettings } from "@/components/profile/integration-settings"
 import { ActivityLog } from "@/components/profile/activity-log"
 import { UserType } from "@/lib/db/schema"
+import { twofactor } from "@/app/profile/page"
+
 interface  ProfileSettingsProps {
-  UserInfo: UserType 
+  UserInfo: UserType
+  twoFactorEnabled :  twofactor[]
 
 }
-export function ProfileSettings({ UserInfo }: ProfileSettingsProps) {
+export function ProfileSettings({ UserInfo , twoFactorEnabled }: ProfileSettingsProps) {
   const [activeTab, setActiveTab] = useState("personal")
 
   return (
@@ -31,7 +34,7 @@ export function ProfileSettings({ UserInfo }: ProfileSettingsProps) {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          <SecuritySettings UserInfo={UserInfo} />
+          <SecuritySettings istwoFactorEnabled={twoFactorEnabled} UserInfo={UserInfo} />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">

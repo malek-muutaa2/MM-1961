@@ -12,14 +12,16 @@ import { Loader2 } from "lucide-react"
 import { UserType } from "@/lib/db/schema"
 import { Enable2fa } from "@/lib/user"
 import { useToast } from "../ui/use-toast"
+import { twofactor } from "@/app/profile/page"
 interface  SecuritySettings {
   UserInfo: UserType 
+  istwoFactorEnabled : twofactor[]
 
 }
-export function SecuritySettings({ UserInfo }: SecuritySettings) {
+export function SecuritySettings({ UserInfo , istwoFactorEnabled }: SecuritySettings) {
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isSaving2FA, setIsSaving2FA] = useState(false)
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(istwoFactorEnabled ? istwoFactorEnabled[0].isTwoFactorEnabled :  false )
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsChangingPassword(true)
@@ -52,7 +54,8 @@ export function SecuritySettings({ UserInfo }: SecuritySettings) {
       setIsSaving2FA(false)
     }, 1000)
   }
-
+ console.log("istwoFactorEnabled", istwoFactorEnabled);
+ 
   return (
     <div className="space-y-6">
       <Card>
@@ -106,7 +109,7 @@ export function SecuritySettings({ UserInfo }: SecuritySettings) {
                 Receive a verification code via email or authenticator app when signing in
               </p>
             </div>
-            <Switch id="2fa" checked={twoFactorEnabled} onCheckedChange={handle2FAToggle} disabled={isSaving2FA} />
+            <Switch id="2fa" defaultChecked={istwoFactorEnabled ? istwoFactorEnabled[0].isTwoFactorEnabled :  false } checked={twoFactorEnabled} onCheckedChange={handle2FAToggle} disabled={isSaving2FA} />
           </div>
 
          

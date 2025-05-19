@@ -59,7 +59,7 @@ if (password) {
             };
         }
         return {
-            success: "Two-factor authentication is enabled but without QR code.",
+            success: "User authenticated successfully.",
         };
     }
 }
@@ -91,7 +91,7 @@ if (code) {
         .update(twoFactorAuth)
         .set({ twoFactorToken: "", twoFactorTokenExpiry: null})
         .where(eq(twoFactorAuth.userId, existingUser[0].id));
-    return { success: "Two-factor authentication successful." };
+    return { success: "User authenticated successfully." };
 }
   else {
     const passwordupdateat = new Date(existingUser[0].passwordupdatedat);

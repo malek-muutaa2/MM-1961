@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 // Sample notifications data
 const notifications = [
@@ -70,7 +70,7 @@ export function TopNav() {
   const [notificationFilter, setNotificationFilter] = useState("all")
   const [notificationsData, setNotificationsData] = useState(notifications)
   const { setTheme, theme } = useTheme()
-
+  const { data: session, status } = useSession();
   const unreadCount = notificationsData.filter((n) => !n.read).length
 
   const filteredNotifications =
@@ -104,7 +104,8 @@ export function TopNav() {
         return <div className="h-2 w-2 rounded-full bg-gray-500"></div>
     }
   }
-
+ console.log("session", session);
+ 
   return (
     <header className="border-b bg-background sticky top-0 z-10">
       <div className="container mx-auto max-w-7xl">
