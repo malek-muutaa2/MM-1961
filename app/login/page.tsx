@@ -2,6 +2,7 @@ import Image from "next/image"
 import { LoginFormNextAuth } from "@/components/auth/login-form-nextauth"
 import { RegisterForm } from "@/components/auth/register-form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Suspense } from "react"
 
 export default function LoginPage() {
   return (
@@ -19,7 +20,11 @@ export default function LoginPage() {
             <TabsTrigger value="register">Register</TabsTrigger>
           </TabsList>
           <TabsContent value="login">
+          <Suspense>
+
             <LoginFormNextAuth />
+
+          </Suspense>
           </TabsContent>
           <TabsContent value="register">
             <RegisterForm />
