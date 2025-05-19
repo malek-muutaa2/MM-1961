@@ -28,6 +28,8 @@ export function RegisterForm() {
     organization: "",
   })
 
+  // Password complexity regex: at least 8 chars, uppercase, lowercase, number, special char
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d_]{8,}$/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
     setFormData((prev) => ({ ...prev, [id]: value }))
@@ -40,6 +42,17 @@ export function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+
+    // Validate password complexity
+    if (!passwordRegex.test(formData.password)) {
+      toast({
+        title: "Weak Password",
+        description: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+        variant: "destructive",
+      })
+      setIsLoading(false)
+      return
+    }
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {

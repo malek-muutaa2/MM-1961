@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db/dbpostgres"
-import { users } from "@/lib/db/schema"
+import { twoFactorAuth, users } from "@/lib/db/schema"
 import { hashPassword } from "@/lib/auth-utils"
+import { eq } from "drizzle-orm"
 
 export async function POST(request: Request) {
   try {
@@ -14,11 +15,13 @@ export async function POST(request: Request) {
     }
 
     // Check if user already exists
-    const existingUser = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.email, email),
-    })
+    const existing = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email));
 
-    if (existingUser) {
+
+    if (existing.length > 0) {
       return NextResponse.json({ message: "User with this email already exists" }, { status: 409 })
     }
 
@@ -36,9 +39,18 @@ export async function POST(request: Request) {
         department,
         workDomain,
         organization,
+        passwordupdatedat: new Date(),
+        isDisabled: false,
       })
       .returning({ id: users.id })
-
+      if(!newUser[0].id) {
+        return NextResponse.json({ message: "Failed to create user" }, { status: 500 })
+      }
+      await db.insert(twoFactorAuth).values({
+        userId: newUser[0].id,
+        isTwoFactorEnabled: false,
+        totpSecret: null,
+      })
     return NextResponse.json({ message: "User registered successfully", userId: newUser[0].id }, { status: 201 })
   } catch (error) {
     console.error("Registration error:", error)
