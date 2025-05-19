@@ -2,19 +2,24 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Loader2 } from "lucide-react"
+import { UserType } from "@/lib/db/schema"
+import { Enable2fa } from "@/lib/user"
+import { useToast } from "../ui/use-toast"
+interface  SecuritySettings {
+  UserInfo: UserType 
 
-export function SecuritySettings() {
+}
+export function SecuritySettings({ UserInfo }: SecuritySettings) {
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isSaving2FA, setIsSaving2FA] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
-
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsChangingPassword(true)
@@ -24,7 +29,20 @@ export function SecuritySettings() {
       setIsChangingPassword(false)
     }, 1000)
   }
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
+  const handleSubmit = async () => {
+    startTransition(async () => {
+
+      await Enable2fa(twoFactorEnabled, UserInfo.id).then((data) => {
+        toast({
+          title: "2FA submitted",
+          description: "2FA has been submitted successfully",
+        });
+      });
+    });
+  };
   const handle2FAToggle = () => {
     setIsSaving2FA(true)
 
@@ -91,13 +109,22 @@ export function SecuritySettings() {
             <Switch id="2fa" checked={twoFactorEnabled} onCheckedChange={handle2FAToggle} disabled={isSaving2FA} />
           </div>
 
-          {twoFactorEnabled && (
+         
             <div className="pt-2">
-              <Button variant="outline" size="sm">
-                Configure 2FA
+              <Button disabled={isPending} onClick={handleSubmit} variant="outline" size="sm">
+              {isPending ? (
+                    <div className="flex">
+                      <div>Confirm</div>
+                      <div>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      </div>
+                    </div>
+                  ) : (
+                    "Confirm"
+                  )}
               </Button>
             </div>
-          )}
+     
         </CardContent>
       </Card>
     </div>

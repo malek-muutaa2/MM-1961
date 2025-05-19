@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useTransition } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,12 +12,25 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { LoginForm2fa } from "./authlogin"
 
 export function LoginFormNextAuth() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-
+  const searchParams = useSearchParams();
+  // const callbackUrl = searchParams.get("callbackUrl");
+  const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider!"
+      : "";
+  // const [failedAttemptsInfo, setFailedAttemptsInfo] = useState<FailedAttemptsState>({});
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [hidelogin, sethidelogin] = useState("false");
+  const [factorwithqr, setfactorwithqr] = useState(false);
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const [QrCode, setQrCode] = useState<QrcodeType | null>();
+  const [loginCredentials, setLoginCredentials] = useState<{ email: string; password: string } | null>(null);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
@@ -50,7 +63,8 @@ export function LoginFormNextAuth() {
   }
 
   return (
-    <Card className="w-full">
+    <div>
+  {/* <Card className="w-full">
       <form onSubmit={handleSubmit}>
         <CardContent className="pt-6 space-y-4">
           {error && (
@@ -98,6 +112,9 @@ export function LoginFormNextAuth() {
           </p>
         </CardFooter>
       </form>
-    </Card>
+    </Card> */}
+    <LoginForm2fa />
+    </div>
+  
   )
 }

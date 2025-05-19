@@ -1,5 +1,5 @@
 import { migrate } from "drizzle-orm/neon-http/migrator"
-import { db } from "."
+import { db } from "./dbpostgres"
 
 // This script will run the migrations on the database
 async function main() {

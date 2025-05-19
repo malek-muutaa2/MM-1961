@@ -8,6 +8,41 @@
       "when": 1747347133665,
       "tag": "0000_nebulous_nightcrawler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747391407004,
+      "tag": "0001_massive_gressill",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747431733200,
+      "tag": "0002_handy_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747434601596,
+      "tag": "0003_lively_namorita",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1747488932267,
+      "tag": "0004_peaceful_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1747606538665,
+      "tag": "0005_motionless_black_tarantula",
+      "breakpoints": true
     }
   ]
 }

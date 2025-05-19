@@ -1,6 +1,6 @@
 "use server"
 
-import { db } from "@/lib/db"
+import { db } from "@/lib/db/dbpostgres"
 import { users } from "@/lib/db/schema"
 import { hashPassword } from "@/lib/auth-utils"
 import { redirect } from "next/navigation"

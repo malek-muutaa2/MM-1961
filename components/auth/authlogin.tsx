@@ -1,0 +1,392 @@
+"use client";
+
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+
+import { Input } from "@/components/ui/input";
+
+import { Button } from "@/components/ui/button";
+
+import { LoginSchema, LoginSchemaEn, TwoFASchema } from "@/lib/zodschema";
+import { DisabledUserAction } from "@/lib/login";
+import { FormError } from "@/components/Form-error";
+import { FormSuccess } from "@/components/Form-success";
+
+import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
+
+import { useToast } from "@/components/ui/use-toast";
+
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
+import { Login2fa2 } from "./login2fa";
+
+interface QrcodeType {
+  qrCodeUrl: string;
+  base32: string;
+  ascii: string;
+}
+
+interface FailedAttemptInfo {
+  attempts: number;
+  password: string;
+}
+
+// This defines an object where each key is a string (email in your case) and maps to FailedAttemptInfo
+interface FailedAttemptsState {
+  [email: string]: FailedAttemptInfo;
+}
+
+export const LoginForm2fa = () => {
+  const searchParams = useSearchParams();
+  // const callbackUrl = searchParams.get("callbackUrl");
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider!"
+      : "";
+  const [failedAttemptsInfo, setFailedAttemptsInfo] =
+    useState<FailedAttemptsState>({});
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [hidelogin, sethidelogin] = useState("false");
+  const [factorwithqr, setfactorwithqr] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const [error, setError] = useState<string | undefined | null>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const [isPendingSecond, startTransitionSecond] = useTransition();
+
+  const [QrCode, setQrCode] = useState<QrcodeType | null>();
+  const [is2FaDisabled, setIs2FaDisabled] = useState(false);
+  const [loginCredentials, setLoginCredentials] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
+  const path = usePathname();
+  const lang = "en";
+  const loginschemaform = lang === "en" ? LoginSchemaEn : LoginSchema;
+  const form = useForm<z.infer<typeof loginschemaform>>({
+    resolver: zodResolver(loginschemaform),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+ 
+  const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      Login2fa2(values)
+        .then(async (data) => {
+          if (data?.error) {
+            setError(data.error);
+            sethidelogin("false");
+
+            // Update failed attempts info and check if we need to disable the user
+            setFailedAttemptsInfo((prev) => {
+              const currentAttempts = (prev[values.email]?.attempts || 0) + 1;
+              return {
+                ...prev,
+                [values.email]: {
+                  attempts: currentAttempts,
+                  password: values.password,
+                },
+              };
+            });
+
+            // Check if the user needs to be disabled based on updated info
+            const attempts = failedAttemptsInfo[values.email]?.attempts || 0;
+            if (attempts + 1 >= 5) {
+              // We add 1 because we're checking before the state has updated
+              try {
+                const disableResponse = await DisabledUserAction(values.email);
+                if (disableResponse?.error) {
+                  console.error("Error disabling user:", disableResponse.error);
+                } else if (disableResponse?.success) {
+                  console.log(
+                    "User disabled successfully:",
+                    disableResponse.success,
+                  );
+                  // Optionally reset attempts or handle success
+                }
+              } catch (error) {
+                console.error("An error occurred:", error);
+                setError("Something went wrong");
+              }
+            }
+          }
+
+          if (data?.success) {
+            setSuccess(data.success);
+            const result = await signIn("credentials", {
+              redirect: false, // Prevent automatic redirection
+              email: values.email,
+              password: values.password,
+              callbackUrl: "/",
+            });
+            form.reset();
+            setError(null);
+
+            if (result?.error) {
+              // Handle error by setting the error message in state
+              setError(result.error);
+            } else {
+              // Redirect on successful login
+              window.location.href = result?.url ?? "/dashboard";
+            }
+          }
+          if (data?.isexpired) {
+            if (data?.passwordResetToken) {
+              window.location.href = `/auth/new-password?token=${data?.passwordResetToken}&renewpassword=true`;
+            }
+          }
+          if (data?.twoFactor) {
+            setShowTwoFactor(true);
+            setLoginCredentials({
+              email: values.email,
+              password: values.password,
+            });
+          }
+        })
+        .catch(() => setError("Something went wrong!"));
+    });
+  };
+
+  // const onQrSubmit2 = async (values: z.infer<typeof TwoFASchema>) => {
+  //   if (loginCredentials) {
+  //     startTransition(async () => {
+  //       // Ensure startTransition callback is also async
+  //       try {
+  //         const data = await verification2fa2(values, loginCredentials);
+
+  //         if (data?.error) {
+  //           formQr.reset();
+  //           setError(data.error);
+  //         } else if (data?.success) {
+  //           formQr.reset();
+  //           setSuccess(data.success);
+  //           setError(null);
+
+  //           // Now you can use await for signIn since the function is async
+  //           const result = await signIn("credentials", {
+  //             redirect: false, // Prevent automatic redirection
+  //             email: loginCredentials.email,
+  //             password: loginCredentials.password,
+  //             callbackUrl: "/",
+  //           });
+
+  //           if (result?.error) {
+  //             // Handle error by setting the error message in state
+  //             setError(result.error);
+  //           } else {
+  //             // Redirect on successful login
+  //             window.location.href = result?.url ?? "/dashboard";
+  //           }
+  //         }
+  //       } catch (error) {
+  //         // Handle any errors that occur during the verification or sign-in process
+  //         console.error("An error occurred:", error);
+  //         setError("Something went wrong");
+  //       }
+  //     });
+  //   }
+  // };
+
+  // function to disable user after 5 failed attempts
+
+  // console.log("isLoading",isLoading);
+  // console.log("factorwithqr",factorwithqr);
+  const { toast } = useToast();
+
+  // const EmailcodeResend = async () => {
+
+  //   startTransitionSecond(async () => {
+  //     if (loginCredentials) {
+  //       const data = await ResendEmailcode(loginCredentials?.email, "fr");
+  //       // .then((data) => {
+  //       //     console.log("data",data);
+  //       // setSuccess("Email envoyée avec succès");
+  //       toast({
+  //         title: path.includes("/en") ? "Email invitation" : "Invitation Email",
+  //         description: "Email envoyée avec succès",
+  //       });
+  //       //   });
+  //       console.log("data", data);
+  //     }
+  //   });
+  // };
+  const handleSubmitResend = async (e: any) => {
+    console.log("loginCredentials", loginCredentials);
+
+    if (loginCredentials) {
+      const res = await fetch("/api/resendemail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginCredentials?.email }),
+      });
+      const newTask = await res.json();
+      console.log(newTask);
+    }
+  };
+  return (
+    <div>
+      {!showTwoFactor && (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmitcode2fa)}
+            className="space-y-6"
+          >
+            <div className=" justify-center  space-y-4">
+              <div className={"grid gap-2 text-center"}>
+                <p className="text-balance text-muted-foreground">
+                Enter your email below to log in to your account
+                </p>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="email">{lang === "en" ? "Email Address" : "Adresse e-mail"}</Label>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder=""
+                        type="email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="password">
+                      {lang === "en" ? "Password" : "Mot de passe"}
+                    </Label>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder=""
+                        type="password"
+                      />
+                    </FormControl>
+                    <Button
+                      size="sm"
+                      variant="link"
+                      asChild
+                      className="px-0 font-normal"
+                    >
+                      <Link href="/recovery">
+                        {lang === "en" ? "Forgot Password?" : "Mot de passe oublié ?"}
+                      </Link>
+                    </Button>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormError message={error ?? urlError} />
+            <FormSuccess message={success} />
+            <Button disabled={isPending} type="submit" className="w-full">
+              {showTwoFactor
+                ? `confirm`
+                : `login`}
+            </Button>
+          </form>
+        </Form>
+      )}
+
+      {showTwoFactor && (
+        <div className="">
+          <div className="flex justify-center  mt-5">
+            <Label
+              htmlFor="email"
+              className=" text-sm font-medium leading-6 text-gray-900"
+            >
+              {lang === "en"
+                ? "Two-Factor Authentication"
+                : "Authentification à Deux Facteurs"}
+            </Label>
+          </div>
+
+          <p className="mt-1 text-sm text-gray-600"></p>
+          <div></div>
+          <div className="mt-2 ">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmitcode2fa)}
+                className="space-y-6"
+              >
+                <div className="space-y-4 flex w-full justify-center">
+                  <FormField
+                    control={form.control}
+                    name="code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex justify-center">
+                          {lang === "en"
+                            ? "Enter the 2FA code"
+                            : "Saisissez le code 2FA"}
+                        </FormLabel>
+                        <FormControl>
+                          <InputOTP maxLength={6} {...field}>
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+
+                              <InputOTPSeparator />
+
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormError message={error} />
+                <FormSuccess message={success} />
+
+                <Button disabled={isPending} type="submit" className="w-full">
+                  {lang === "en" ? "Confirm" : "Confirmer"}
+                </Button>
+              </form>
+            </Form>
+          </div>
+          <div>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSubmitResend();
+              }}
+              className="w-full mt-4"
+              variant="link"
+              type="button"
+            >
+              {lang === "en"
+                ? "Resend Email code"
+                : "Renvoyer le code par email"}
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

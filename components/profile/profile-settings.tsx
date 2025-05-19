@@ -7,8 +7,12 @@ import { SecuritySettings } from "@/components/profile/security-settings"
 import { NotificationPreferences } from "@/components/profile/notification-preferences"
 import { IntegrationSettings } from "@/components/profile/integration-settings"
 import { ActivityLog } from "@/components/profile/activity-log"
+import { UserType } from "@/lib/db/schema"
+interface  ProfileSettingsProps {
+  UserInfo: UserType 
 
-export function ProfileSettings() {
+}
+export function ProfileSettings({ UserInfo }: ProfileSettingsProps) {
   const [activeTab, setActiveTab] = useState("personal")
 
   return (
@@ -27,7 +31,7 @@ export function ProfileSettings() {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          <SecuritySettings />
+          <SecuritySettings UserInfo={UserInfo} />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">

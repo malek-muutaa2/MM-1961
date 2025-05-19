@@ -1,97 +1,94 @@
-import type { NextAuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { db } from "./db"
-import { users } from "./db/schema"
-import { eq } from "drizzle-orm"
-import { comparePassword } from "./auth-utils"
+//src/server/auth.ts
 
-// Ensure NEXTAUTH_URL is set in production
-if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
-  throw new Error("Please provide NEXTAUTH_URL environment variable")
-}
-
-// Ensure NEXTAUTH_SECRET is set
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("Please provide NEXTAUTH_SECRET environment variable")
-}
-
+import bcrypt from "bcrypt";
+import { getServerSession, type NextAuthOptions } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { audit } from "./audit";
+import { findUniqueUser, findUserById } from "./user";
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt", //(1)
+    // session max duration 96 Hours
+    maxAge: 96 * 60 * 60,
+  },
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account && account.type === "credentials") {
+        //(2)
+        token.userId = account.providerAccountId;
+        const user2 = await findUserById(parseInt(token.userId));
+
+        // this is Id that coming from authorize() callback
+      }
+      return token;
+    },
+    async session({ session, token, user }: any) {
+      session.user.id = token.userId;
+      //(3)
+      const user2 = await findUserById(parseInt(token.userId));
+
+      if (user2[0].isDisabled || user2[0].deleted_at !== null) {
+        session.error = "Disableduser";
+      }
+      session.user.role = user2[0].role;
+
+      return session;
+    },
+  },
+  events: {
+    async signIn(message) {
+      await audit({
+        event: "user.signin",
+        event_description: "User signed in",
+        targets: [{ label: "email", value: String(message.user.email) }],
+      });
+    },
+    async signOut(message) {
+      await audit({
+        event: "user.signout",
+        event_description: "User signed out",
+        targets: [{ label: "email", value: String(message.token.email) }],
+      });
+    },
+  },
+
+  pages: {
+    signIn: "/login", //(4) custom signin page path
+  },
   providers: [
-    CredentialsProvider({
+    Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "email", type: "text", placeholder: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
+      async authorize(credentials, req) {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        const user2 = await findUniqueUser(email);
+
+        if (!user2[0]) {
+          //(1)
+          return null; //(2)
+        } else if (user2[0].password) {
+          const isMatch = await bcrypt.compare(password, user2[0]?.password);
+          if (!isMatch) {
+            // If the passwords do not match, return null to indicate unsuccessful authentication
+            return null;
+          }
         }
+        const user = {
+          id: user2[0].id,
+          name: user2[0].name,
+          email: user2[0].email,
+          role: user2[0].role,
+        };
 
-        try {
-          // Simplified query to avoid potential issues
-          const userResults = await db.select().from(users).where(eq(users.email, credentials.email))
-
-          if (!userResults || userResults.length === 0) {
-            console.log("No user found with email:", credentials.email)
-            return null
-          }
-
-          const user = userResults[0]
-
-          // Simple password check to avoid potential issues
-          const isValidPassword = await comparePassword(credentials.password, user.password)
-
-          if (!isValidPassword) {
-            console.log("Invalid password for user:", credentials.email)
-            return null
-          }
-
-          // Return only the necessary user data
-          return {
-            id: String(user.id),
-            email: user.email,
-            name: user.name || "User",
-          }
-        } catch (error) {
-          console.error("Auth error:", error)
-          return null
-        }
+        return user;
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
-    error: "/auth/error",
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      try {
-        if (user) {
-          token.name = user.name
-        }
-        return token
-      } catch (error) {
-        console.error("JWT error:", error)
-        return token
-      }
-    },
-    async session({ session, token }) {
-      try {
-        if (session?.user) {
-          session.user.name = token.name as string
-        }
-        return session
-      } catch (error) {
-        console.error("Session error:", error)
-        return session
-      }
-    },
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  debug: process.env.NODE_ENV === "development",
-}
-
+};
+export const getServerAuthSession = () => getServerSession(authOptions); //(6)
