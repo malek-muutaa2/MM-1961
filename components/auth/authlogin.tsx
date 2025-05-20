@@ -24,6 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
 import { Login2fa2 } from "./login2fa";
+import { log } from "util";
 
 interface QrcodeType {
   qrCodeUrl: string;
@@ -52,15 +53,11 @@ export const LoginForm2fa = () => {
     useState<FailedAttemptsState>({});
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [hidelogin, sethidelogin] = useState("false");
-  const [factorwithqr, setfactorwithqr] = useState(false);
-  const [isLoading, setisLoading] = useState(false);
+
   const [error, setError] = useState<string | undefined | null>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const [isPendingSecond, startTransitionSecond] = useTransition();
-
-  const [QrCode, setQrCode] = useState<QrcodeType | null>();
-  const [is2FaDisabled, setIs2FaDisabled] = useState(false);
+ 
   const [loginCredentials, setLoginCredentials] = useState<{
     email: string;
     password: string;
@@ -79,7 +76,7 @@ export const LoginForm2fa = () => {
   const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
     setError("");
     setSuccess("");
-
+    console.log("values", values);
     startTransition(async () => {
       Login2fa2(values)
         .then(async (data) => {
@@ -157,69 +154,9 @@ export const LoginForm2fa = () => {
     });
   };
 
-  // const onQrSubmit2 = async (values: z.infer<typeof TwoFASchema>) => {
-  //   if (loginCredentials) {
-  //     startTransition(async () => {
-  //       // Ensure startTransition callback is also async
-  //       try {
-  //         const data = await verification2fa2(values, loginCredentials);
 
-  //         if (data?.error) {
-  //           formQr.reset();
-  //           setError(data.error);
-  //         } else if (data?.success) {
-  //           formQr.reset();
-  //           setSuccess(data.success);
-  //           setError(null);
-
-  //           // Now you can use await for signIn since the function is async
-  //           const result = await signIn("credentials", {
-  //             redirect: false, // Prevent automatic redirection
-  //             email: loginCredentials.email,
-  //             password: loginCredentials.password,
-  //             callbackUrl: "/",
-  //           });
-
-  //           if (result?.error) {
-  //             // Handle error by setting the error message in state
-  //             setError(result.error);
-  //           } else {
-  //             // Redirect on successful login
-  //             window.location.href = result?.url ?? "/dashboard";
-  //           }
-  //         }
-  //       } catch (error) {
-  //         // Handle any errors that occur during the verification or sign-in process
-  //         console.error("An error occurred:", error);
-  //         setError("Something went wrong");
-  //       }
-  //     });
-  //   }
-  // };
-
-  // function to disable user after 5 failed attempts
-
-  // console.log("isLoading",isLoading);
-  // console.log("factorwithqr",factorwithqr);
   const { toast } = useToast();
 
-  // const EmailcodeResend = async () => {
-
-  //   startTransitionSecond(async () => {
-  //     if (loginCredentials) {
-  //       const data = await ResendEmailcode(loginCredentials?.email, "fr");
-  //       // .then((data) => {
-  //       //     console.log("data",data);
-  //       // setSuccess("Email envoyée avec succès");
-  //       toast({
-  //         title: path.includes("/en") ? "Email invitation" : "Invitation Email",
-  //         description: "Email envoyée avec succès",
-  //       });
-  //       //   });
-  //       console.log("data", data);
-  //     }
-  //   });
-  // };
   const handleSubmitResend = async (e: any) => {
     console.log("loginCredentials", loginCredentials);
 
@@ -257,6 +194,7 @@ export const LoginForm2fa = () => {
                     <FormControl>
                       <Input
                         {...field}
+                        id="email"
                         disabled={isPending}
                         placeholder=""
                         type="email"
@@ -277,6 +215,7 @@ export const LoginForm2fa = () => {
                     <FormControl>
                       <Input
                         {...field}
+                        id="password"
                         disabled={isPending}
                         placeholder=""
                         type="password"
