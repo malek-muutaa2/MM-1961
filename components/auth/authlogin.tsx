@@ -76,7 +76,7 @@ export const LoginForm2fa = () => {
   const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
     setError("");
     setSuccess("");
-    console.log("values", values);
+    
     startTransition(async () => {
       Login2fa2(values)
         .then(async (data) => {

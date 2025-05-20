@@ -114,9 +114,11 @@ export function LoginFormNextAuth() {
       </form>
     </Card> */}
     <Card className="w-full">
+  
+            <CardContent className="pt-6 space-y-4">
+          <LoginForm2fa />
 
-    <LoginForm2fa />
-
+    </CardContent>
     </Card>
     </div>
   
