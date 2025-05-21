@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -17,13 +18,13 @@ export const metadata: Metadata = {
 }
 
 
+
 export default async function  RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const userinfo = await getCurrentUser();
-  console.log("userinfo", userinfo);
 
   
   return (
