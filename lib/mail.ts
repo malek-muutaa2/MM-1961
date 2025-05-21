@@ -9,7 +9,7 @@ export const sendPasswordResetEmail = async (
   token: string,
   lang: string,
 ) => {
-  const resetLink = `${domain}/auth/new-password?token=${token}`;
+  const resetLink = `${domain}/login/new-password?token=${token}`;
   const emailContentEn = `
   <!DOCTYPE html>
   <html lang="en">
@@ -164,7 +164,7 @@ export const sendInvationResetEmail = async (
   token: string,
   lang: string,
 ) => {
-  const resetLink = `${domain}/auth/new-password?token=${token}`;
+  const resetLink = `${domain}/login/new-password?token=${token}`;
   const emailContent = `
     <!DOCTYPE html>
     <html lang="en">

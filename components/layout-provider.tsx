@@ -14,7 +14,7 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   // Check if the current path is the login page
-  const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/forgot-password"
+  const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/forgot-password" || pathname === "/recovery" || pathname === "/login/new-password"
 
   if (isAuthPage) {
     return (

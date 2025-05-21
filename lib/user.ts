@@ -152,4 +152,47 @@ export const findUniqueUser = async (email: string | null) => {
       };
     }
   };
-  
+  export const findUerbyToken = async (token: string) => {
+  try {
+    if (token) {
+      return await db
+        .selectDistinct()
+        .from(users)
+        .where(eq(users.resetpasswordtoken, token));
+    } else {
+      return [];
+    }
+  } catch (e: any) {
+    console.log("findUerbyToken error", e?.message);
+    return [];
+  }
+};
+
+export const UpdateUserPassword = async (
+  hashedpassword: string,
+  id: number,
+) => {
+  try {
+    console.log("hashedpassword", hashedpassword);
+    
+    const date = new Date();
+    return await db
+      .update(users)
+      .set({ password: hashedpassword, passwordupdatedat: date })
+      .where(eq(users.id, id));
+  } catch (e: any) {
+    console.log("AddUser UpdateUserPassword", e?.message);
+    return [];
+  }
+};
+export const updateLock = async (newStatus: boolean, userId: number) => {
+  try {
+    return await db
+      .update(users)
+      .set({ isDisabled: newStatus })
+      .where(eq(users.id, userId));
+  } catch (e: any) {
+    console.log("updateLock error", e?.message);
+    return [];
+  }
+};

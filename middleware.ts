@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const isAuthenticated = !!token
 
   // Public paths that don't require authentication
-  const publicPaths = ["/login", "/register"]
+  const publicPaths = ["/login", "/register","/recovery","/login/new-password"]
   const isPublicPath = publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))
 
   // If the user is not authenticated and trying to access a protected route

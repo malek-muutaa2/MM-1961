@@ -139,7 +139,7 @@ export const LoginForm2fa = () => {
           }
           if (data?.isexpired) {
             if (data?.passwordResetToken) {
-              window.location.href = `/auth/new-password?token=${data?.passwordResetToken}&renewpassword=true`;
+              window.location.href = `/login/new-password?token=${data?.passwordResetToken}&renewpassword=true`;
             }
           }
           if (data?.twoFactor) {

@@ -29,7 +29,7 @@ export function RegisterForm() {
   })
 
   // Password complexity regex: at least 8 chars, uppercase, lowercase, number, special char
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d_]{8,}$/
+const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{12,}$/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
     setFormData((prev) => ({ ...prev, [id]: value }))
@@ -44,15 +44,61 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d_]{8,}$/
     setIsLoading(true)
 
     // Validate password complexity
-    if (!passwordRegex.test(formData.password)) {
-      toast({
-        title: "Weak Password",
-        description: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
-        variant: "destructive",
-      })
-      setIsLoading(false)
-      return
+    const pw = formData.password
+const v = {
+      "minLength": "Password must be at least 12 characters long",
+      "mustIncludeLetters": "Password must include letters",
+      "mustIncludeUppercase": "Password must include at least one uppercase letter",
+      "mustIncludeNumbers": "Password must include numbers",
+      "mustIncludeSpecialChar": "Password must include a special character"
     }
+
+if (pw.length < 12) {
+  toast({
+    title: "Invalid Password",
+    description: v.minLength,
+    variant: "destructive",
+  })
+  setIsLoading(false)
+  return
+}
+if (!/[a-zA-Z]/.test(pw)) {
+  toast({
+    title: "Invalid Password",
+    description: v.mustIncludeLetters,
+    variant: "destructive",
+  })
+  setIsLoading(false)
+  return
+}
+if (!/[A-Z]/.test(pw)) {
+  toast({
+    title: "Invalid Password",
+    description: v.mustIncludeUppercase,
+    variant: "destructive",
+  })
+  setIsLoading(false)
+  return
+}
+if (!/\d/.test(pw)) {
+  toast({
+    title: "Invalid Password",
+    description: v.mustIncludeNumbers,
+    variant: "destructive",
+  })
+  setIsLoading(false)
+  return
+}
+if (!/[^a-zA-Z0-9]/.test(pw)) {
+  toast({
+    title: "Invalid Password",
+    description: v.mustIncludeSpecialChar,
+    variant: "destructive",
+  })
+  setIsLoading(false)
+  return
+}
+
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
