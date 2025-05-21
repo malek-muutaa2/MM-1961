@@ -50,13 +50,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
+import {getCurrentUser} from "@/lib/getCurrentUser";
+import {UserType} from "@/lib/db/schema";
 
-export function AppSidebar() {
+export function  AppSidebar({userinfo}: UserType) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
   const pathname = usePathname()
   const { role } = useRole()
-
+  console.log("userinfo2",userinfo)
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">
@@ -393,7 +395,7 @@ export function AppSidebar() {
               </Avatar>
               {!isCollapsed && (
                 <div className="flex flex-col items-start text-sm">
-                  <span className="font-medium">John Doe</span>
+                  <span className="font-medium">{userinfo.name}</span>
                   <span className="text-xs text-muted-foreground">
                     {role === "rafed-admin"
                       ? "Rafed Administrator"

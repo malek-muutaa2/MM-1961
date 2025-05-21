@@ -11,8 +11,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Upload } from "lucide-react"
+import {UserType} from "@/lib/db/schema";
+import {twofactor} from "@/app/profile/page";
 
-export function ProfileInformation() {
+interface  ProfileInfoSettings {
+  UserInfo: UserType
+
+}
+export function ProfileInformation( { UserInfo   }: ProfileInfoSettings) {
   const [isLoading, setIsLoading] = useState(false)
   const [avatarSrc, setAvatarSrc] = useState("/abstract-geometric-shapes.png")
 
@@ -38,7 +44,7 @@ export function ProfileInformation() {
       reader.readAsDataURL(file)
     }
   }
-
+console.log("userinfo", UserInfo);
   return (
     <Card>
       <CardHeader>
@@ -81,18 +87,18 @@ export function ProfileInformation() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="first-name">First Name</Label>
-              <Input id="first-name" defaultValue="John" />
+              <Label htmlFor="full-name">Full Name</Label>
+              <Input id="full-name" defaultValue={`${UserInfo.name}`} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="last-name">Last Name</Label>
-              <Input id="last-name" defaultValue="Doe" />
-            </div>
+            {/*<div className="space-y-2">*/}
+            {/*  <Label htmlFor="last-name">Last Name</Label>*/}
+            {/*  <Input id="last-name" defaultValue="Doe" />*/}
+            {/*</div>*/}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" defaultValue="john.doe@example.com" />
+            <Input id="email" type="email" defaultValue={`${UserInfo.email}`} />
           </div>
 
           <div className="space-y-2">
