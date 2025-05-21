@@ -16,11 +16,14 @@ export const metadata: Metadata = {
   generator: "v0.dev",
 }
 
-export default  function  RootLayout({
+
+export default async function  RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const userinfo = await getCurrentUser();
+  console.log("userinfo", userinfo);
 
   
   return (
@@ -28,7 +31,7 @@ export default  function  RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <LayoutProvider>{children}</LayoutProvider>
+            <LayoutProvider userinfo={userinfo}>{children}</LayoutProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>

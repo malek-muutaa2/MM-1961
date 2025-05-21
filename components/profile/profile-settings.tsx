@@ -30,7 +30,7 @@ export function ProfileSettings({ UserInfo , twoFactorEnabled }: ProfileSettings
         </TabsList>
 
         <TabsContent value="personal" className="space-y-4">
-          <ProfileInformation />
+          <ProfileInformation UserInfo={UserInfo} />
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
