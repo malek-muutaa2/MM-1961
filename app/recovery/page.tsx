@@ -6,7 +6,7 @@ export default async function RecoveryPage({
   // const Translation : Translation[] = await getDictTranslation()
   const dict = {
     "title": "Account Recovery",
-    "description": "Set or recover your SIFA account",
+    "description": "Set or recover your optivian account",
     "form": {
       "Email": "Email",
       "submitbutton": "Send reset email"

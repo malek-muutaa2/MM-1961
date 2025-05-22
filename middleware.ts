@@ -8,6 +8,9 @@ export async function middleware(request: NextRequest) {
   
   const isAuthenticated = !!token
     const { pathname } = request.nextUrl
+      if (pathname.startsWith("/images/")) {
+    return NextResponse.next()
+  }
     if (pathname.startsWith("/login/new-password")) {
     return NextResponse.next()
     
