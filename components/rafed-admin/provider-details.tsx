@@ -21,6 +21,7 @@ import {
   ArrowLeft,
   AlertCircle,
   BarChart,
+  Clock,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -51,6 +52,7 @@ const getProviderData = (id: string) => {
           anomalies: 5,
           acknowledged: 3,
           forecastAccuracy: 96.8,
+          otifTarget: 99.2,
         },
         {
           id: "sub-102",
@@ -64,6 +66,7 @@ const getProviderData = (id: string) => {
           anomalies: 4,
           acknowledged: 4,
           forecastAccuracy: 94.2,
+          otifTarget: 98.7,
         },
         {
           id: "sub-103",
@@ -77,6 +80,7 @@ const getProviderData = (id: string) => {
           anomalies: 7,
           acknowledged: 5,
           forecastAccuracy: 92.5,
+          otifTarget: 98.3,
         },
       ],
       topProducts: [
@@ -285,6 +289,7 @@ export function ProviderDetails({ providerId }: { providerId: string }) {
                     <TableHead>Products</TableHead>
                     <TableHead>Anomalies</TableHead>
                     <TableHead>Forecast Accuracy</TableHead>
+                    <TableHead>On-time & In Full Target</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -327,6 +332,12 @@ export function ProviderDetails({ providerId }: { providerId: string }) {
                         <div className="flex items-center">
                           <BarChart className="h-4 w-4 text-green-500 mr-1.5" />
                           <span className="font-medium text-green-600">{submission.forecastAccuracy}%</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 text-green-500 mr-1.5" />
+                          <span className="font-medium text-green-600">{submission.otifTarget}%</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
