@@ -10,8 +10,11 @@ import { UsersList } from "./users-list"
 import { InvitationsList } from "./invitations-list"
 import { InviteUserDialog } from "./invite-user-dialog"
 import { AddUserDialog } from "./add-user-dialog"
-
-export function UserManagement() {
+import { UserType } from "@/lib/db/schema"
+interface UserManagementProps {
+users : UserType[]
+}
+export function UserManagement({ users }: UserManagementProps) {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -46,7 +49,7 @@ export function UserManagement() {
           </div>
         </div>
         <TabsContent value="users" className="mt-6">
-          <UsersList searchQuery={searchQuery} />
+          <UsersList users={users} searchQuery={searchQuery} />
         </TabsContent>
         <TabsContent value="invitations" className="mt-6">
           <InvitationsList searchQuery={searchQuery} />

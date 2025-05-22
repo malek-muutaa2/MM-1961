@@ -1,10 +1,74 @@
 "use server"
-import { eq, InferModel, InferSelectModel } from "drizzle-orm";
+import { asc, desc, eq, InferModel, InferSelectModel, sql } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+export const getusers = async (
+  offsetItems?: number,
+  search?: string | null,
+  size?: number,
+  column?: string,
+  order?: string,
+) => {
+  try {
+    const searchWord = `%${search}%`;
+    return await db.query.users.findMany({
+      // orderBy: (configurations:any, { asc }: any) => [asc(configurations.updated_at)],
+      ...(size && { limit: size }),
+      ...(offsetItems && { offset: offsetItems }),
+      ...(column &&
+        column in users && {
+          orderBy:
+            order === "asc"
+              ? [asc(users[column])]
+              : order === "desc"
+                ? [desc(users[column])]
+                : [desc(users.createdAt)],
+        }),
 
+      ...(search
+        ? {
+            where: sql`
+                        lower
+                        (${users.email} ::
+                            text)
+                        LIKE lower(
+                        ${searchWord}
+                        )
+                        or
+                        lower
+                        (
+                        ${users.name}
+                        ::
+                        text
+                        )
+                        LIKE
+                        lower
+                        (
+                        ${searchWord}
+                        )
+
+                        or
+                        lower
+                        (
+                        ${users.organization}
+                        )
+                        LIKE
+                        lower
+                        (
+                        ${searchWord}
+                        )
+
+                    `,
+          }
+        : { where: null }),
+    });
+  } catch (e: any) {
+    console.log("getDictGtin error", e?.message);
+    return [];
+  }
+};
 export const UpdateUser2F = async (secretbase32: string, id: number) => {
     try {
       return await db

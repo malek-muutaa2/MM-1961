@@ -58,6 +58,9 @@ export function  AppSidebar({userinfo}: UserType) {
   const isCollapsed = state === "collapsed"
   const pathname = usePathname()
   const { role } = useRole()
+  if(!userinfo) {
+    return null
+  }
   console.log("userinfo2",userinfo)
   return (
     <Sidebar collapsible="icon">
@@ -80,6 +83,7 @@ export function  AppSidebar({userinfo}: UserType) {
                 alt="MUUTAA Logo"
                 width={120}
                 height={32}
+                unoptimized
                 className="object-contain"
               />
             </div>

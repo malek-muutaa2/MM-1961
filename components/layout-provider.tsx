@@ -10,13 +10,14 @@ import { TopNav } from "@/components/top-nav"
 import { RoleSwitcher } from "@/components/role-switcher"
 import { Toaster } from "@/components/ui/toaster"
 import {UserType} from "@/lib/db/schema";
+import { AccessDeniedPage } from "./AccessDenied"
 
 export function LayoutProvider({ children, userinfo }: { children: React.ReactNode; userinfo: UserType }) {
   const pathname = usePathname()
 
   // Check if the current path is the login page
   const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/forgot-password" || pathname === "/recovery" || pathname === "/login/new-password"
-
+  const adminPage = pathname.startsWith("/rafed-admin") 
   if (isAuthPage) {
     return (
       <>
@@ -35,7 +36,12 @@ export function LayoutProvider({ children, userinfo }: { children: React.ReactNo
           <div className="flex flex-col flex-1 w-full overflow-hidden">
             <TopNav />
             <main className="flex-1 w-full overflow-auto bg-background">
-              <div className="container mx-auto max-w-12xl">{children}</div>
+              {userinfo.role === "Admin" ?
+              <div className="container mx-auto max-w-12xl">{children}</div> :
+              <div>
+        <AccessDeniedPage />
+      </div>}
+              
             </main>
           </div>
         </div>
