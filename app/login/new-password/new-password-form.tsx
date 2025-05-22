@@ -101,11 +101,11 @@ export const NewPasswordForm = ({ ResetPassword }: ResetPasswordProps) => {
   };
 
   const { resolvedTheme } = useTheme();
-  const [logo, setLogo] = useState("/muutaa-logo.png");
+  const [logo, setLogo] = useState("/images/muutaa-logo.png");
 
   useEffect(() => {
     setLogo(
-      resolvedTheme === "light" ? "/muutaa-logo.png" : "/muutaa-logo.png",
+      resolvedTheme === "light" ? "/images/muutaa-logo.png" : "/images/muutaa-logo.png",
     );
   }, [resolvedTheme]);
 

@@ -37,11 +37,11 @@ export function LayoutProvider({
 
   // now the rest is exactly as before
   const isAuthPage =
-    pathname === "/login" ||
+    pathname.includes("/login") ||
     pathname === "/signup" ||
     pathname === "/forgot-password" ||
     pathname === "/recovery" ||
-    pathname === "/login/new-password"
+    pathname.includes("/login/new-password") 
 const isAdminPage =
     pathname.includes("/rafed-admin") 
   if (isAuthPage) {

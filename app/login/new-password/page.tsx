@@ -8,7 +8,7 @@ export default async function NewPasswordpage({
   // const Translation : Translation[] = await getDictTranslation()
   const dict = {
     "title": "Enter a new password",
-    "description": "Set or recover your SIFA account",
+    "description": "Set or recover your Optivian account",
     "renew": " Your password expired have been expired and need to be changed ",
     "form": {
       "passwordLabel": "Password",
