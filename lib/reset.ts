@@ -21,12 +21,13 @@ export const reset = async (
   const { email } = validatedFields.data;
 
   const existingUser = await findUniqueUser(email);
+    if (!existingUser[0]) {
+    return { error: "The email does not exist in our records." };
+  }
   if (existingUser[0]?.deleted_at !== null) {
     return { error: "The email is associated with a deleted account." };
   }
-  if (!existingUser[0]) {
-    return { error: "The email does not exist in our records." };
-  }
+
   if (existingUser[0]) {
     const passwordResetToken = await generatePasswordResetToken(email);
     if (passwordResetToken[0].resetpasswordtoken) {

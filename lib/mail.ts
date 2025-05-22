@@ -68,7 +68,7 @@ export const sendPasswordResetEmail = async (
   <body>
     <div class="container">
       <img class="logo" src="https://i2.wp.com/muutaa.com/wp-content/uploads/2021/03/Final-Logo-1.png?fit=2033%2C614&ssl=1" alt="Muutaa Logo">
-      <h1>Reset your SIFAconnect password again</h1>
+      <h1>Reset your optivian password again</h1>
       <h2>It seems that you have requested to reset your password again.</h2>
       <p>Simply click on the link below to set a new password. This link will expire in 24 hours for your security: <a href="${resetLink}">Click here</a></p>
 
@@ -136,7 +136,7 @@ export const sendPasswordResetEmail = async (
     <body>
       <div class="container">
         <img class="logo" src="https://i2.wp.com/muutaa.com/wp-content/uploads/2021/03/Final-Logo-1.png?fit=2033%2C614&ssl=1" alt="Muutaa Logo">
-        <h1>Réinitialisez votre mot de passe SIFAconnect à nouveau</h1>
+        <h1>Réinitialisez votre mot de passe Optivian à nouveau</h1>
         <h2>Il semble que vous ayez demandé à réinitialiser votre mot de passe à nouveau.</h2>
         <p>Cliquez simplement sur le lien ci-dessous pour définir un nouveau mot de passe. Ce lien expirera dans 24 heures pour votre sécurité: <a href="${resetLink}">Cliquez ici</a></p>
 
@@ -149,10 +149,10 @@ export const sendPasswordResetEmail = async (
   const content = lang === "en" ? emailContentEn : emailContent;
   const subject =
     lang === "en"
-      ? "Reset your SIFAconnect password again"
-      : "Réinitialisez votre mot de passe SIFAconnect à nouveau";
+      ? "Reset your Optivian password again"
+      : "Réinitialisez votre mot de passe Optivian à nouveau";
   const emailres = await resend.emails.send({
-    from: "Muutaa Inc. SIFAconnect <muutaa@no-reply.demandamp.plus>",
+    from: "Muutaa Inc. Optivian <muutaa@no-reply.demandamp.plus>",
     to: email,
     subject: subject,
     html: content,
@@ -225,7 +225,7 @@ export const sendInvationResetEmail = async (
       <div class="container">
         <h4>Bonjour </h4>
 
-        <h5>Vous avez reçu une invitation pour accéder à l'application SIFAconnect : <a href="${process.env.NEXTAUTH_URL}">${process.env.NEXTAUTH_URL}</a></p> </h5>
+        <h5>Vous avez reçu une invitation pour accéder à l'application Optivian : <a href="${process.env.NEXTAUTH_URL}">${process.env.NEXTAUTH_URL}</a></p> </h5>
 
         <p>Cliquez simplement sur le lien ci-dessous pour créer votre mot de passe. Ce lien expirera dans 24 heures pour votre sécurité: <a href="${resetLink}">Cliquez ici</a></p>
 
@@ -294,7 +294,7 @@ export const sendInvationResetEmail = async (
       <div class="container">
         <h4>Hello</h4>
 
-        <h5>You have received an invitation to access the SIFAconnect application: <a href="${process.env.NEXTAUTH_URL}">${process.env.NEXTAUTH_URL}</a></p> </h5>
+        <h5>You have received an invitation to access the Optivian application: <a href="${process.env.NEXTAUTH_URL}">${process.env.NEXTAUTH_URL}</a></p> </h5>
 
         <p>Simply click on the link below to create your password. This link will expire in 24 hours for your security: <a href="${resetLink}">Click here</a></p>
 
@@ -306,10 +306,10 @@ export const sendInvationResetEmail = async (
   const content = lang === "en" ? emailContentEn : emailContent;
   const subject =
     lang === "en"
-      ? "Reset your SIFAconnect password again"
-      : "Réinitialisez votre mot de passe SIFAconnect à nouveau";
+      ? "Reset your Optivian password again"
+      : "Réinitialisez votre mot de passe Optivian à nouveau";
   const emailres = await resend.emails.send({
-    from: "Muutaa Inc. SIFAconnect <muutaa@no-reply.demandamp.plus>",
+    from: "Muutaa Inc. Optivian <muutaa@no-reply.demandamp.plus>",
     to: email,
     subject: subject,
     html: content,
