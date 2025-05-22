@@ -17,7 +17,7 @@ interface  ProfileSettingsProps {
 }
 export function ProfileSettings({ UserInfo , twoFactorEnabled }: ProfileSettingsProps) {
   const [activeTab, setActiveTab] = useState("personal")
-
+  
   return (
     <div className="col-span-3">
       <Tabs defaultValue="personal" value={activeTab} onValueChange={setActiveTab} className="space-y-4">

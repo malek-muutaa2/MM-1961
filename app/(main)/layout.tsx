@@ -1,7 +1,7 @@
+export const dynamic = "force-dynamic"
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LayoutProvider } from "@/components/layout-provider"
 import { AuthProvider } from "@/components/auth/auth-provider"
@@ -18,22 +18,20 @@ export const metadata: Metadata = {
 
 
 
-export default  function  RootLayout({
+export default async function  RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const userinfo = await getCurrentUser();
 
-   
+console.log("userinfo", userinfo);
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning  className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-{children}
-          </ThemeProvider>
-        </AuthProvider>
-      </body>
-    </html>
+    <div>
+            <LayoutProvider userinfo={userinfo}>{children}</LayoutProvider>
+
+    </div>    
+   
   )
 }

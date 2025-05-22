@@ -61,7 +61,6 @@ export function  AppSidebar({userinfo}: UserType) {
   if(!userinfo) {
     return null
   }
-  console.log("userinfo2",userinfo)
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">

@@ -14,13 +14,15 @@ export async function getCurrentUser() {
     if (!authSession) {
       return null;
     }
-
+    console.log("authSession", authSession);
+    
     const userId = parseInt(authSession.user.id || "");
     const user = userId ? await findUserById(userId) : null;
-
+    
     if (!user) {
       return null;
     }
+    console.log("user1", user[0]);
 
     return user[0];
   } catch (error) {

@@ -4,29 +4,27 @@ import { getToken } from "next-auth/jwt"
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
+  console.log("token", token);
+  
   const isAuthenticated = !!token
     const { pathname } = request.nextUrl
     if (pathname.startsWith("/login/new-password")) {
     return NextResponse.next()
+    
   }
-  // Public paths that don't require authentication
-  const publicPaths = ["/login", "/register","/recovery","/login/new-password"]
-  const isPublicPath = publicPaths.some((path) => request.nextUrl.pathname.startsWith(path))
-if (!isAuthenticated) {
+   if (request.nextUrl.pathname.startsWith(`/recovery`)) {
+    return NextResponse.next();
+  }
+
+  if (!token) {
     if (request.nextUrl.pathname.startsWith("/api")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    return NextResponse.rewrite(new URL(`/login`, request.url));
   }
-  // If the user is not authenticated and trying to access a protected route
-  if (!isAuthenticated && !isPublicPath) {
-    const url = new URL("/login", request.url)
-    url.searchParams.set("callbackUrl", request.nextUrl.pathname)
-    return NextResponse.redirect(url)
-  }
-
-  // If the user is authenticated and trying to access a public route
-  if (isAuthenticated && isPublicPath) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+  // If token exists and user is trying to access auth pages, redirect to dashboard
+  if (token && request.nextUrl.pathname.startsWith(`/login`)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next()

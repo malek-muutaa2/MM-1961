@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { RoleProvider } from "@/contexts/role-context"
 import { SidebarProvider } from "@/components/ui/sidebar"
@@ -9,15 +8,42 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { TopNav } from "@/components/top-nav"
 import { RoleSwitcher } from "@/components/role-switcher"
 import { Toaster } from "@/components/ui/toaster"
-import {UserType} from "@/lib/db/schema";
+import { UserType } from "@/lib/db/schema"
 import { AccessDeniedPage } from "./AccessDenied"
 
-export function LayoutProvider({ children, userinfo }: { children: React.ReactNode; userinfo: UserType }) {
+export function LayoutProvider({
+  children,
+  userinfo,
+}: {
+  children: React.ReactNode
+  userinfo: UserType | null
+}) {
   const pathname = usePathname()
 
-  // Check if the current path is the login page
-  const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/forgot-password" || pathname === "/recovery" || pathname === "/login/new-password"
-  const adminPage = pathname.startsWith("/rafed-admin") 
+  // ←— NEW: block render for up to 2s, but bail early if userinfo arrives
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    if (userinfo) {
+      setReady(true)
+      return
+    }
+    const timer = setTimeout(() => setReady(true), 2000)
+    return () => clearTimeout(timer)
+  }, [userinfo])
+
+  if (!ready) {
+    return null // or your <Spinner/> 
+  }
+
+  // now the rest is exactly as before
+  const isAuthPage =
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/recovery" ||
+    pathname === "/login/new-password"
+const isAdminPage =
+    pathname.includes("/rafed-admin") 
   if (isAuthPage) {
     return (
       <>
@@ -26,22 +52,25 @@ export function LayoutProvider({ children, userinfo }: { children: React.ReactNo
       </>
     )
   }
+  
 
-  // For all other pages, use the main layout with sidebar and navigation
   return (
     <RoleProvider>
       <SidebarProvider>
         <div className="flex h-screen w-screen overflow-hidden">
-          <AppSidebar userinfo={userinfo}/>
+          <AppSidebar userinfo={userinfo!} />
           <div className="flex flex-col flex-1 w-full overflow-hidden">
             <TopNav />
             <main className="flex-1 w-full overflow-auto bg-background">
-              {userinfo.role === "Admin" ?
-              <div className="container mx-auto max-w-12xl">{children}</div> :
-              <div>
-        <AccessDeniedPage />
-      </div>}
-              
+                  {isAdminPage ? (
+                  userinfo?.role === "Admin" ? (
+                    <div className="container mx-auto max-w-12xl">{children}</div>
+                  ) : (
+                    <AccessDeniedPage />
+                  )
+                  ) : (
+                  <div className="container mx-auto max-w-12xl">{children}</div>
+                  )}
             </main>
           </div>
         </div>
