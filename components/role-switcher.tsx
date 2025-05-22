@@ -48,7 +48,7 @@ export function RoleSwitcher() {
       case "rafed-provider":
         return "Rafed Provider"
       case "obtivian":
-        return "Obtivian"
+        return "Optivian"
       default:
         return role
     }
@@ -82,7 +82,7 @@ export function RoleSwitcher() {
             onClick={() => handleRoleChange("obtivian")}
             className={role === "obtivian" ? "bg-muted" : ""}
           >
-            Obtivian
+            Optivian
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -20,6 +20,7 @@ import {
   FileText,
   ArrowLeft,
   AlertCircle,
+  BarChart,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -49,6 +50,7 @@ const getProviderData = (id: string) => {
           categoriesCount: 12,
           anomalies: 5,
           acknowledged: 3,
+          forecastAccuracy: 96.8,
         },
         {
           id: "sub-102",
@@ -61,6 +63,7 @@ const getProviderData = (id: string) => {
           categoriesCount: 12,
           anomalies: 4,
           acknowledged: 4,
+          forecastAccuracy: 94.2,
         },
         {
           id: "sub-103",
@@ -73,6 +76,7 @@ const getProviderData = (id: string) => {
           categoriesCount: 12,
           anomalies: 7,
           acknowledged: 5,
+          forecastAccuracy: 92.5,
         },
       ],
       topProducts: [
@@ -280,6 +284,7 @@ export function ProviderDetails({ providerId }: { providerId: string }) {
                     <TableHead>File Name</TableHead>
                     <TableHead>Products</TableHead>
                     <TableHead>Anomalies</TableHead>
+                    <TableHead>Forecast Accuracy</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -316,6 +321,12 @@ export function ProviderDetails({ providerId }: { providerId: string }) {
                             </span>
                             <span className="text-muted-foreground ml-1">acknowledged</span>
                           </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <BarChart className="h-4 w-4 text-green-500 mr-1.5" />
+                          <span className="font-medium text-green-600">{submission.forecastAccuracy}%</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
