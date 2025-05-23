@@ -474,9 +474,8 @@ export function ForecastProductTimeline({ forecastId }: ForecastProductTimelineP
 
         <div className="rounded-md bg-muted/50 p-3 text-sm">
           <p>
-            <span className="font-medium">Note:</span> Ce graphique montre les données historiques et les prévisions pour
-            le produit sélectionné au fil du temps.
-          </p>
+  <span className="font-medium">Note:</span> This chart shows historical data and forecasts for the selected product over time.
+</p>
         </div>
 
 
