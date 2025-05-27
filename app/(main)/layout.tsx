@@ -25,7 +25,6 @@ export default async function  RootLayout({
 }) {
   const userinfo = await getCurrentUser();
 
-console.log("userinfo", userinfo);
 
   return (
     <div>

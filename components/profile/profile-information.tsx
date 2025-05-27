@@ -44,7 +44,6 @@ export function ProfileInformation( { UserInfo   }: ProfileInfoSettings) {
       reader.readAsDataURL(file)
     }
   }
-console.log("userinfo", UserInfo);
   return (
     <Card>
       <CardHeader>

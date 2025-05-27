@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Edit2, Search, Filter } from "lucide-react"
+import { Edit2, Search, Filter, Calendar } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import { toast } from "@/components/ui/use-toast"
 
 interface Product {
   id: number
-  productName: string
+  name: string
   description?: string
   classificationId?: number
 }
@@ -45,6 +45,7 @@ interface ForecastData {
   classificationName: string
   sku: string
   date: string
+  originalDate: string // Keep original date for API calls
   [key: string]: any // For dynamic forecast type columns
 }
 
@@ -57,13 +58,24 @@ export function ForecastDataTable() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [firstForecastDate, setFirstForecastDate] = useState<string>("")
+  const [selectedMonth, setSelectedMonth] = useState<string>("all")
+  const [availableMonths, setAvailableMonths] = useState<string[]>([])
 
   // State for edit modal
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ForecastData | null>(null)
   const [editingForecastType, setEditingForecastType] = useState<string>("")
   const [newQuantity, setNewQuantity] = useState<number | "">("")
+
+  // Function to format date to "Month YYYY" format
+  const formatDateToMonthYear = (dateString: string) => {
+    const date = new Date(dateString)
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+    }
+    return date.toLocaleDateString("en-US", options)
+  }
 
   // Fetch classifications from the database
   useEffect(() => {
@@ -128,11 +140,17 @@ export function ForecastDataTable() {
           throw new Error("Failed to fetch products")
         }
         const data = await response.json()
-        setProducts(data)
+
+        // Sort products alphabetically by name
+        const sortedProducts = data.sort((a: Product, b: Product) =>
+            a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
+        )
+
+        setProducts(sortedProducts)
       } catch (error) {
         console.error("Error fetching products:", error)
         // Fallback to mock data if API fails
-        setProducts([
+        const mockProducts = [
           {
             id: 1,
             name: "Paracétamol 500mg",
@@ -153,127 +171,159 @@ export function ForecastDataTable() {
             description: "Appareil d'assistance respiratoire",
             classificationId: 2,
           },
-        ])
+        ]
+
+        // Sort mock products alphabetically as well
+        const sortedMockProducts = mockProducts.sort((a, b) =>
+            a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
+        )
+
+        setProducts(sortedMockProducts)
       }
     }
 
     fetchProducts()
   }, [])
 
-  // Fetch forecast data for all products
+  // Fetch all forecast data
   useEffect(() => {
-    if (products.length > 0 && forecastTypes.length > 0 && classifications.length > 0) {
+    if (forecastTypes.length > 0) {
       setLoading(true)
       fetchAllForecastData()
     }
-  }, [products, forecastTypes, classifications])
+  }, [forecastTypes])
 
-  // Apply filters when search term or selected category changes
+  // Apply filters when search term, selected category, or selected month changes
   useEffect(() => {
     applyFilters()
-  }, [searchTerm, selectedCategory, forecastData])
+  }, [searchTerm, selectedCategory, selectedMonth, forecastData])
 
   const fetchAllForecastData = async () => {
     try {
-      // Fetch the first forecast date (future date with forecast data)
-      const dateResponse = await fetch("/api/forecast-first-date")
-      if (!dateResponse.ok) {
-        throw new Error("Failed to fetch first forecast date")
-      }
-      const { date } = await dateResponse.json()
-      setFirstForecastDate(date)
-
-      // Fetch forecast data for all products at the first forecast date
-      const response = await fetch(`/api/forecast-data-all?date=${date}`)
+      // Fetch all forecast data using your API route
+      const response = await fetch("/api/forecast-data-complete")
       if (!response.ok) {
-        throw new Error("Failed to fetch forecast data")
+        throw new Error("Failed to fetch complete forecast data")
       }
       const data = await response.json()
-      //console.log("Fetched forecast data:", data)
+      console.log("Raw API data:", data)
+
       // Process the data
-      const processedData = processAllForecastData(data)
+      const processedData = processCompleteForecastData(data)
+      console.log("Processed data:", processedData)
+
       setForecastData(processedData)
       setFilteredData(processedData)
+
+      // Extract unique months for filtering (formatted as "Month YYYY")
+      const months = [...new Set(processedData.map((item) => item.date))].sort((a, b) => {
+        // Sort by actual date, not string
+        const dateA = new Date(processedData.find((item) => item.date === a)?.originalDate || a)
+        const dateB = new Date(processedData.find((item) => item.date === b)?.originalDate || b)
+        return dateA.getTime() - dateB.getTime()
+      })
+      setAvailableMonths(months)
     } catch (error) {
-      console.error("Error fetching forecast data:", error)
-        toast({
-            title: "Error fetching forecast data",
-            description: "Failed to fetch forecast data. Please try again later.",
-            variant: "destructive",
-        })
+      console.error("Error fetching complete forecast data:", error)
+      // Generate mock data as fallback
+      generateMockCompleteForecastData()
     } finally {
       setLoading(false)
     }
   }
 
-  const processAllForecastData = (data: any[]) => {
+  const processCompleteForecastData = (data: any[]) => {
     const processedData: ForecastData[] = []
 
-    // Group data by product
-    const groupedByProduct = data.reduce((acc: any, item: any) => {
-      //console.log("item", item)
-      if (!acc[item.productId]) {
-        console.log(products, "products")
-        const product = products.find((p) => p.id === item.productId)
-        console.log("product", product)
-        const classification = classifications.find((c) => c.id === product?.classificationId)
-        console.log("classifications", classifications)
-        acc[item.productId] = {
-          productId: item.productId,
-          productName: item?.productName || `Product ${item.productId}`,
-          classificationId: item?.classificationId || 0,
-          classificationName: item.classificationName || "Unknown",
-          date: new Date(item.date).toLocaleDateString(),
-          sku: item.classificationName?.substring(0, 4).toUpperCase() +
-              "-" +
-              item.productId.toString().padStart(4, "0"),
-        }
+    // Group data by product and date
+    const groupedByProductAndDate = data.reduce((acc: any, item: any) => {
+      const key = `${item.productId}-${item.date}`
 
+      if (!acc[key]) {
+        // Generate SKU from product name
+        const sku = item.productName?.substring(0, 4).toUpperCase() + "-" + item.productId.toString().padStart(4, "0")
+
+        acc[key] = {
+          productId: item.productId,
+          productName: item.productName || `Product ${item.productId}`,
+          classificationId: 0, // We'll need to map this if needed for filtering
+          classificationName: item.classificationName || "Unknown",
+          sku: sku,
+          date: formatDateToMonthYear(item.date), // Format as "Month YYYY"
+          originalDate: item.date, // Keep original date for API calls
+        }
       }
 
-      // Find the forecast type name
+      // Find the forecast type name and add the value
       const forecastType = forecastTypes.find((ft) => ft.id === item.forecastTypeId)
       if (forecastType) {
         const typeName = forecastType.name.replace(/\s+/g, "")
-        acc[item.productId][typeName] = Number(item.value)
+        acc[key][typeName] = Number(item.value)
       }
 
       return acc
     }, {})
 
-    // Convert to array
-    return Object.values(groupedByProduct)
+    // Convert to array and sort by original date and product name
+    const result = Object.values(groupedByProductAndDate) as ForecastData[]
+    return result.sort((a, b) => {
+      const dateComparison = new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
+      if (dateComparison !== 0) return dateComparison
+      return a.productName.localeCompare(b.productName, "fr", { sensitivity: "base" })
+    })
   }
 
-  const generateMockForecastData = () => {
+  const generateMockCompleteForecastData = () => {
     const mockData: ForecastData[] = []
-    const mockDate = new Date()
-    mockDate.setMonth(mockDate.getMonth() + 1) // Next month
-    setFirstForecastDate(mockDate.toLocaleDateString())
+    const startDate = new Date()
+    startDate.setMonth(startDate.getMonth() + 1) // Start from next month
 
-    products.forEach((product) => {
-      const classification = classifications.find((c) => c.id === product.classificationId)
+    // Generate data for 6 months
+    for (let monthOffset = 0; monthOffset < 6; monthOffset++) {
+      const currentDate = new Date(startDate)
+      currentDate.setMonth(currentDate.getMonth() + monthOffset)
 
-      const dataPoint: ForecastData = {
-        productId: product.id,
-        productName: product.name,
-        classificationId: product.classificationId || 0,
-        classificationName: classification?.name || "Unknown",
-        sku: product.name.substring(0, 4).toUpperCase() + "-" + product.id.toString().padStart(4, "0"),
-        date: mockDate.toLocaleDateString(),
-      }
+      products.forEach((product) => {
+        const classification = classifications.find((c) => c.id === product.classificationId)
 
-      // Add data for each forecast type
-      forecastTypes.forEach((type) => {
-        const typeName = type.name.replace(/\s+/g, "")
-        dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
+        const dataPoint: ForecastData = {
+          productId: product.id,
+          productName: product.name,
+          classificationId: product.classificationId || 0,
+          classificationName: classification?.name || "Unknown",
+          sku: product.name.substring(0, 4).toUpperCase() + "-" + product.id.toString().padStart(4, "0"),
+          date: formatDateToMonthYear(currentDate.toISOString()), // Format as "Month YYYY"
+          originalDate: currentDate.toISOString(), // Keep original date
+        }
+
+        // Add data for each forecast type
+        forecastTypes.forEach((type) => {
+          const typeName = type.name.replace(/\s+/g, "")
+          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500 + monthOffset * 50 // Slight increase over time
+        })
+
+        mockData.push(dataPoint)
       })
+    }
 
-      mockData.push(dataPoint)
+    // Sort by original date and product name
+    const sortedMockData = mockData.sort((a, b) => {
+      const dateComparison = new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
+      if (dateComparison !== 0) return dateComparison
+      return a.productName.localeCompare(b.productName, "fr", { sensitivity: "base" })
     })
 
-    setForecastData(mockData)
-    setFilteredData(mockData)
+    setForecastData(sortedMockData)
+    setFilteredData(sortedMockData)
+
+    // Extract unique months for filtering (formatted as "Month YYYY")
+    const months = [...new Set(sortedMockData.map((item) => item.date))].sort((a, b) => {
+      // Sort by actual date, not string
+      const dateA = new Date(sortedMockData.find((item) => item.date === a)?.originalDate || a)
+      const dateB = new Date(sortedMockData.find((item) => item.date === b)?.originalDate || b)
+      return dateA.getTime() - dateB.getTime()
+    })
+    setAvailableMonths(months)
   }
 
   const applyFilters = () => {
@@ -289,7 +339,12 @@ export function ForecastDataTable() {
 
     // Apply category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((item) => item.classificationId.toString() === selectedCategory)
+      filtered = filtered.filter((item) => item.classificationName === selectedCategory)
+    }
+
+    // Apply month filter
+    if (selectedMonth !== "all") {
+      filtered = filtered.filter((item) => item.date === selectedMonth)
     }
 
     setFilteredData(filtered)
@@ -301,6 +356,10 @@ export function ForecastDataTable() {
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value)
+  }
+
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value)
   }
 
   const handleEditClick = (item: ForecastData, forecastType: string) => {
@@ -320,8 +379,8 @@ export function ForecastDataTable() {
           throw new Error("Forecast type not found")
         }
 
-        // Parse date from string to Date object
-        const dateObj = new Date(editingItem.date)
+        // Use the original date for API calls
+        const dateObj = new Date(editingItem.originalDate)
 
         // Prepare data for API
         const updateData = {
@@ -346,7 +405,7 @@ export function ForecastDataTable() {
 
         // Update the local state
         const updatedData = forecastData.map((item) => {
-          if (item.productId === editingItem.productId) {
+          if (item.productId === editingItem.productId && item.originalDate === editingItem.originalDate) {
             return {
               ...item,
               [editingForecastType]: Number(newQuantity),
@@ -363,7 +422,7 @@ export function ForecastDataTable() {
         // Show success toast
         toast({
           title: "Forecast updated",
-          description: `Updated ${forecastType.name} for ${editingItem.productName} to ${newQuantity}`,
+          description: `Updated ${forecastType.name} for ${editingItem.productName} (${editingItem.date}) to ${newQuantity}`,
         })
       } catch (error) {
         console.error("Error updating forecast:", error)
@@ -389,7 +448,7 @@ export function ForecastDataTable() {
         </div>
     )
   }
-console.log("filteredData", filteredData)
+
   return (
       <div className="space-y-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -407,8 +466,24 @@ console.log("filteredData", filteredData)
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
                   {classifications.map((classification) => (
-                      <SelectItem key={classification.id} value={classification.id.toString()}>
+                      <SelectItem key={classification.id} value={classification.name}>
                         {classification.name}
+                      </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Select value={selectedMonth} onValueChange={handleMonthChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All Months" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Months</SelectItem>
+                  {availableMonths.map((month) => (
+                      <SelectItem key={month} value={month}>
+                        {month}
                       </SelectItem>
                   ))}
                 </SelectContent>
@@ -436,7 +511,7 @@ console.log("filteredData", filteredData)
             <TableBody>
               {filteredData.length > 0 ? (
                   filteredData.map((item, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={`${item.productId}-${item.originalDate}-${index}`}>
                         <TableCell className="font-medium">{item.sku}</TableCell>
                         <TableCell>{item.productName}</TableCell>
                         <TableCell>{item.classificationName}</TableCell>
