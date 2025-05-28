@@ -347,6 +347,7 @@ export function ForecastProductTimeline({ forecastId }: ForecastProductTimelineP
   const selectedProductDetails = products.find((p) => p.id.toString() === selectedProduct) || {
     name: "",
     description: "",
+    classificationId: 0,
   }
 
   if ((loadingProducts || loadingForecastTypes) && !products.length) {
