@@ -128,7 +128,7 @@ export function RegisterForm() {
       <form onSubmit={handleSubmit}>
         <CardContent className="pt-6 space-y-4">
           {/* FullName, Email, Password, Confirm Password */}
-          {["fullName", "email", "password", "confirmPassword", "organization"].map((field) => (
+          {["full Name", "email", "password", "confirmPassword", "organization"].map((field) => (
             <div className="space-y-2" key={field}>
               <Label htmlFor={field}>
                 {field === "confirmPassword" ? "Confirm Password" : field.charAt(0).toUpperCase() + field.slice(1)}
