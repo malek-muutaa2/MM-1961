@@ -7,6 +7,7 @@ import { LayoutProvider } from "@/components/layout-provider"
 import { AuthProvider } from "@/components/auth/auth-provider"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { getServerAuthSession } from "@/lib/auth"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,9 +31,12 @@ export default  function  RootLayout({
       <body suppressHydrationWarning  className={inter.className}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            
 {children}
           </ThemeProvider>
         </AuthProvider>
+                <Toaster />
+
       </body>
     </html>
   )
