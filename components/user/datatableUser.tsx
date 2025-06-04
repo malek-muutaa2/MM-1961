@@ -141,9 +141,7 @@ export function DataTable<TData, TValue>({
 
   const { toast } = useToast();
 
-console.log("sorting", sorting);
-console.log("searchParams", searchParams);
-console.log("pathname", data);
+
 
 
   useEffect(() => {
