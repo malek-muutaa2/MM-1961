@@ -28,7 +28,7 @@ export const users = pgTable("users", {
   passwordresettokenexpiry: timestamp("passwordresettokenexpiry"),
   passwordupdatedat: timestamp("passwordupdatedat"),
   isDisabled: boolean("isDisabled"),
-
+  last_login : timestamp("deleted_at")
 
 })
 export const audit_log = pgTable("audit_log", {

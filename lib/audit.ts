@@ -1,13 +1,15 @@
 import { db } from "@/lib/db/dbpostgres";
 import { getServerSession } from "next-auth";
 import { headers } from "next/headers";
-import { audit_log } from "./db/schema";
+import { audit_log, users } from "./db/schema";
+import { eq } from "drizzle-orm";
 
 export interface AuditLog {
   // auto-generated ID
   timestamp: Date;
   // user email or system user
   actor: string;
+  email: string;
   // dot notation path to the component beeing modified
   // example : 'user.delete', 'user.create', 'appariement.validate-facility', 'appariement.validate-sifa-admin' ...
   event: string;
@@ -52,7 +54,7 @@ export const audit = async (log: AuditLogInput) => {
   const auditLog: AuditLog = {
     timestamp: dateFromString,
     ...log,
-    actor: session?.user.email || "system",
+    actor: log.email ,
     client: {
       ip:
         headerList.get("x-forwarded-for") ||
@@ -69,6 +71,12 @@ export const audit = async (log: AuditLogInput) => {
 
   try {
     await db.insert(audit_log).values(auditLog);
+    if(auditLog.event === "user.signin" ) {
+      console.log("Audit log for user sign in: ", auditLog);
+      
+    await db.update(users).set({ last_login: auditLog.timestamp }).where(eq(users.email,auditLog.email));
+
+    }
   } catch (error) {
     console.error("audit error: ", error);
     // do nothing else

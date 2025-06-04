@@ -5,6 +5,8 @@ import { getServerSession, type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { audit } from "./audit";
 import { findUniqueUser, findUserById } from "./user";
+import { db } from "./db/dbpostgres";
+import { users } from "./db/schema";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt", //(1)
@@ -41,13 +43,18 @@ export const authOptions: NextAuthOptions = {
         event: "user.signin",
         event_description: "User signed in",
         targets: [{ label: "email", value: String(message.user.email) }],
+        email :  message.user.email ? message.user.email : "",
       });
+
+   
     },
     async signOut(message) {
       await audit({
         event: "user.signout",
         event_description: "User signed out",
         targets: [{ label: "email", value: String(message.token.email) }],
+        email :  message.token.email ? message.token.email : "",
+
       });
     },
   },

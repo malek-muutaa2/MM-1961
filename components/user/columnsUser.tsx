@@ -206,4 +206,47 @@ export const UsersColumns: ColumnDef<UserType>[] = [
                    {new Date(row.getValue("createdAt")).toLocaleDateString()}</div>,
                     
     },
+    {
+      accessorKey: "last_login",
+      header: ({ column }) => (
+        <div className="flex  items-center">
+          <button
+            className="cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Last login
+          </button>
+          {column.getIsSorted() === "desc" ? (
+            <ArrowDownIcon
+              onClick={() => {
+                // Toggle sorting
+                column.clearSorting();
+              }}
+              className="ml-2 h-4 w-4 cursor-pointer"
+            />
+          ) : column.getIsSorted() === "asc" ? (
+            <ArrowUpIcon
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className=" ml-2 h-4 w-4 cursor-pointer"
+            />
+          ) : (
+            <CaretSortIcon
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="ml-2 h-4 w-4 cursor-pointer"
+            />
+          )}
+        </div>
+      ),
+      cell: ({ row }) => {
+    const value = row.original.last_login;
+    if (!value) return null;
+    const date = new Date(value);
+    return (
+      <div>
+      {date.toLocaleDateString()} {date.toLocaleTimeString()}
+      </div>
+    );
+    },
+                    
+    }
   ];
