@@ -4,6 +4,27 @@ import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+export const TotalUsers = async (search?: string | null) => {
+  try {
+    const searchWord = `%${search}%`;
+    return await db
+      .select({ count: sql<number>`count(*)` })
+      .from(users)
+      .where(
+        search
+          ? sql`
+            lower(${users.email}::text) LIKE lower(${searchWord})
+            OR lower(${users.name}::text) LIKE lower(${searchWord})
+            OR lower(${users.organization}) LIKE lower(${searchWord})
+          `
+          : undefined,
+      );
+  }
+  catch (e: any) {
+    console.log("TotalUsers error", e?.message);
+    return [];
+  }
+}
 export const getusers = async (
   offsetItems?: number,
   search?: string | null,
