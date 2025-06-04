@@ -89,14 +89,7 @@ export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pa
           </TabsList>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search users..."
-                className="pl-8 w-[250px]"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+             
             </div>
             <Button onClick={() => setInviteDialogOpen(true)} variant="outline">
               <UserPlus className="mr-2 h-4 w-4" />
