@@ -17,6 +17,10 @@ import { UserType } from "@/lib/db/schema"
 import { DataTable } from "../user/datatableUser"
 import { UsersColumns } from "../user/columnsUser"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { useToast } from "@/hooks/use-toast";
+import { ActivateUser, AddUserAction, deleteUser } from "@/lib/user";
+import { useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 interface UserManagementProps {
 users : UserType[],
  pageNumber: number;
@@ -31,6 +35,88 @@ export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pa
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+   let [isPending, startTransition] = React.useTransition();
+    const { toast } = useToast();
+
+  
+    React.useEffect(() => {
+      if (isPending) return;
+  
+     
+    }, [isPending]);
+    const [dialog, setDialog] = useState({
+  open: false,
+  userId: null,
+  action: "",
+});
+
+const handleConfirm = () => {
+  if (dialog.action === "activate") ActivateUserAction(dialog.userId, false);
+  if (dialog.action === "deactivate") ActivateUserAction(dialog.userId, true);
+  if (dialog.action === "delete") deleteUserAction(dialog.userId); // Assuming delete also disables
+  setDialog({ open: false, userId: null, action: "" });
+};
+ const deleteUserAction = async (userId: number) => {
+
+        // Simulate API call to delete user
+        console.log(`Deleting user with ID: ${userId}`);
+        
+            startTransition(async () => {
+              try{
+                await deleteUser(userId)
+                .then(() => {
+                  console.log("User deleted successfully");
+                  toast({
+                    title: "Success",
+                    description: "User deleted successfully.",
+                    variant: "default",
+                  });
+                })
+              
+              
+            
+          } catch (error) {
+            console.error("Error deleting user:", error);
+            toast({
+              title: "Error",
+              description: "Failed to delete user.",
+              variant: "destructive",
+            });
+          }
+        }
+      )
+  }
+    const ActivateUserAction = async (userId: number,isActivate:boolean) => {
+        // Simulate API call to activate user
+        console.log(`Activating user with ID: ${userId}, isActivate: ${isActivate}`);
+        
+            startTransition(async () => {
+              try{
+                await ActivateUser(isActivate,userId)
+                .then(() => {
+                  console.log("User activated successfully");
+                  toast({
+                    title: "Success",
+                    description: "User activated successfully.",
+                    variant: "default",
+                  });
+                })
+              
+              
+            
+          } catch (error) {
+            console.error("Error activating user:", error);
+            toast({
+              title: "Error",
+              description: "Failed to activate user.",
+              variant: "destructive",
+            });
+          }
+
+
+      
+    })
+  }
   const [allColumns, setAllColumns] = React.useState<ColumnDef<any>[]>([]);
    React.useEffect(() => {
     setAllColumns([
@@ -54,24 +140,33 @@ export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pa
                           Edit User
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          disabled={row.isDisabled === false}
-                          onClick={() => console.log("Activate user", row.id)}
-                        >
-                          Activate
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          disabled={row.isDisabled === true}
-                          onClick={() => console.log("Deactivate user", row.id)}
-                        >
-                          Deactivate
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => console.log("Delete user", row.id)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
+                     <DropdownMenuItem
+  disabled={row.original.isDisabled === false}
+  onClick={() =>
+    setDialog({ open: true, userId: row.original.id, action: "activate" })
+  }
+>
+  Activate
+</DropdownMenuItem>
+
+<DropdownMenuItem
+  disabled={row.original.isDisabled === true}
+  onClick={() =>
+    setDialog({ open: true, userId: row.original.id, action: "deactivate" })
+  }
+>
+  Deactivate
+</DropdownMenuItem>
+
+<DropdownMenuItem
+  className="text-destructive focus:text-destructive"
+  onClick={() =>
+    setDialog({ open: true, userId: row.original.id, action: "delete" })
+  }
+>
+  Delete
+</DropdownMenuItem>
+
                       </DropdownMenuContent>
                     </DropdownMenu>
           );
@@ -81,6 +176,27 @@ export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pa
   }, [UsersColumns]);
   return (
     <div className="space-y-6">
+      <Dialog open={dialog.open} onOpenChange={(open) => setDialog({ ...dialog, open })}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>
+        Confirm {dialog.action.charAt(0).toUpperCase() + dialog.action.slice(1)}
+      </DialogTitle>
+      <DialogDescription>
+        Are you sure you want to {dialog.action} this user?
+      </DialogDescription>
+    </DialogHeader>
+    <DialogFooter>
+      <Button variant="ghost" onClick={() => setDialog({ ...dialog, open: false })}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={handleConfirm}>
+        Confirm
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
       <Tabs defaultValue="users">
         <div className="flex items-center justify-between">
           <TabsList>

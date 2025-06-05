@@ -1,9 +1,12 @@
 "use server"
-import { asc, desc, eq, InferModel, InferSelectModel, sql } from "drizzle-orm";
+import { and, asc, desc, eq, InferModel, InferSelectModel, isNull, sql } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { revalidatePath } from "next/cache";
+import { generatePasswordResetToken } from "./reset";
+import { sendInvationResetEmail } from "./mail";
 export const TotalUsers = async (search?: string | null) => {
   try {
     const searchWord = `%${search}%`;
@@ -50,40 +53,20 @@ export const getusers = async (
 
       ...(search
         ? {
-            where: sql`
-                        lower
-                        (${users.email} ::
-                            text)
-                        LIKE lower(
-                        ${searchWord}
-                        )
-                        or
-                        lower
-                        (
-                        ${users.name}
-                        ::
-                        text
-                        )
-                        LIKE
-                        lower
-                        (
-                        ${searchWord}
-                        )
-
-                        or
-                        lower
-                        (
-                        ${users.organization}
-                        )
-                        LIKE
-                        lower
-                        (
-                        ${searchWord}
-                        )
-
-                    `,
+           where: and(
+    isNull(users.deleted_at), // only rows where deleted IS NULL
+    search
+      ? sql`
+          (
+            lower(${users.email}::text) LIKE lower(${searchWord})
+            OR lower(${users.name}::text) LIKE lower(${searchWord})
+            OR lower(${users.organization}::text) LIKE lower(${searchWord})
+          )
+        `
+      : undefined
+  ),
           }
-        : { where: null }),
+        : { where: isNull(users.deleted_at) }),
     });
   } catch (e: any) {
     console.log("getDictGtin error", e?.message);
@@ -160,6 +143,32 @@ export const isTwoFactorEnabled = async (userId: number)  => {
         .set({ isTwoFactorEnabled: isActivate })
         .where(eq(twoFactorAuth.userId, userId));
       return  {success: "2FA enabled successfully."};
+    } catch (e: any) {
+      console.log("Enable2fa error", e?.message);
+      return [];
+    }
+  };
+    export const  ActivateUser = async (isActivate : boolean,userId : number) => {
+    try {
+        await db
+        .update(users)
+        .set({ isDisabled: isActivate })
+        .where(eq(users.id, userId));
+        revalidatePath("/rafed-admin/users");
+      return  {success: "ActivateUser successfully."};
+    } catch (e: any) {
+      console.log("Enable2fa error", e?.message);
+      return [];
+    }
+  };
+      export const  deleteUser = async (userId : number) => {
+    try {
+        await db
+        .update(users)
+        .set({ deleted_at: new Date() })
+        .where(eq(users.id, userId));
+        revalidatePath("/rafed-admin/users");
+      return  {success: "ActivateUser successfully."};
     } catch (e: any) {
       console.log("Enable2fa error", e?.message);
       return [];
@@ -281,3 +290,126 @@ export const updateLock = async (newStatus: boolean, userId: number) => {
     return [];
   }
 };
+export  type UserAdd = {
+    username: string;
+    password: string;
+    email: string;
+    role: "Admin" | "User";
+  };
+export async function AddUserAction(
+  Value: UserAdd,
+) {
+  //   const schema = z.object({
+  //     id: z.string().min(1),
+  //   })
+  //   const data = schema.parse({
+  //     id: formData.get('id'),
+
+  //   })
+  // const  idOutput = parseInt(data.id)
+  const DictionaryAdd =  {
+        title: "Add a user",
+        emailLabel: "Email",
+        usernameLabel: "Username",
+        rolesLabel: "Role",
+        establishmentsLabel: "Establishments",
+        saveButton: "Save",
+        allEstablishmentsLabel: "All establishments",
+        message: {
+          duplicateEmailError: "The entered email address already exists. Please use another one!",
+          emailNotExistMessage: "Email does not exist!",
+          userAddedSuccess: "User added successfully."
+        }
+      }
+  try {
+ 
+
+    const { username, password, email, role } = Value;
+    const today = new Date();
+     
+    const created = new Date(today.setDate(today.getDate()));
+    // Hash the password
+    const saltRounds = 10;
+    const checkDuplicateUser = await findUniqueUser(email);
+    console.log("checkDuplicateUser", checkDuplicateUser);
+
+    if (checkDuplicateUser[0]) {
+      return {
+        error: `${DictionaryAdd.message.duplicateEmailError}`,
+      };
+    }
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const data = {
+        username,
+        password: hashedPassword,
+        email,
+        role,
+        created_at: created,
+        passwordupdatedat: created,
+      };
+      console.log("useradd", hashedPassword);
+
+  const user = await db
+    .insert(users)
+    .values({
+      name: username,
+      email,
+      password: hashedPassword,
+      role,
+      createdAt: created,
+      updatedAt: created,
+      passwordupdatedat: created,
+      isDisabled: false,
+      workDomain: "",
+      organization: "",
+      bio: "",
+      department: "",
+      last_login: null,
+      jobTitle: "",
+      resetpasswordtoken: null,
+      passwordresettokenexpiry: null,
+    })
+    .returning({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      role: users.role,
+    });
+      
+if(!user[0]?.id) {
+        return { error: "Failed to create user" };
+      }
+     await db.insert(twoFactorAuth).values({
+      userId: user[0].id,
+      isTwoFactorEnabled: false,
+      totpSecret: null,
+    })
+    }
+    const existingUser = await findUniqueUser(email);
+    if (!existingUser[0]) {
+      return { message: "Email n'existe pas ! " };
+    }
+ 
+    const passwordResetToken = await generatePasswordResetToken(
+      existingUser[0].email,
+    );
+    if (passwordResetToken[0].resetpasswordtoken) {
+      const res = await sendInvationResetEmail(
+        existingUser[0].email,
+        passwordResetToken[0].resetpasswordtoken,
+        "en",
+      );
+      console.log("res", res);
+    }
+
+ 
+
+    revalidatePath("/rafed-admin/users");
+    return {
+      message: `${DictionaryAdd.message.userAddedSuccess}`,
+    };
+  } catch (e) {
+    return { error: `Error adding user: ${e}` };
+  }
+}

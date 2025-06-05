@@ -24,11 +24,13 @@ export default async function  RootLayout({
   children: React.ReactNode
 }) {
   const userinfo = await getCurrentUser();
+  const authSession: any = await getServerAuthSession(); //(1)
 
 
   return (
     <div>
-            <LayoutProvider userinfo={userinfo}>{children}</LayoutProvider>
+            <LayoutProvider                     error={authSession?.error ?? ""}
+ userinfo={userinfo}>{children}</LayoutProvider>
 
     </div>    
    
