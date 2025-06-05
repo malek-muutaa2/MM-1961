@@ -222,10 +222,7 @@ const handleConfirm = () => {
             <div className="relative">
              
             </div>
-            <Button onClick={() => setInviteDialogOpen(true)} variant="outline">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Invite User
-            </Button>
+         
             <Button onClick={() => setAddUserDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add User
