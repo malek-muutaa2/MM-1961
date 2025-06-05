@@ -36,6 +36,8 @@ export const users = pgTable("users", {
   passwordresettokenexpiry: timestamp("passwordresettokenexpiry"),
   passwordupdatedat: timestamp("passwordupdatedat"),
   isDisabled: boolean("isDisabled"),
+  last_login : timestamp("last_login")
+
 })
 export const audit_log = pgTable("audit_log", {
   id: serial("id").notNull(),
