@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ActivateUser, AddUserAction, deleteUser } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { EditUserDialog } from "./edit-user-dialog";
 interface UserManagementProps {
 users : UserType[],
  pageNumber: number;
@@ -49,6 +50,7 @@ export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pa
   userId: null,
   action: "",
 });
+  const [editingUser, setEditingUser] = useState<UserType | null>(null)
 
 const handleConfirm = () => {
   if (dialog.action === "activate") ActivateUserAction(dialog.userId, false);
@@ -125,6 +127,8 @@ const handleConfirm = () => {
         id: "actions",
         header: "Actions",
         cell: ({ row }: any) => {
+          console.log("row", row.original);
+          
           return (
          <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -135,7 +139,7 @@ const handleConfirm = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => console.log("Edit user", row.id)}>
+                        <DropdownMenuItem onClick={() => setEditingUser(row.original)}>
                           <UserCog className="mr-2 h-4 w-4" />
                           Edit User
                         </DropdownMenuItem>
@@ -174,8 +178,19 @@ const handleConfirm = () => {
       },
     ]);
   }, [UsersColumns]);
+  console.log("editingUser", editingUser);
+  
   return (
     <div className="space-y-6">
+        {editingUser && (
+              <EditUserDialog
+                user={editingUser}
+                open={!!editingUser}
+                onOpenChange={(open) => {
+                  if (!open) setEditingUser(null)
+                }}
+              />
+            )}
       <Dialog open={dialog.open} onOpenChange={(open) => setDialog({ ...dialog, open })}>
   <DialogContent>
     <DialogHeader>
@@ -238,5 +253,6 @@ const handleConfirm = () => {
       <InviteUserDialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen} />
       <AddUserDialog open={addUserDialogOpen} onOpenChange={setAddUserDialogOpen} />
     </div>
+    
   )
 }

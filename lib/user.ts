@@ -290,6 +290,31 @@ export const updateLock = async (newStatus: boolean, userId: number) => {
     return [];
   }
 };
+export const updateUser = async (
+  id: number,
+  username: string,
+  role: "Admin" | "User",
+  organization: string | null,
+) => {
+  try {
+    const today = new Date();
+    const updated = new Date(today.setDate(today.getDate()));
+     await db
+      .update(users)
+      .set({
+        name: username,
+        organization: organization ? organization : "",
+        role,
+        updatedAt: updated,
+      })
+      .where(eq(users.id, id));
+    revalidatePath("/rafed-admin/users");
+      return { message: "User updated successfully." };
+  } catch (e: any) {
+    console.log("updateUser error", e?.message);
+    return { error: `Error updating user: ${e}` };
+  }
+}
 export  type UserAdd = {
     username: string;
     password: string;
