@@ -441,3 +441,54 @@ if(!user[0]?.id) {
     return { error: `Error adding user: ${e}` };
   }
 }
+
+export const updateUserProfile = async (
+    userId: number,
+    profileData: {
+        name?: string
+        phone?: string
+        jobTitle?: string
+        department?: string
+        workDomain?: string
+        organization?: string
+        bio?: string
+        image?: string | null // Accepter null explicitement
+    },
+) => {
+    try {
+        const updateData: any = {}
+
+        // Ne mettre à jour que les champs fournis
+        if (profileData.name !== undefined) updateData.name = profileData.name
+        if (profileData.jobTitle !== undefined) updateData.jobTitle = profileData.jobTitle
+        if (profileData.department !== undefined) updateData.department = profileData.department
+        if (profileData.workDomain !== undefined) updateData.workDomain = profileData.workDomain
+        if (profileData.organization !== undefined) updateData.organization = profileData.organization
+        if (profileData.bio !== undefined) updateData.bio = profileData.bio
+        if (profileData.image !== undefined) updateData.image = profileData.image // Préserver null
+
+        // Ajouter la date de mise à jour
+        updateData.updatedAt = new Date()
+
+        console.log("Données à mettre à jour:", updateData)
+
+        const result = await db.update(users).set(updateData).where(eq(users.id, userId)).returning({
+            id: users.id,
+            name: users.name,
+            email: users.email,
+            jobTitle: users.jobTitle,
+            department: users.department,
+            workDomain: users.workDomain,
+            organization: users.organization,
+            bio: users.bio,
+            image: users.image,
+            updatedAt: users.updatedAt,
+        })
+
+        console.log("Résultat de la mise à jour du profil:", result)
+        return result[0] || null
+    } catch (e: any) {
+        console.log("updateUserProfile error", e?.message)
+        return null
+    }
+}
