@@ -7,9 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "db:push": "npx drizzle-kit push",
+    "db:pull": "npx drizzle-kit introspect",
+    "db:migrate": "npx drizzle-kit migrate",
+    "db:generate": "npx drizzle-kit generate",
+    "test:watch": "jest --watch",
+    "prepare": "husky",
+    "release": "standard-version",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:vitest" : "vitest"
+    "test:vitest": "vitest"
   },
   "dependencies": {
     "@auth/core": "latest",
@@ -56,6 +63,7 @@
     "@types/better-sqlite3": "latest",
     "@types/pg": "latest",
     "@types/sql.js": "latest",
+    "@vercel/blob": "^1.1.1",
     "@vercel/postgres": "latest",
     "@xata.io/client": "latest",
     "autoprefixer": "^10.4.20",

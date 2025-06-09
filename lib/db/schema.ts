@@ -1,5 +1,7 @@
-import { pgTable, serial, varchar, timestamp, text, pgEnum, boolean, integer, json, index,  numeric,
-    date, } from "drizzle-orm/pg-core"
+import {
+    pgTable, serial, varchar, timestamp, text, pgEnum, boolean, integer, json, index, numeric,
+    date, jsonb, decimal,
+} from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
 // Users table
@@ -181,4 +183,131 @@ export const classificationsRelations = relations(classifications, ({ one }) => 
     fields: [classifications.level],
     references: [classificationLevels.id],
   }),
+}))
+
+
+
+
+
+// Upload Configurations Table
+export const uploadConfigurations = pgTable("upload_configurations", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
+    organizationType: varchar("organization_type", { length: 100 }).notNull(),
+    organizationId: integer("organization_id").references(() => organizationTypes.id),
+    sourceType: varchar("source_type", { length: 100 }).notNull(),
+    fileType: varchar("file_type", { length: 100 }).notNull(),
+    delimiter: varchar("delimiter", { length: 10 }).notNull(),
+    maxFileSize: integer("max_file_size").notNull(),
+    maxRows: integer("max_rows"),
+    storageConfigId: integer("storage_config_id").references(() => uploadStorageConfigurations.id),
+    active: boolean("active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
+// Upload Configuration Columns Table
+export const uploadConfigurationColumns = pgTable("upload_configuration_columns", {
+    id: serial("id").primaryKey(),
+    configId: integer("config_id").references(() => uploadConfigurations.id),
+    name: varchar("name", { length: 255 }).notNull(),
+    displayName: varchar("display_name", { length: 255 }).notNull(),
+    dataType: varchar("data_type", { length: 50 }).notNull(),
+    required: boolean("required").default(false).notNull(),
+    pattern: varchar("pattern", { length: 500 }),
+    minLength: integer("min_length"),
+    maxLength: integer("max_length"),
+    minValue: decimal("min_value"),
+    maxValue: decimal("max_value"),
+    customValidator: text("custom_validator"),
+    position: integer("position").notNull(),
+})
+
+// Upload Storage Configurations Table
+export const uploadStorageConfigurations = pgTable("upload_storage_configurations", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
+    storageType: varchar("storage_type", { length: 50 }).notNull(),
+    bucketName: varchar("bucket_name", { length: 255 }),
+    basePath: varchar("base_path", { length: 500 }).notNull(),
+    pathTemplate: varchar("path_template", { length: 500 }).notNull(),
+    region: varchar("region", { length: 100 }),
+    awsAccessKeyId: varchar("aws_access_key_id", { length: 255 }),
+    awsSecretAccessKey: varchar("aws_secret_access_key", { length: 255 }),
+    accessType: varchar("access_type", { length: 20 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
+// Upload Operations Table
+export const uploadOperations = pgTable("upload_operations", {
+    id: serial("id").primaryKey(),
+    configId: integer("config_id").references(() => uploadConfigurations.id),
+    userId: integer("user_id").references(() => users.id),
+    fileName: varchar("file_name", { length: 255 }).notNull(),
+    filePath: varchar("file_path", { length: 1000 }).notNull(),
+    fileSize: integer("file_size").notNull(),
+    rowCount: integer("row_count").notNull(),
+    status: varchar("status", { length: 50 }).notNull(),
+    errorCount: integer("error_count").default(0).notNull(),
+    validationErrors: jsonb("validation_errors"),
+    startedAt: timestamp("started_at").defaultNow().notNull(),
+    completedAt: timestamp("completed_at"),
+})
+
+// Upload Operation Errors Table
+export const uploadOperationErrors = pgTable("upload_operation_errors", {
+    id: serial("id").primaryKey(),
+    operationId: integer("operation_id").references(() => uploadOperations.id),
+    rowNumber: integer("row_number"),
+    columnName: varchar("column_name", { length: 255 }),
+    errorCode: varchar("error_code", { length: 100 }).notNull(),
+    errorMessage: text("error_message").notNull(),
+    rawValue: text("raw_value"),
+})
+
+// Organization Types Table (for reference data)
+export const organizationTypes = pgTable("organization_types", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    sourceTypes: jsonb("source_types").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
+// Relations
+export const uploadConfigurationsRelations = relations(uploadConfigurations, ({ many, one }) => ({
+    columns: many(uploadConfigurationColumns),
+    storageConfig: one(uploadStorageConfigurations, {
+        fields: [uploadConfigurations.storageConfigId],
+        references: [uploadStorageConfigurations.id],
+    }),
+    operations: many(uploadOperations),
+}))
+
+export const uploadConfigurationColumnsRelations = relations(uploadConfigurationColumns, ({ one }) => ({
+    config: one(uploadConfigurations, {
+        fields: [uploadConfigurationColumns.configId],
+        references: [uploadConfigurations.id],
+    }),
+}))
+
+export const uploadStorageConfigurationsRelations = relations(uploadStorageConfigurations, ({ many }) => ({
+    configurations: many(uploadConfigurations),
+}))
+
+export const uploadOperationsRelations = relations(uploadOperations, ({ one, many }) => ({
+    config: one(uploadConfigurations, {
+        fields: [uploadOperations.configId],
+        references: [uploadConfigurations.id],
+    }),
+    errors: many(uploadOperationErrors),
+}))
+
+export const uploadOperationErrorsRelations = relations(uploadOperationErrors, ({ one }) => ({
+    operation: one(uploadOperations, {
+        fields: [uploadOperationErrors.operationId],
+        references: [uploadOperations.id],
+    }),
 }))
