@@ -66,7 +66,7 @@ export default function FileManager() {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    }).format(date)
+    }).format(new Date(date))
   }
 
   const handleDownload = (file: UploadedFile) => {

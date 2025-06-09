@@ -68,7 +68,7 @@ export default function FileDetailsModal({ isOpen, onClose, file }: FileDetailsM
       minute: "2-digit",
       second: "2-digit",
       timeZoneName: "short",
-    }).format(date)
+    }).format(new Date(date))
   }
 
   const copyToClipboard = (text: string) => {

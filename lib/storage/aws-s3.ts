@@ -46,14 +46,14 @@ export class S3StorageService {
           pathname: filePath,
           size: file.size,
         }
-      } catch (error) {
+      } catch (error: any) {
         clearTimeout(timeoutId)
         if (error.name === "AbortError") {
           throw new Error("S3 upload timeout - please try again")
         }
         throw error
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("S3 upload error:", error)
       throw new Error(`S3 upload failed: ${error.message}`)
     }
@@ -79,7 +79,7 @@ export class S3StorageService {
       if (!response.ok) {
         throw new Error(`S3 delete failed: ${response.statusText}`)
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === "AbortError") {
         throw new Error("S3 delete timeout - please try again")
       }
@@ -104,7 +104,7 @@ export class S3StorageService {
 
       const result = await response.json()
       return result.files || []
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === "AbortError") {
         throw new Error("S3 list timeout - please try again")
       }

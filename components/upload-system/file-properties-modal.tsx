@@ -82,7 +82,7 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: FilePrope
       minute: "2-digit",
       second: "2-digit",
       timeZoneName: "short",
-    }).format(date)
+    }).format(new Date(date))
   }
 
   const getStorageIcon = (storageType: string) => {

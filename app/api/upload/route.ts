@@ -113,8 +113,10 @@ export async function POST(request: NextRequest) {
       base_path: config.storageConfig?.basePath ?? "uploads",
       path_template: config.storageConfig?.pathTemplate ?? "{base_path}/{uuid}.{ext}",
       access_type: config.storageConfig?.accessType as any,
-      bucket_name: config.storageConfig?.bucketName,
-      region: config.storageConfig?.region,
+      aws_access_key_id: config.storageConfig?.awsAccessKeyId ?? "",
+      aws_secret_access_key: config.storageConfig?.awsSecretAccessKey ?? "",
+      bucket_name: config.storageConfig?.bucketName ?? "",
+      region: config.storageConfig?.region ?? "us-east-1",
     })
 
     const uploadResult = await storageService.uploadFile(file, {

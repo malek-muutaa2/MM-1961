@@ -227,7 +227,7 @@ export function PreviousUploads({ searchQuery, yearFilter, monthFilter, statusFi
       year: "numeric",
       month: "short",
       day: "numeric",
-    }).format(date)
+    }).format(new Date(date))
   }
 
   // Render status badge with appropriate color and icon

@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         // In a real implementation, you would fetch from all storage providers
         const mockFiles = [
             {
-                id: "mock-1",
+                id: 1,
                 fileName: "sample-data.csv",
                 filePath: "uploads/2024-01/sample-data.csv",
                 fileSize: 1024 * 50, // 50KB
@@ -46,13 +46,13 @@ export async function GET(request: NextRequest) {
                 errorCount: 0,
                 startedAt: new Date(Date.now() - 86400000), // 1 day ago
                 completedAt: new Date(Date.now() - 86400000 + 5000),
-                configId: "550e8400-e29b-41d4-a716-446655440003",
+                configId: 2,
                 configName: "Patient Data Import",
                 storageType: "vercel_blob",
-                storageConfigId: "550e8400-e29b-41d4-a716-446655440001",
+                storageConfigId: 2,
             },
             {
-                id: "mock-2",
+                id: 2,
                 fileName: "transactions.xlsx",
                 filePath: "uploads/2024-01/transactions.xlsx",
                 fileSize: 1024 * 200, // 200KB
@@ -60,10 +60,10 @@ export async function GET(request: NextRequest) {
                 errorCount: 5,
                 startedAt: new Date(Date.now() - 43200000), // 12 hours ago
                 completedAt: new Date(Date.now() - 43200000 + 8000),
-                configId: "550e8400-e29b-41d4-a716-446655440004",
+                configId: 3,
                 configName: "Transaction Data Upload",
                 storageType: "s3",
-                storageConfigId: "550e8400-e29b-41d4-a716-446655440002",
+                storageConfigId: 1,
             },
         ]
 
@@ -73,10 +73,10 @@ export async function GET(request: NextRequest) {
         // Apply filters
         let filteredFiles = allFiles
         if (configId && configId !== "all") {
-            filteredFiles = filteredFiles.filter((file) => file.configId === configId)
+            filteredFiles = filteredFiles.filter((file: any) => file.configId === configId)
         }
         if (storageType && storageType !== "all") {
-            filteredFiles = filteredFiles.filter((file) => file.storageType === storageType)
+            filteredFiles = filteredFiles.filter((file: any) => file.storageType === storageType)
         }
 
         // Format the response

@@ -75,13 +75,33 @@ export default function EnhancedFileManager() {
   }
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date)
+    if(!date){
+      new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })?.format(new Date())
+    }
+    const parsedDate = typeof date === "string" ? new Date(date) : date
+    console.log("date :: ", parsedDate)
+    if (isNaN(parsedDate.getTime())) { // Check if the date is invalid
+      console.error("Invalid date!");
+      return null
+    } else {
+      const formattedDate =  new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })?.format(parsedDate);
+      console.log(formattedDate);
+      return formattedDate
+    }
+
+
   }
 
   const getStorageIcon = (storageType: string) => {
