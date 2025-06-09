@@ -13,6 +13,7 @@ export interface UploadConfiguration {
   active: boolean
   created_at: Date
   updated_at: Date
+  deleted_at?: Date
 }
 
 export interface UploadConfigurationColumn {
@@ -35,7 +36,7 @@ export interface UploadStorageConfiguration {
   id: string
   name: string
   description: string
-  storage_type: "vercel_blob" | "s3" | "local" | "azure_blob"
+  storage_type: "vercel_blob" | "s3" | "local" | "azure_blob" | "gcs"
   bucket_name?: string
   base_path: string
   path_template: string
@@ -45,6 +46,13 @@ export interface UploadStorageConfiguration {
   access_type?: "public" | "private"
   created_at: Date
   updated_at: Date
+  deleted_at?: Date
+  gcs_project_id?: string
+  gcs_key_filename?: string
+  azure_account_name?: string
+  azure_account_key?: string
+  container_name?: string
+  azure_sas_token?: string
 }
 
 export interface UploadOperation {

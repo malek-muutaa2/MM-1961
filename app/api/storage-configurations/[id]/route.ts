@@ -52,7 +52,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    await db.delete(uploadStorageConfigurations).where(eq(uploadStorageConfigurations.id, params.id))
+
+    // await db.delete(uploadStorageConfigurations).where(eq(uploadStorageConfigurations.id, params.id))
+      // todo : update deletedAt instead of deleting
+      await db.update(
+        uploadStorageConfigurations
+      ).set({
+        deletedAt: new Date(),
+      }).where(eq(uploadStorageConfigurations.id, params.id));
+
 
     return NextResponse.json({ success: true })
   } catch (error) {

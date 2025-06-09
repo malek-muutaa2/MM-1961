@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UploadInterface from "@/components/upload-system/upload-interface"
 import ConfigurationManager from "@/components/upload-system/configuration-manager"
-import FileManager from "@/components/upload-system/file-manager"
+import EnhancedFileManager from "@/components/upload-system/enhanced-file-manager"
 import type { UploadConfiguration, UploadStorageConfiguration, OrganizationType } from "@/types/upload"
 
 export default function HomePage() {
@@ -138,51 +138,48 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">File Upload System</h1>
-          <p className="text-muted-foreground">Generic file upload with configurable business rules and validation</p>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">File Upload System</h1>
+            <p className="text-muted-foreground">Generic file upload with configurable business rules and validation</p>
+          </div>
+
+          <Tabs defaultValue="upload" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="upload">Upload Files</TabsTrigger>
+              <TabsTrigger value="files">Manage Files</TabsTrigger>
+              <TabsTrigger value="configure">Configurations</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="upload">
+              <UploadInterface configurations={configurations.filter((c) => c.active)} />
+            </TabsContent>
+
+            <TabsContent value="files">
+              <EnhancedFileManager />
+            </TabsContent>
+
+            <TabsContent value="configure">
+              <ConfigurationManager
+                  configurations={configurations}
+                  storageConfigs={storageConfigs}
+                  organizationTypes={organizationTypes}
+                  onSaveConfig={handleSaveConfiguration}
+                  onDeleteConfig={handleDeleteConfiguration}
+                  onSaveStorage={handleSaveStorageConfig}
+                  onDeleteStorage={handleDeleteStorageConfig}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
-
-        <Tabs defaultValue="upload" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="upload">Upload Files</TabsTrigger>
-            <TabsTrigger value="files">Manage Files</TabsTrigger>
-            <TabsTrigger value="configure">Configurations</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="upload">
-            {configurations?.length > 0 ? (
-                <UploadInterface configurations={configurations?.filter((c) => c.active)} />
-            ): ""
-            }
-          </TabsContent>
-
-          <TabsContent value="files">
-            <FileManager />
-          </TabsContent>
-
-          <TabsContent value="configure">
-            <ConfigurationManager
-              configurations={configurations}
-              storageConfigs={storageConfigs}
-              organizationTypes={organizationTypes}
-              onSaveConfig={handleSaveConfiguration}
-              onDeleteConfig={handleDeleteConfiguration}
-              onSaveStorage={handleSaveStorageConfig}
-              onDeleteStorage={handleDeleteStorageConfig}
-            />
-          </TabsContent>
-        </Tabs>
       </div>
-    </div>
   )
 }

@@ -132,10 +132,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   try {
     // Delete columns first (cascade should handle this, but being explicit)
-    await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, params.id))
+    // todo : don't delete columns if they are used in operations
+    // await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, params.id))
 
     // Delete the configuration
-    await db.delete(uploadConfigurations).where(eq(uploadConfigurations.id, params.id))
+    // await db.delete(uploadConfigurations).where(eq(uploadConfigurations.id, params.id))
+    // update deleted_At to mark as deleted
+    await db
+      .update(uploadConfigurations)
+      .set({ deletedAt: new Date() })
+      .where(eq(uploadConfigurations.id, params.id))
 
     return NextResponse.json({ success: true })
   } catch (error) {

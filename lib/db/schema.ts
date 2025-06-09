@@ -205,6 +205,7 @@ export const uploadConfigurations = pgTable("upload_configurations", {
     active: boolean("active").default(true).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
 })
 
 // Upload Configuration Columns Table
@@ -237,9 +238,24 @@ export const uploadStorageConfigurations = pgTable("upload_storage_configuration
     awsAccessKeyId: varchar("aws_access_key_id", { length: 255 }),
     awsSecretAccessKey: varchar("aws_secret_access_key", { length: 255 }),
     accessType: varchar("access_type", { length: 20 }),
+    containerName: varchar("container_name", { length: 255 }),
+    gcsProjectId: varchar("gcs_project_id", { length: 255 }),
+    gcsKeyFilename: varchar("gcs_key_filename", { length: 255 }),
+    gcsCredentials: jsonb("gcs_credentials"),
+    azureAccountName: varchar("azure_account_name", { length: 255 }),
+    azureAccountKey: varchar("azure_account_key", { length: 255 }),
+    azureSasToken: varchar("azure_sas_token", { length: 255 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+    deletedAt: timestamp("deleted_at"),
+},
+    // index the storage_type column for faster lookups
+    (table) => {
+        return {
+            storageTypeIdx: index("idx_upload_storage_configurations_storage_type").on(table.storageType),
+        }
+    },
+    )
 
 // Upload Operations Table
 export const uploadOperations = pgTable("upload_operations", {
@@ -255,7 +271,15 @@ export const uploadOperations = pgTable("upload_operations", {
     validationErrors: jsonb("validation_errors"),
     startedAt: timestamp("started_at").defaultNow().notNull(),
     completedAt: timestamp("completed_at"),
-})
+    deletedAt: timestamp("deleted_at"),
+},
+    // Add index on file_path for upload operations file path for faster lookups
+    (table) => {
+        return {
+            filePathIdx: index("idx_upload_operations_file_path").on(table.filePath),
+        }
+    },
+)
 
 // Upload Operation Errors Table
 export const uploadOperationErrors = pgTable("upload_operation_errors", {
@@ -274,6 +298,8 @@ export const organizationTypes = pgTable("organization_types", {
     name: varchar("name", { length: 255 }).notNull(),
     sourceTypes: jsonb("source_types").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
 })
 
 // Relations

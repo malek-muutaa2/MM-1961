@@ -117,7 +117,7 @@ export default function UploadInterface({ configurations }: UploadInterfaceProps
           fileInputRef.current.value = ""
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       setUploadResult({
         status: "failed",
         error: {
