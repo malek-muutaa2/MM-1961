@@ -251,8 +251,8 @@ export default function EnhancedFileManager() {
               <SelectItem value="all">All Storage Types</SelectItem>
               <SelectItem value="vercel_blob">Vercel Blob</SelectItem>
               <SelectItem value="s3">AWS S3</SelectItem>
-              <SelectItem value="gcs">Google Cloud</SelectItem>
-              <SelectItem value="azure_blob">Azure Blob</SelectItem>
+              <SelectItem value="gcs" disabled>Google Cloud</SelectItem>
+              <SelectItem value="azure_blob" disabled>Azure Blob</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -265,7 +265,7 @@ export default function EnhancedFileManager() {
           </div>
         ) : (
           <Tabs defaultValue={Object.keys(groupedFiles)[0]} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-auto">
+            <TabsList className="grid w-full grid-rows-auto">
               {Object.keys(groupedFiles).map((storageType) => (
                 <TabsTrigger key={storageType} value={storageType} className="flex items-center gap-2">
                   {getStorageIcon(storageType)}

@@ -115,9 +115,9 @@ export default function StorageConfigurationManager({
                                             <SelectContent>
                                                 <SelectItem value="vercel_blob">Vercel Blob</SelectItem>
                                                 <SelectItem value="s3">Amazon S3</SelectItem>
-                                                <SelectItem value="gcs">Google Cloud Storage</SelectItem>
-                                                <SelectItem value="azure_blob">Azure Blob Storage</SelectItem>
-                                                <SelectItem value="local">Local Storage</SelectItem>
+                                                <SelectItem value="gcs" disabled={true}>Google Cloud Storage</SelectItem>
+                                                <SelectItem value="azure_blob" disabled={true}>Azure Blob Storage</SelectItem>
+                                                <SelectItem value="local" disabled={true}>Local Storage</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
