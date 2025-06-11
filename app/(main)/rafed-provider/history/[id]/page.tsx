@@ -39,7 +39,6 @@ export default function ForecastDetailsPage({ params }: { params: { id: string }
         if (!response.ok) {
           throw new Error("Failed to fetch products")
         }
-
         const products = await response.json()
         setProductCount(products.length)
       } catch (error) {
