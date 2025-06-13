@@ -25,8 +25,7 @@ import type {
   UploadStorageConfiguration,
   OrganizationType,
 } from "@/types/upload"
-import StorageConfigurationManager from "./storage-configuration-manager"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import StorageConfigurationManager, {AWS_S3_REGIONS} from "./storage-configuration-manager"
 
 interface ConfigurationManagerProps {
   configurations: UploadConfiguration[]
@@ -54,6 +53,12 @@ export default function ConfigurationManager({
 
   const selectedOrgType = organizationTypes?.find((org) => org.id === editingConfig.organization_type) ?? ""
 
+  const file_types = [
+    { code: "csv", name: "CSV", disabled: false },
+    { code: "xlsx", name: "Excel (XLSX)", disabled: true },
+    { code: "json", name: "JSON", disabled: true },
+    { code: "xml", name: "XML", disabled: true },
+  ]
   const handleEdit = (config: UploadConfiguration) => {
     setEditingConfig(config)
     // Fetch columns for this configuration
@@ -94,11 +99,6 @@ export default function ConfigurationManager({
     if (confirm("Are you sure you want to delete this configuration?")) {
       onDeleteConfig(id)
     }
-  }
-
-  const handleDownloadTemplate = (config: UploadConfiguration) => {
-    // Open the template download URL in a new tab
-    window.open(`/api/configurations/${config.id}/template`, "_blank")
   }
 
   const handleConfigChange = (field: keyof UploadConfiguration, value: any) => {
@@ -185,88 +185,108 @@ export default function ConfigurationManager({
                         </div>
 
                         <div>
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={editingConfig.description || ""}
-                            onChange={(e) => handleConfigChange("description", e.target.value)}
-                            placeholder="Describe what this configuration is for..."
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="organization_type">Organization Type</Label>
-                          <Select
-                            value={editingConfig.organization_type || ""}
-                            onValueChange={(value) => handleConfigChange("organization_type", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select organization type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {organizationTypes.map((orgType) => (
-                                <SelectItem key={orgType.id} value={orgType.id}>
-                                  {orgType.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="source_type">Source Type</Label>
-                          <Select
-                            value={editingConfig.source_type || ""}
-                            onValueChange={(value) => handleConfigChange("source_type", value)}
-                            disabled={!selectedOrgType}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select source type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {selectedOrgType ? selectedOrgType?.source_types?.map((sourceType) => (
-                                <SelectItem key={sourceType} value={sourceType}>
-                                  {sourceType}
-                                </SelectItem>
-                              )): ('')}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
                           <Label htmlFor="storage_config_id">Storage Configuration</Label>
                           <Select
-                            value={editingConfig.storage_config_id || ""}
-                            onValueChange={(value) => handleConfigChange("storage_config_id", value)}
+                              value={editingConfig.storage_config_id || ""}
+                              onValueChange={(value) => handleConfigChange("storage_config_id", value)}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Select storage configuration" />
                             </SelectTrigger>
                             <SelectContent>
                               {storageConfigs.map((storage) => (
-                                <SelectItem key={storage.id} value={storage.id}>
-                                  <div className="flex flex-col">
-                                    <span>{storage.name}</span>
-                                    <span className="text-xs text-muted-foreground">
+                                  <SelectItem key={storage.id} value={storage.id}>
+                                    <div className="flex flex-col">
+                                      <span>{storage.name}</span>
+                                      <span className="text-xs text-muted-foreground">
                                       {storage.storage_type} - {storage.base_path}
                                     </span>
-                                  </div>
-                                </SelectItem>
+                                    </div>
+                                  </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
+
+                        <div>
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea
+                            id="description"
+                            rows={4}
+                            cols={3}
+                            value={editingConfig.description || ""}
+                            onChange={(e) => handleConfigChange("description", e.target.value)}
+                            placeholder="Describe what this configuration is for..."
+                          />
+                        </div>
+
+                        {/*<div>*/}
+                        {/*  <Label htmlFor="organization_type">Organization Type</Label>*/}
+                        {/*  <Select*/}
+                        {/*    value={editingConfig.organization_type || ""}*/}
+                        {/*    onValueChange={(value) => handleConfigChange("organization_type", value)}*/}
+                        {/*  >*/}
+                        {/*    <SelectTrigger>*/}
+                        {/*      <SelectValue placeholder="Select organization type" />*/}
+                        {/*    </SelectTrigger>*/}
+                        {/*    <SelectContent>*/}
+                        {/*      {organizationTypes.map((orgType) => (*/}
+                        {/*        <SelectItem key={orgType.id} value={orgType.id}>*/}
+                        {/*          {orgType.name}*/}
+                        {/*        </SelectItem>*/}
+                        {/*      ))}*/}
+                        {/*    </SelectContent>*/}
+                        {/*  </Select>*/}
+                        {/*</div>*/}
+
+                        {/*<div>*/}
+                        {/*  <Label htmlFor="source_type">Source Type</Label>*/}
+                        {/*  <Select*/}
+                        {/*    value={editingConfig.source_type || ""}*/}
+                        {/*    onValueChange={(value) => handleConfigChange("source_type", value)}*/}
+                        {/*    disabled={!selectedOrgType}*/}
+                        {/*  >*/}
+                        {/*    <SelectTrigger>*/}
+                        {/*      <SelectValue placeholder="Select source type" />*/}
+                        {/*    </SelectTrigger>*/}
+                        {/*    <SelectContent>*/}
+                        {/*      {selectedOrgType ? selectedOrgType?.source_types?.map((sourceType) => (*/}
+                        {/*        <SelectItem key={sourceType} value={sourceType}>*/}
+                        {/*          {sourceType}*/}
+                        {/*        </SelectItem>*/}
+                        {/*      )): ('')}*/}
+                        {/*    </SelectContent>*/}
+                        {/*  </Select>*/}
+                        {/*</div>*/}
+
                       </div>
 
                       <div className="space-y-4">
                         <div>
                           <Label htmlFor="file_type">Allowed File Types</Label>
-                          <Input
-                            id="file_type"
-                            value={editingConfig.file_type || ""}
-                            onChange={(e) => handleConfigChange("file_type", e.target.value)}
-                            placeholder="csv,xlsx"
-                          />
+                          <Select
+                              value={editingConfig.file_type || ""}
+                              onValueChange={(value) => handleConfigChange("file_type", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select File type"/>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {file_types
+                                  .filter((type) => !type.disabled)
+                                  .map((type) => (
+                                  <SelectItem key={type.code} value={type.code}>
+                                    {type.name}
+                                  </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {/*<Input*/}
+                          {/*  id="file_type"*/}
+                          {/*  value={editingConfig.file_type || ""}*/}
+                          {/*  onChange={(e) => handleConfigChange("file_type", e.target.value)}*/}
+                          {/*  placeholder="csv,xlsx"*/}
+                          {/*/>*/}
                         </div>
 
                         <div>
@@ -313,14 +333,14 @@ export default function ConfigurationManager({
                           />
                         </div>
 
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            id="active"
-                            checked={editingConfig.active || false}
-                            onCheckedChange={(checked) => handleConfigChange("active", checked)}
-                          />
-                          <Label htmlFor="active">Active Configuration</Label>
-                        </div>
+                        {/*<div className="flex items-center space-x-2">*/}
+                        {/*  <Switch*/}
+                        {/*    id="active"*/}
+                        {/*    checked={editingConfig.active || false}*/}
+                        {/*    onCheckedChange={(checked) => handleConfigChange("active", checked)}*/}
+                        {/*  />*/}
+                        {/*  <Label htmlFor="active">Active Configuration</Label>*/}
+                        {/*</div>*/}
                       </div>
                     </div>
                   </TabsContent>
@@ -343,7 +363,7 @@ export default function ConfigurationManager({
                               <Input
                                 value={column.name}
                                 onChange={(e) => updateColumn(index, "name", e.target.value)}
-                                placeholder="email"
+                                placeholder="name"
                               />
                             </div>
                             <div>
@@ -351,7 +371,7 @@ export default function ConfigurationManager({
                               <Input
                                 value={column.display_name}
                                 onChange={(e) => updateColumn(index, "display_name", e.target.value)}
-                                placeholder="Email Address"
+                                placeholder="Display Name"
                               />
                             </div>
                             <div>
@@ -368,7 +388,6 @@ export default function ConfigurationManager({
                                   <SelectItem value="number">Number</SelectItem>
                                   <SelectItem value="date">Date</SelectItem>
                                   <SelectItem value="boolean">Boolean</SelectItem>
-                                  <SelectItem value="email">Email</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
@@ -444,6 +463,20 @@ export default function ConfigurationManager({
                                 </div>
                               </>
                             )}
+                          {/*  data type equal to Date add input string for format */}
+                            {column.data_type === "date" && (
+                                <>
+
+                                  <div>
+                                    <Label>Date Format</Label>
+                                    <Input
+                                        value={column.pattern || ""}
+                                        onChange={(e) => updateColumn(index, "pattern", e.target.value)}
+                                        placeholder="e.g., YYYY-MM-DD"
+                                    />
+                                  </div>
+                                </>
+                            )}
                           </div>
                         </Card>
                       ))}
@@ -471,10 +504,10 @@ export default function ConfigurationManager({
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Organization</TableHead>
-                  <TableHead>Source Type</TableHead>
+                  {/*<TableHead>Organization</TableHead>*/}
+                  {/*<TableHead>Source Type</TableHead>*/}
                   <TableHead>File Types</TableHead>
-                  <TableHead>Status</TableHead>
+                  {/*<TableHead>Status</TableHead>*/}
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -487,35 +520,23 @@ export default function ConfigurationManager({
                         <p className="text-sm text-muted-foreground">{config.description}</p>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {organizationTypes.find((org) => org.id === config.organization_type)?.name ||
-                        config.organization_type}
-                    </TableCell>
-                    <TableCell>{config.source_type}</TableCell>
+                    {/*<TableCell>*/}
+                    {/*  {organizationTypes.find((org) => org.id === config.organization_type)?.name ||*/}
+                    {/*    config.organization_type}*/}
+                    {/*</TableCell>*/}
+                    {/*<TableCell>{config.source_type}</TableCell>*/}
                     <TableCell>{config.file_type}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          config.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {config.active ? "Active" : "Inactive"}
-                      </span>
-                    </TableCell>
+                    {/*<TableCell>*/}
+                    {/*  <span*/}
+                    {/*    className={`px-2 py-1 rounded-full text-xs ${*/}
+                    {/*      config.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"*/}
+                    {/*    }`}*/}
+                    {/*  >*/}
+                    {/*    {config.active ? "Active" : "Inactive"}*/}
+                    {/*  </span>*/}
+                    {/*</TableCell>*/}
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" size="sm" onClick={() => handleDownloadTemplate(config)}>
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Download template file</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
                         <Button variant="ghost" size="sm" onClick={() => handleEdit(config)}>
                           <Edit className="h-4 w-4" />
                         </Button>

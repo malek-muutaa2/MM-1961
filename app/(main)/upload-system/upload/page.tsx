@@ -153,9 +153,9 @@ export default function HomePage() {
           </div>
 
           <Tabs defaultValue="upload" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="upload">Upload Files</TabsTrigger>
-              <TabsTrigger value="files">Manage Files</TabsTrigger>
+              {/*<TabsTrigger value="files">Manage Files</TabsTrigger>*/}
               <TabsTrigger value="configure">Configurations</TabsTrigger>
             </TabsList>
 
@@ -163,9 +163,9 @@ export default function HomePage() {
               <UploadInterface configurations={configurations.filter((c) => c.active)} />
             </TabsContent>
 
-            <TabsContent value="files">
-              <EnhancedFileManager />
-            </TabsContent>
+            {/*<TabsContent value="files">*/}
+            {/*  <EnhancedFileManager />*/}
+            {/*</TabsContent>*/}
 
             <TabsContent value="configure">
               <ConfigurationManager

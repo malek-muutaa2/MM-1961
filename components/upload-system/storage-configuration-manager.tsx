@@ -18,13 +18,14 @@ import {
 } from "@/components/ui/dialog"
 import {Plus, Edit, Trash2, Database} from "lucide-react"
 import type {UploadStorageConfiguration} from "@/types/upload"
+import {AWS_S3_REGIONS} from "@/lib/storage/aws-s3";
 
 interface StorageConfigurationManagerProps {
     storageConfigs: UploadStorageConfiguration[]
     onSave: (config: Partial<UploadStorageConfiguration>) => void
     onDelete: (id: string) => void
 }
-
+// List of AWS S3 Regions
 export default function StorageConfigurationManager({
                                                         storageConfigs,
                                                         onSave,
@@ -42,7 +43,7 @@ export default function StorageConfigurationManager({
 
     const handleAdd = () => {
         setEditingConfig({
-            storage_type: "vercel_blob",
+            storage_type: "s3",
             base_path: "uploads",
             path_template: "{base_path}/{year}-{month}/{uuid}.{ext}",
             access_type: "public",
@@ -66,6 +67,8 @@ export default function StorageConfigurationManager({
     const handleConfigChange = (field: keyof UploadStorageConfiguration, value: any) => {
         setEditingConfig((prev) => ({...prev, [field]: value}))
     }
+
+
 
     return (
         <Card>
@@ -113,8 +116,8 @@ export default function StorageConfigurationManager({
                                                 <SelectValue placeholder="Select storage type"/>
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="vercel_blob">Vercel Blob</SelectItem>
                                                 <SelectItem value="s3">Amazon S3</SelectItem>
+                                                <SelectItem value="vercel_blob" disabled>Vercel Blob</SelectItem>
                                                 <SelectItem value="gcs" disabled={true}>Google Cloud Storage</SelectItem>
                                                 <SelectItem value="azure_blob" disabled={true}>Azure Blob Storage</SelectItem>
                                                 <SelectItem value="local" disabled={true}>Local Storage</SelectItem>
@@ -163,13 +166,29 @@ export default function StorageConfigurationManager({
                                         <Label htmlFor="region">
                                             Region {editingConfig.storage_type === "vercel_blob" ? "(Auto-managed)" : ""}
                                         </Label>
-                                        <Input
-                                            id="region"
-                                            value={editingConfig.region || ""}
-                                            onChange={(e) => handleConfigChange("region", e.target.value)}
-                                            placeholder={editingConfig.storage_type === "vercel_blob" ? "Global CDN" : "us-east-1"}
+                                        <Select
+                                            value={editingConfig.region || "ca-central-1"}
+                                            onValueChange={(value) => handleConfigChange("region", value)}
                                             disabled={editingConfig.storage_type === "vercel_blob"}
-                                        />
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select Region type" defaultValue="ca-central-1"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {AWS_S3_REGIONS.map((region) => (
+                                                    <SelectItem key={region.code} value={region.code}>
+                                                        {region.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {/*<Input*/}
+                                        {/*    id="region"*/}
+                                        {/*    value={editingConfig.region || ""}*/}
+                                        {/*    onChange={(e) => handleConfigChange("region", e.target.value)}*/}
+                                        {/*    placeholder={editingConfig.storage_type === "vercel_blob" ? "Global CDN" : "us-east-1"}*/}
+                                        {/*    disabled={editingConfig.storage_type === "vercel_blob"}*/}
+                                        {/*/>*/}
                                     </div>
                                 </div>
 
