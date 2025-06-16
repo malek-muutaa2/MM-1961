@@ -95,9 +95,9 @@ export function PreviousUploads({ searchQuery, yearFilter, monthFilter, statusFi
     const executionMonth = executionDate.getMonth() + 1
 
     const matchesSearch =
-      searchQuery === "" ||
-      execution.id.toString().includes(searchQuery) ||
-      formatDate(execution.dateExecution).toLowerCase().includes(searchQuery.toLowerCase())
+        searchQuery === "" ||
+        execution.id.toString().includes(searchQuery) ||
+        formatDate(execution.dateExecution).toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesYear = yearFilter === "all" || executionYear.toString() === yearFilter
 
@@ -111,67 +111,67 @@ export function PreviousUploads({ searchQuery, yearFilter, monthFilter, statusFi
 
   if (loading) {
     return (
-      <div className="flex justify-center p-8">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-      </div>
+        <div className="flex justify-center p-8">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        </div>
     )
   }
 
   if (filteredExecutions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-        <Calendar className="mb-2 h-10 w-10 text-muted-foreground" />
-        <h3 className="text-lg font-medium">Aucune exécution trouvée</h3>
-        <p className="text-sm text-muted-foreground">Essayez d'ajuster vos critères de recherche ou de filtre</p>
-      </div>
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+          <Calendar className="mb-2 h-10 w-10 text-muted-foreground" />
+          <h3 className="text-lg font-medium">No executions found</h3>
+          <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria</p>
+        </div>
     )
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID Exécution</TableHead>
-            <TableHead>Période de prévision</TableHead>
-            <TableHead>Nom du fichier</TableHead>
-            <TableHead>Date d'exécution</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead>Anomalies</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredExecutions.map((execution) => (
-            <TableRow key={execution.id}>
-              <TableCell className="font-medium">#{execution.id}</TableCell>
-              <TableCell>{formatPeriod(execution.dateExecution)}</TableCell>
-              <TableCell>{generateFileName(execution.dateExecution)}</TableCell>
-              <TableCell>{formatDate(execution.dateExecution)}</TableCell>
-              <TableCell>
-                <Badge className="flex items-center gap-1 bg-green-500 hover:bg-green-600">
-                  <CheckCircle className="h-3 w-3" />
-                  Soumis
-                </Badge>
-              </TableCell>
-              <TableCell>—</TableCell>
-              <TableCell className="text-right">
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="gap-1 border-primary text-primary hover:bg-primary/10"
-                >
-                  <Link href={`/rafed-provider/history/${execution.id}`}>
-                    <span>Voir les détails</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
-              </TableCell>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Execution ID</TableHead>
+              <TableHead>Forecast Period</TableHead>
+              <TableHead>File Name</TableHead>
+              <TableHead>Execution Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Anomalies</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {filteredExecutions.map((execution) => (
+                <TableRow key={execution.id}>
+                  <TableCell className="font-medium">#{execution.id}</TableCell>
+                  <TableCell>{formatPeriod(execution.dateExecution)}</TableCell>
+                  <TableCell>{generateFileName(execution.dateExecution)}</TableCell>
+                  <TableCell>{formatDate(execution.dateExecution)}</TableCell>
+                  <TableCell>
+                    <Badge className="flex items-center gap-1 bg-green-500 hover:bg-green-600">
+                      <CheckCircle className="h-3 w-3" />
+                      Submitted
+                    </Badge>
+                  </TableCell>
+                  <TableCell>—</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="gap-1 border-primary text-primary hover:bg-primary/10"
+                    >
+                      <Link href={`/rafed-provider/history/${execution.id}`}>
+                        <span>View Details</span>
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
   )
 }
