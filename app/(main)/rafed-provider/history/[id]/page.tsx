@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -9,12 +9,11 @@ import Link from "next/link"
 import { ForecastProductTimeline } from "@/components/rafed-provider/forecast-product-timeline"
 import { ForecastDataTable } from "@/components/rafed-provider/forecast-data-table"
 import { ForecastAnomalies } from "@/components/rafed-provider/forecast-anomalies"
-import { useEffect, useState } from "react"
 
 export default function ForecastDetailsPage({ params }: { params: { id: string } }) {
   // Unwrap params using React.use() to follow the new Next.js pattern
-  const unwrappedParams = React.use(params)
-  console.log("unwrappedParams",unwrappedParams)
+  const unwrappedParams: any = React.use(params)
+  console.log("unwrappedParams ::",unwrappedParams)
   const forecastId = unwrappedParams.id
 
   const [productCount, setProductCount] = useState<number>(0)
