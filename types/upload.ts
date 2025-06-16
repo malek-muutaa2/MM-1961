@@ -1,5 +1,5 @@
 export interface UploadConfiguration {
-  id: string
+  id: number
   name: string
   description: string
   organization_type: string
@@ -11,14 +11,14 @@ export interface UploadConfiguration {
   max_rows?: number
   storage_config_id: string
   active: boolean
+  allow_partial_upload: boolean // New field to control upload behavior on validation errors
   created_at: Date
   updated_at: Date
-  deleted_at?: Date
 }
 
 export interface UploadConfigurationColumn {
   id: string
-  config_id: string
+  config_id: number | undefined
   name: string
   display_name: string
   data_type: "string" | "number" | "date" | "boolean" | "email"
@@ -33,11 +33,17 @@ export interface UploadConfigurationColumn {
 }
 
 export interface UploadStorageConfiguration {
-  id: string
+  id: number
   name: string
   description: string
   storage_type: "vercel_blob" | "s3" | "local" | "azure_blob" | "gcs"
   bucket_name?: string
+  container_name?: string
+  gcs_project_id?: string
+  gcs_key_filename?: string
+  azure_account_name?: string
+  azure_account_key?: string
+  azure_sas_token?: string
   base_path: string
   path_template: string
   region?: string
@@ -46,38 +52,6 @@ export interface UploadStorageConfiguration {
   access_type?: "public" | "private"
   created_at: Date
   updated_at: Date
-  deleted_at?: Date
-  gcs_project_id?: string
-  gcs_key_filename?: string
-  azure_account_name?: string
-  azure_account_key?: string
-  container_name?: string
-  azure_sas_token?: string
-}
-
-export interface UploadOperation {
-  id: string
-  config_id: string
-  user_id: string
-  file_name: string
-  file_path: string
-  file_size: number
-  row_count: number
-  status: "pending" | "processing" | "completed" | "failed" | "partially_completed"
-  error_count: number
-  validation_errors: any
-  started_at: Date
-  completed_at?: Date
-}
-
-export interface UploadOperationError {
-  id: string
-  operation_id: string
-  row_number?: number
-  column_name?: string
-  error_code: string
-  error_message: string
-  raw_value?: string
 }
 
 export interface ValidationError {
@@ -85,12 +59,16 @@ export interface ValidationError {
   message: string
   column?: string
   row?: number
+  line?: number
   value?: string
+  expected_format?: string
 }
 
 export interface UploadResponse {
   status: "success" | "failed" | "partially_completed"
   operation_id?: string
+  processed_rows?: number
+  total_rows?: number
   error?: {
     code: string
     message: string
@@ -99,13 +77,14 @@ export interface UploadResponse {
       row_level_errors?: {
         total: number
         samples: ValidationError[]
+        all_errors: ValidationError[] // Complete list of all validation errors
       }
     }
   }
 }
 
 export interface OrganizationType {
-  id: string
+  id: number
   name: string
   source_types: string[]
 }

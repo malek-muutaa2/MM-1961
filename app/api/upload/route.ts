@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
         delimiter: uploadConfigurations.delimiter,
         maxFileSize: uploadConfigurations.maxFileSize,
         maxRows: uploadConfigurations.maxRows,
+        allowPartialUpload: uploadConfigurations.allowPartialUpload,
         storageConfig: {
           id: uploadStorageConfigurations.id,
           storageType: uploadStorageConfigurations.storageType,

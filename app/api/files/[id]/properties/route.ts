@@ -27,6 +27,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
                     delimiter: uploadConfigurations.delimiter,
                     maxFileSize: uploadConfigurations.maxFileSize,
                     maxRows: uploadConfigurations.maxRows,
+                    allowPartialUpload: uploadConfigurations.allowPartialUpload,
+
                 },
                 storageConfig: {
                     id: uploadStorageConfigurations.id,

@@ -10,14 +10,30 @@ import { eq } from "drizzle-orm"
 import { StorageService } from "@/lib/storage"
 import { ValidationService } from "@/lib/validation-service"
 import type { UploadResponse } from "@/types/upload"
+import {getCurrentUser} from "@/lib/getCurrentUser";
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get("file") as File
-    const configId = formData.get("config_id") as number
+    const configId = formData.get("config_id") as unknown as number;
+    const user = await getCurrentUser();
+    const userId = user?.id;
 
-    if (!file || !configId) {
+      if(!userId) {
+        return NextResponse.json(
+            {
+              status: "failed",
+              error: {
+                code: "UNAUTHORIZED",
+                message: "User not authenticated",
+              },
+            } as UploadResponse,
+            { status: 401 },
+        )
+      }
+
+      if (!file || !configId) {
       return NextResponse.json(
           {
             status: "failed",
@@ -56,7 +72,8 @@ export async function POST(request: NextRequest) {
         .leftJoin(uploadStorageConfigurations, eq(uploadConfigurations.storageConfigId, uploadStorageConfigurations.id))
         .where(eq(uploadConfigurations.id, configId))
 
-    if (!config) {
+
+      if (!config) {
       return NextResponse.json(
           {
             status: "failed",
@@ -95,6 +112,26 @@ export async function POST(request: NextRequest) {
 
     // If validation fails and partial upload is not allowed, return error
     if (!validationResult.isValid && !config.allowPartialUpload) {
+      //   save upload_operation_errors with validation errors on db
+        await db
+            .insert(uploadOperations)
+            .values({
+                configId: configId,
+                userId: userId, // This would come from the authenticated user
+                fileName: file.name,
+                filePath: "",
+                fileSize: file.size,
+                rowCount: validationResult.totalRows,
+                status: "failed",
+                errorCount: validationResult.errors.length,
+                validationErrors: {
+                errors: validationResult.errors,
+                valid_rows: validationResult.validRows,
+                total_rows: validationResult.totalRows,
+                },
+            })
+            .returning()
+
       return NextResponse.json(
           {
             status: "failed",
@@ -123,17 +160,17 @@ export async function POST(request: NextRequest) {
       base_path: config.storageConfig?.basePath || "uploads",
       path_template: config.storageConfig?.pathTemplate || "{base_path}/{uuid}.{ext}",
       access_type: config.storageConfig?.accessType as any,
-      bucket_name: config.storageConfig?.bucketName,
-      region: config.storageConfig?.region,
-      aws_access_key_id: config.storageConfig?.awsAccessKeyId,
-      aws_secret_access_key: config.storageConfig?.awsSecretAccessKey,
+      bucket_name: config.storageConfig?.bucketName || "optivians-bucket",
+      region: config.storageConfig?.region || "us-east-1",
+      aws_access_key_id: config.storageConfig?.awsAccessKeyId || "",
+      aws_secret_access_key: config.storageConfig?.awsSecretAccessKey || "",
     })
 
     let uploadResult
     try {
       uploadResult = await storageService.uploadFile(file, {
-        organization_id: "org-1", // This would come from the authenticated user
-        user_id: "user-1", // This would come from the authenticated user
+        organization_id: "MUUTAA", // This would come from the authenticated user
+        user_id: userId, // This would come from the authenticated user
       })
     } catch (storageError: any) {
       return NextResponse.json(
@@ -153,7 +190,7 @@ export async function POST(request: NextRequest) {
         .insert(uploadOperations)
         .values({
           configId: configId,
-          userId: "user-1", // This would come from the authenticated user
+          userId: userId, // This would come from the authenticated user
           fileName: file.name,
           filePath: uploadResult.pathname,
           fileSize: file.size,
@@ -175,31 +212,32 @@ export async function POST(request: NextRequest) {
 
     if (validationResult.errors.length > 0) {
       return NextResponse.json({
-        status: "partially_completed",
-        operation_id: operation.id,
-        processed_rows: validationResult.validRows,
-        total_rows: validationResult.totalRows,
-        error: {
-          code: "VALIDATION_ERRORS",
-          message: `File processed with ${validationResult.errors.length} validation errors`,
-          details: {
-            row_level_errors: {
-              total: validationResult.errors.filter((e) => e.row).length,
-              samples: validationResult.errors.filter((e) => e.row).slice(0, 10),
-              all_errors: validationResult.errors,
-            },
-            file_level_errors: validationResult.errors.filter((e) => !e.row),
+          status: "partially_completed",
+          operation_id: operation.id,
+          processed_rows: validationResult.validRows,
+          total_rows: validationResult.totalRows,
+          error: {
+              code: "VALIDATION_ERRORS",
+              message: `File processed with ${validationResult.errors.length} validation errors`,
+              details: {
+                  row_level_errors: {
+                      total: validationResult.errors.filter((e) => e.row).length,
+                      samples: validationResult.errors.filter((e) => e.row).slice(0, 10),
+                      all_errors: validationResult.errors,
+                  },
+                  file_level_errors: validationResult.errors.filter((e) => !e.row),
+              },
           },
-        },
-      } as UploadResponse)
+      } as unknown as UploadResponse)
     }
 
     return NextResponse.json({
-      status: "success",
-      operation_id: operation.id,
-      processed_rows: validationResult.validRows,
-      total_rows: validationResult.totalRows,
-    } as UploadResponse)
+        status: "success",
+        operation_id: operation.id,
+        processed_rows: validationResult.validRows,
+        total_rows: validationResult.totalRows,
+    } as unknown as UploadResponse)
+
   } catch (error) {
     console.error("Upload error:", error)
     return NextResponse.json(

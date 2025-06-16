@@ -53,7 +53,7 @@ export class StorageError extends Error {
 }
 
 export class StorageService {
-    private config: StorageConfig
+    private readonly config: StorageConfig
 
     constructor(config: StorageConfig) {
         this.config = config
@@ -284,15 +284,15 @@ export class StorageService {
         // Replace placeholders
         const replacements: Record<string, string> = {
             base_path: this.config.base_path,
-            organization_id: metadata.organization_id || "default",
-            user_id: metadata.user_id || "anonymous",
+            organization_id: "default",
+            user_id: metadata.user_id,
             year: now.getFullYear().toString(),
             month: (now.getMonth() + 1).toString().padStart(2, "0"),
             day: now.getDate().toString().padStart(2, "0"),
             hour: now.getHours().toString().padStart(2, "0"),
             minute: now.getMinutes().toString().padStart(2, "0"),
             second: now.getSeconds().toString().padStart(2, "0"),
-            uuid: crypto.randomUUID(),
+            uuid: crypto?.randomUUID?.() || Math.random().toString(36).substring(2, 15) + "_" + metadata.user_id,
             timestamp: now.getTime().toString(),
             ext: fileExtension ?? "bin",
         }

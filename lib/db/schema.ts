@@ -202,6 +202,7 @@ export const uploadConfigurations = pgTable("upload_configurations", {
     maxFileSize: integer("max_file_size").notNull(),
     maxRows: integer("max_rows"),
     storageConfigId: integer("storage_config_id").references(() => uploadStorageConfigurations.id),
+    allowPartialUpload: boolean("allow_partial_upload").default(false).notNull(),
     active: boolean("active").default(true).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

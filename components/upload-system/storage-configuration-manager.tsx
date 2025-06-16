@@ -23,7 +23,7 @@ import {AWS_S3_REGIONS} from "@/lib/storage/aws-s3";
 interface StorageConfigurationManagerProps {
     storageConfigs: UploadStorageConfiguration[]
     onSave: (config: Partial<UploadStorageConfiguration>) => void
-    onDelete: (id: string) => void
+    onDelete: (id: number) => void
 }
 // List of AWS S3 Regions
 export default function StorageConfigurationManager({
@@ -58,7 +58,7 @@ export default function StorageConfigurationManager({
         setEditingConfig({})
     }
 
-    const handleDelete = (id: string) => {
+    const handleDelete = (id: number) => {
         if (confirm("Are you sure you want to delete this storage configuration?")) {
             onDelete(id)
         }

@@ -28,6 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
       max_file_size: config.maxFileSize,
       max_rows: config.maxRows,
       storage_config_id: config.storageConfigId,
+      allow_partial_upload: config.allowPartialUpload,
       active: config.active,
       created_at: config.createdAt,
       updated_at: config.updatedAt,
@@ -73,6 +74,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
         maxFileSize: body.max_file_size,
         maxRows: body.max_rows,
         storageConfigId: body.storage_config_id,
+        allowPartialUpload: body.allow_partial_upload,
         active: body.active,
         updatedAt: new Date(),
       })
@@ -120,6 +122,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
       max_rows: updatedConfig.maxRows,
       storage_config_id: updatedConfig.storageConfigId,
       active: updatedConfig.active,
+      allow_partial_upload: updatedConfig.allowPartialUpload,
       created_at: updatedConfig.createdAt,
       updated_at: updatedConfig.updatedAt,
     })

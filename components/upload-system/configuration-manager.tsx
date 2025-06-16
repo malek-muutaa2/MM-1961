@@ -25,16 +25,16 @@ import type {
   UploadStorageConfiguration,
   OrganizationType,
 } from "@/types/upload"
-import StorageConfigurationManager, {AWS_S3_REGIONS} from "./storage-configuration-manager"
+import StorageConfigurationManager from "./storage-configuration-manager"
 
 interface ConfigurationManagerProps {
   configurations: UploadConfiguration[]
   storageConfigs: UploadStorageConfiguration[]
   organizationTypes: OrganizationType[]
   onSaveConfig: (config: Partial<UploadConfiguration>) => void
-  onDeleteConfig: (id: string) => void
+  onDeleteConfig: (id: number) => void
   onSaveStorage: (config: Partial<UploadStorageConfiguration>) => void
-  onDeleteStorage: (id: string) => void
+  onDeleteStorage: (id: number) => void
 }
 
 export default function ConfigurationManager({
@@ -51,7 +51,7 @@ export default function ConfigurationManager({
   const [columns, setColumns] = useState<UploadConfigurationColumn[]>([])
   const [isEditing, setIsEditing] = useState(false)
 
-  const selectedOrgType = organizationTypes?.find((org) => org.id === editingConfig.organization_type) ?? ""
+  // const selectedOrgType = organizationTypes?.find((org) => org.id === editingConfig.organization_type) ?? ""
 
   const file_types = [
     { code: "csv", name: "CSV", disabled: false },
@@ -67,7 +67,7 @@ export default function ConfigurationManager({
     setIsDialogOpen(true)
   }
 
-  const fetchColumns = async (configId: string) => {
+  const fetchColumns = async (configId: number) => {
     try {
       const response = await fetch(`/api/configurations/${configId}`)
       if (response.ok) {
@@ -89,13 +89,14 @@ export default function ConfigurationManager({
       delimiter: ",",
       max_file_size: 10 * 1024 * 1024,
       active: true,
+      allow_partial_upload: true,
     })
     setColumns([])
     setIsEditing(false)
     setIsDialogOpen(true)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this configuration?")) {
       onDeleteConfig(id)
     }
@@ -108,7 +109,7 @@ export default function ConfigurationManager({
   const addColumn = () => {
     const newColumn: UploadConfigurationColumn = {
       id: crypto.randomUUID(),
-      config_id: editingConfig.id || "",
+      config_id: editingConfig.id,
       name: "",
       display_name: "",
       data_type: "string",
@@ -195,7 +196,7 @@ export default function ConfigurationManager({
                             </SelectTrigger>
                             <SelectContent>
                               {storageConfigs.map((storage) => (
-                                  <SelectItem key={storage.id} value={storage.id}>
+                                  <SelectItem key={storage.id} value={String(storage.id)}>
                                     <div className="flex flex-col">
                                       <span>{storage.name}</span>
                                       <span className="text-xs text-muted-foreground">
@@ -331,6 +332,15 @@ export default function ConfigurationManager({
                             }
                             placeholder="Leave empty for unlimited"
                           />
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="active"
+                            checked={editingConfig.allow_partial_upload || false}
+                            onCheckedChange={(checked) => handleConfigChange("allow_partial_upload", checked)}
+                          />
+                          <Label htmlFor="active">Allow partial upload</Label>
                         </div>
 
                         {/*<div className="flex items-center space-x-2">*/}

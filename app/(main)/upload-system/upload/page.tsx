@@ -6,12 +6,15 @@ import UploadInterface from "@/components/upload-system/upload-interface"
 import ConfigurationManager from "@/components/upload-system/configuration-manager"
 import EnhancedFileManager from "@/components/upload-system/enhanced-file-manager"
 import type { UploadConfiguration, UploadStorageConfiguration, OrganizationType } from "@/types/upload"
+import EnhancedUploadInterface from "@/components/upload-system/enhanced-upload-interface"
+import {useToast} from "@/hooks/use-toast";
 
 export default function HomePage() {
   const [configurations, setConfigurations] = useState<UploadConfiguration[]>([])
   const [storageConfigs, setStorageConfigs] = useState<UploadStorageConfiguration[]>([])
   const [organizationTypes, setOrganizationTypes] = useState<OrganizationType[]>([])
   const [loading, setLoading] = useState(true)
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +60,11 @@ export default function HomePage() {
         if (response.ok) {
           const updatedConfig = await response.json()
           setConfigurations((prev) => prev.map((c) => (c.id === config.id ? updatedConfig : c)))
+            toast({
+                title: "Configuration updated",
+                description: "Your configuration has been updated successfully.",
+                variant: "default",
+            })
         }
       } else {
         // Create new
@@ -69,14 +77,24 @@ export default function HomePage() {
         if (response.ok) {
           const newConfig = await response.json()
           setConfigurations((prev) => [...prev, newConfig])
+            toast({
+                title: "Configuration saved",
+                description: "Your configuration has been saved successfully.",
+                variant: "default",
+            })
         }
       }
     } catch (error) {
       console.error("Failed to save configuration:", error)
+        toast({
+            title: "Error",
+            description: "Failed to save configuration. Please try again.",
+            variant: "destructive",
+        })
     }
   }
 
-  const handleDeleteConfiguration = async (id: string) => {
+  const handleDeleteConfiguration = async (id: number) => {
     try {
       const response = await fetch(`/api/configurations/${id}`, {
         method: "DELETE",
@@ -84,9 +102,19 @@ export default function HomePage() {
 
       if (response.ok) {
         setConfigurations((prev) => prev.filter((c) => c.id !== id))
+        toast({
+            title: "Configuration deleted",
+            description: "Your configuration has been deleted successfully.",
+            variant: "default",
+        })
       }
     } catch (error) {
       console.error("Failed to delete configuration:", error)
+        toast({
+            title: "Error",
+            description: "Failed to delete configuration. Please try again.",
+            variant: "destructive",
+        })
     }
   }
 
@@ -103,6 +131,11 @@ export default function HomePage() {
         if (response.ok) {
           const updatedConfig = await response.json()
           setStorageConfigs((prev) => prev.map((c) => (c.id === config.id ? updatedConfig : c)))
+          toast({
+                title: "Storage configuration saved",
+                description: "Your storage configuration has been saved successfully.",
+                variant: "default",
+          })
         }
       } else {
         // Create new
@@ -115,14 +148,24 @@ export default function HomePage() {
         if (response.ok) {
           const newConfig = await response.json()
           setStorageConfigs((prev) => [...prev, newConfig])
+            toast({
+                    title: "Storage configuration created",
+                    description: "Your storage configuration has been created successfully.",
+                    variant: "default",
+            })
         }
       }
     } catch (error) {
       console.error("Failed to save storage configuration:", error)
+        toast({
+            title: "Error",
+            description: "Failed to save storage configuration. Please try again.",
+            variant: "destructive",
+        })
     }
   }
 
-  const handleDeleteStorageConfig = async (id: string) => {
+  const handleDeleteStorageConfig = async (id: number) => {
     try {
       const response = await fetch(`/api/storage-configurations/${id}`, {
         method: "DELETE",
@@ -130,9 +173,19 @@ export default function HomePage() {
 
       if (response.ok) {
         setStorageConfigs((prev) => prev.filter((c) => c.id !== id))
+        toast({
+            title: "Storage configuration deleted",
+            description: "Your storage configuration has been deleted successfully.",
+            variant: "default",
+        })
       }
     } catch (error) {
       console.error("Failed to delete storage configuration:", error)
+        toast({
+            title: "Error",
+            description: "Failed to delete storage configuration. Please try again.",
+            variant: "destructive",
+        })
     }
   }
 
@@ -158,10 +211,12 @@ export default function HomePage() {
               {/*<TabsTrigger value="files">Manage Files</TabsTrigger>*/}
               <TabsTrigger value="configure">Configurations</TabsTrigger>
             </TabsList>
-
             <TabsContent value="upload">
-              <UploadInterface configurations={configurations.filter((c) => c.active)} />
+              <EnhancedUploadInterface configurations={configurations.filter((c) => c.active)} />
             </TabsContent>
+            {/*<TabsContent value="upload">*/}
+            {/*  <UploadInterface configurations={configurations.filter((c) => c.active)} />*/}
+            {/*</TabsContent>*/}
 
             {/*<TabsContent value="files">*/}
             {/*  <EnhancedFileManager />*/}
