@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
         .where(eq(uploadConfigurationColumns.configId, configId))
         .orderBy(uploadConfigurationColumns.position)
 
+      console.log('validation service ...')
     // Enhanced validation using ValidationService
     const validationService = new ValidationService(
         { ...config, allow_partial_upload: config.allowPartialUpload },

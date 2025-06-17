@@ -7,7 +7,7 @@ export interface AzureBlobConfig {
 }
 
 export class AzureBlobStorageService {
-  private config: AzureBlobConfig
+  private readonly config: AzureBlobConfig
 
   constructor(config: AzureBlobConfig) {
     this.config = config
@@ -42,14 +42,14 @@ export class AzureBlobStorageService {
           pathname: filePath,
           size: file.size,
         }
-      } catch (error) {
+      } catch (error: any) {
         clearTimeout(timeoutId)
         if (error.name === "AbortError") {
           throw new Error("Azure Blob upload timeout - please try again")
         }
         throw error
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Azure Blob upload error:", error)
       throw new Error(`Azure Blob upload failed: ${error.message}`)
     }
@@ -75,7 +75,7 @@ export class AzureBlobStorageService {
       if (!response.ok) {
         throw new Error(`Azure Blob delete failed: ${response.statusText}`)
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === "AbortError") {
         throw new Error("Azure Blob delete timeout - please try again")
       }
@@ -103,7 +103,7 @@ export class AzureBlobStorageService {
 
       const result = await response.json()
       return result.files || []
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === "AbortError") {
         throw new Error("Azure Blob list timeout - please try again")
       }

@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, {useEffect} from "react"
 import { useState, useCallback, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Upload, FileText, AlertCircle, CheckCircle, X, AlertTriangle } from "lucide-react"
 import ConfigurationSelector from "./configuration-selector"
 import type { UploadConfiguration, UploadResponse, ValidationError } from "@/types/upload"
+import {UserRole} from "@/contexts/role-context";
 
 interface EnhancedUploadInterfaceProps {
   configurations: UploadConfiguration[]
@@ -27,8 +28,22 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [selectedConfiguration, setSelectedConfiguration] = useState<UploadConfiguration | null | undefined >(configurations.find((c) => c.id === selectedConfig))
+  // const selectedConfiguration = configurations.find((c) => c.id === selectedConfig)
 
-  const selectedConfiguration = configurations.find((c) => c.id === selectedConfig)
+
+  useEffect(() => {
+    const initConfiguration = (typeof window !== "undefined" && localStorage.getItem("selectedConfiguration")) as string;
+    // console.log("Initial role from localStorage:", initConfiguration);
+    if (!initConfiguration) {
+      localStorage.setItem("selectedConfiguration", configurations[0]?.id.toString())
+      setSelectedConfig(configurations[0]?.id)
+      setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig || configurations[0]?.id)));
+    }else {
+      setSelectedConfig(Number(initConfiguration))
+      setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig || Number(initConfiguration))));
+    }
+  }, [configurations, selectedConfig]);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -40,17 +55,18 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
     }
   }, [])
 
+
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
-
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFileSelection(e.dataTransfer.files[0])
     }
   }, [])
 
   const handleFileSelection = (file: File) => {
+    console.log(selectedConfig, selectedConfiguration)
     if (!selectedConfiguration) {
       alert("Please select a configuration first")
       return
@@ -78,6 +94,7 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      console.log(selectedConfiguration)
       handleFileSelection(e.target.files[0])
     }
   }
@@ -175,7 +192,7 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
   }
 
   const getErrorSeverity = (errorCode: string) => {
-    const criticalErrors = ["MISSING_REQUIRED_COLUMN", "MISSING_REQUIRED_VALUE", "EMPTY_FILE"]
+    const criticalErrors = ["MISSING_REQUIRED_COLUMN", "MISSING_REQUIRED_VALUE", "EMPTY_FILE", "ROW_NOT_FOUND"]
     return criticalErrors.includes(errorCode) ? "critical" : "warning"
   }
 

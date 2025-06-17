@@ -1,5 +1,5 @@
-import { ValidationService } from "../../lib/validation-service"
-import type { UploadConfigurationColumn } from "../../types/upload"
+import { ValidationService } from "@/lib/validation-service"
+import type { UploadConfigurationColumn } from "@/types/upload"
 
 describe("ValidationService", () => {
   const mockConfig = {

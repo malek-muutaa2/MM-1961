@@ -19,7 +19,7 @@ interface FileDetailsModalProps {
   } | null
 }
 
-export default function FileDetailsModal({ isOpen, onClose, file }: FileDetailsModalProps) {
+export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<FileDetailsModalProps>) {
   const [fileInfo, setFileInfo] = useState<any>(null)
   const [loading, setLoading] = useState(false)
 

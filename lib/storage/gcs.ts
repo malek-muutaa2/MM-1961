@@ -7,7 +7,7 @@ export interface GCSConfig {
 }
 
 export class GCSStorageService {
-  private config: GCSConfig
+  private readonly config: GCSConfig
 
   constructor(config: GCSConfig) {
     this.config = config
@@ -42,14 +42,14 @@ export class GCSStorageService {
           pathname: filePath,
           size: file.size,
         }
-      } catch (error) {
+      } catch (error: any) {
         clearTimeout(timeoutId)
         if (error.name === "AbortError") {
           throw new Error("GCS upload timeout - please try again")
         }
         throw error
       }
-    } catch (error) {
+    } catch (error :any) {
       console.error("GCS upload error:", error)
       throw new Error(`GCS upload failed: ${error.message}`)
     }
@@ -75,7 +75,7 @@ export class GCSStorageService {
       if (!response.ok) {
         throw new Error(`GCS delete failed: ${response.statusText}`)
       }
-    } catch (error) {
+    } catch (error :any) {
       if (error.name === "AbortError") {
         throw new Error("GCS delete timeout - please try again")
       }
@@ -100,7 +100,7 @@ export class GCSStorageService {
 
       const result = await response.json()
       return result.files || []
-    } catch (error) {
+    } catch (error: any) {
       if (error.name === "AbortError") {
         throw new Error("GCS list timeout - please try again")
       }

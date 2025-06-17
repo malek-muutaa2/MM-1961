@@ -31,12 +31,6 @@ export interface UploadResult {
     storage_type: string
 }
 
-// export interface StorageError extends Error {
-//   code: string
-//   provider: string
-//   retryable: boolean
-// }
-
 export class StorageError extends Error {
     public code: string
     public provider: string
@@ -304,7 +298,7 @@ export class StorageService {
         return path
     }
 
-    private createStorageError(message: string, code: string, retryable: boolean): StorageError {
+    createStorageError(message: string, code: string, retryable: boolean): StorageError {
         const error = new StorageError(message)
         error.code = code
         error.provider = this.config.storage_type

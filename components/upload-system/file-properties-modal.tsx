@@ -24,7 +24,7 @@ interface FilePropertiesModalProps {
   } | null
 }
 
-export default function FilePropertiesModal({ isOpen, onClose, file }: FilePropertiesModalProps) {
+export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<FilePropertiesModalProps>) {
   const [configDetails, setConfigDetails] = useState<any>(null)
   const [storageDetails, setStorageDetails] = useState<any>(null)
   const [loading, setLoading] = useState(false)

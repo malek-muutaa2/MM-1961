@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import UploadInterface from "@/components/upload-system/upload-interface"
+// import UploadInterface from "@/components/upload-system/upload-interface"
 import ConfigurationManager from "@/components/upload-system/configuration-manager"
-import EnhancedFileManager from "@/components/upload-system/enhanced-file-manager"
+// import EnhancedFileManager from "@/components/upload-system/enhanced-file-manager"
 import type { UploadConfiguration, UploadStorageConfiguration, OrganizationType } from "@/types/upload"
 import EnhancedUploadInterface from "@/components/upload-system/enhanced-upload-interface"
 import {useToast} from "@/hooks/use-toast";
@@ -224,6 +224,7 @@ export default function HomePage() {
 
             <TabsContent value="configure">
               <ConfigurationManager
+                  apiCallLoading={loading}
                   configurations={configurations}
                   storageConfigs={storageConfigs}
                   organizationTypes={organizationTypes}

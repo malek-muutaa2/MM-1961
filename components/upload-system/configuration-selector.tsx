@@ -22,8 +22,8 @@ export default function ConfigurationSelector({
 }: Readonly<ConfigurationSelectorProps>) {
   const selectedConfiguration = configurations.find((c) => c.id === selectedConfigId)
 
-  console.log("selectedConfiguration", selectedConfiguration)
-
+  // console.log("selectedConfiguration", selectedConfiguration, selectedConfigId)
+  // console.log("configurations", configurations)
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes"
     const k = 1024
@@ -45,7 +45,11 @@ export default function ConfigurationSelector({
         {/* Configuration Selection */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Choose Configuration</label>
-          <Select value={selectedConfigId ? String(selectedConfigId) : ""} onValueChange={(value: string) => onConfigurationSelect(Number(value))}>
+          <Select value={selectedConfigId ? String(selectedConfigId) : ""} onValueChange={(value: string) => {
+            localStorage.setItem("selectedConfiguration", value)
+
+            onConfigurationSelect(Number(value))
+          }}>
             <SelectTrigger>
               <SelectValue placeholder="Select an upload configuration" />
             </SelectTrigger>

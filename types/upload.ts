@@ -9,7 +9,7 @@ export interface UploadConfiguration {
   delimiter: string
   max_file_size: number
   max_rows?: number
-  storage_config_id: string
+  storage_config_id: number
   active: boolean
   allow_partial_upload: boolean // New field to control upload behavior on validation errors
   created_at: Date
@@ -17,7 +17,7 @@ export interface UploadConfiguration {
 }
 
 export interface UploadConfigurationColumn {
-  id: string
+  id: number
   config_id: number | undefined
   name: string
   display_name: string

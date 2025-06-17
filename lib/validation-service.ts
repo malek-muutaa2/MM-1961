@@ -34,12 +34,27 @@ export class ValidationService {
     const lines = content.split("\n").filter((line) => line.trim())
     const errors: ValidationError[] = []
     const processedRows: any[] = []
-
+    console.log("line length : ", lines?.length)
     if (lines.length === 0) {
       errors.push({
         code: "EMPTY_FILE",
         message: "File is empty",
         line: 0,
+      })
+      return {
+        isValid: false,
+        errors,
+        processedRows: [],
+        totalRows: 0,
+        validRows: 0,
+      }
+    }
+
+    if (lines.length === 1) {
+      errors.push({
+        code: "ROW_NOT_FOUND",
+        message: "no rows found in file",
+        line: 1,
       })
       return {
         isValid: false,

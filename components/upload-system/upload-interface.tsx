@@ -26,7 +26,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const selectedConfiguration = configurations.find((c) => c.id === selectedConfig)
+    const selectedConfiguration = configurations.find((c) => c.id === Number(selectedConfig))
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault()
@@ -87,7 +87,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
 
         const formData = new FormData()
         formData.append("file", selectedFile)
-        formData.append("config_id", selectedConfiguration.id)
+        formData.append("config_id", String(selectedConfiguration.id))
 
         try {
             // Simulate progress for better UX
@@ -166,11 +166,11 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                             <label className="text-sm font-medium">Upload Configuration</label>
                             <Select value={selectedConfig} onValueChange={setSelectedConfig}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select an upload configuration"/>
+                                    <SelectValue placeholder="Select  an upload  configuration "/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {configurations.map((config) => (
-                                        <SelectItem key={config.id} value={config.id}>
+                                        <SelectItem key={config.id} value={String(config.id)}>
                                             <div className="flex flex-col">
                                                 <span>{config.name}</span>
                                                 <span
