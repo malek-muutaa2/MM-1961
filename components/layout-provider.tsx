@@ -11,16 +11,21 @@ import { Toaster } from "@/components/ui/toaster"
 import { UserType } from "@/lib/db/schema"
 import { AccessDeniedPage } from "./AccessDenied"
 import { signOut } from "next-auth/react"
+import { Notification } from "@/lib/notification"
 
 export function LayoutProvider({
   children,
   userinfo,
   error,
+  notificationData,
+  countUnread
 }: {
   children: React.ReactNode
   userinfo: UserType | null,
-
+  notificationData : Notification[] | null,
+  countUnread: number,
   error? : string,
+
 }) {
   const pathname = usePathname()
   useEffect(() => {
@@ -71,7 +76,7 @@ const isAdminPage =
         <div className="flex h-screen w-screen overflow-hidden">
           <AppSidebar userinfo={userinfo!} />
           <div className="flex flex-col flex-1 w-full overflow-hidden">
-            <TopNav />
+            <TopNav countUnread={countUnread} notificationData={notificationData} />
             <main className="flex-1 w-full overflow-auto bg-background">
                   {isAdminPage ? (
                   userinfo?.role === "Admin" ? (

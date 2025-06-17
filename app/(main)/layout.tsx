@@ -7,6 +7,7 @@ import { LayoutProvider } from "@/components/layout-provider"
 import { AuthProvider } from "@/components/auth/auth-provider"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { getServerAuthSession } from "@/lib/auth"
+import { CountUnreadNotifications, getNotificationByUserId } from "@/lib/notification"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,13 +24,21 @@ export default async function  RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  let notificationData = null;
+  let countUnread = 0;
   const userinfo = await getCurrentUser();
-  const authSession: any = await getServerAuthSession(); //(1)
+  const authSession: any = await getServerAuthSession();
+  if(userinfo){
+    notificationData = await getNotificationByUserId(userinfo?.id)
+    countUnread = await CountUnreadNotifications(userinfo?.id);
+  } //(1)
+
 
 
   return (
     <div>
-            <LayoutProvider                     error={authSession?.error ?? ""}
+            <LayoutProvider countUnread={countUnread} notificationData={notificationData}    
+              error={authSession?.error ?? ""}
  userinfo={userinfo}>{children}</LayoutProvider>
 
     </div>    

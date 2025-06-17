@@ -17,13 +17,15 @@ import {
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut, useSession } from "next-auth/react"
+import { NotificationCenter } from "./NotificationCenter"
+import { useNotifications } from "@/hooks/useNotifications"
 
 // Sample notifications data
-const notifications = [
+const notifications2 = [
   {
     id: 1,
     title: "Stock Level Alert",
@@ -65,26 +67,42 @@ const notifications = [
     read: true,
   },
 ]
-
-export function TopNav() {
+type Notificationuser = {
+      id: number;
+    userId: number;
+    typeId: number;
+    title: string;
+    message: string;
+    redirectUrl: string | null;
+    data: unknown;
+    readAt: Date | null;
+    createdAt: Date;
+    typeName: string | null;
+    };
+interface TopNavProps {
+  notificationData: Notificationuser[] | null;
+  countUnread : number
+}
+export function TopNav( { notificationData , countUnread }: TopNavProps
+) {
   const [notificationFilter, setNotificationFilter] = useState("all")
-  const [notificationsData, setNotificationsData] = useState(notifications)
+  const [notificationsData, setNotificationsData] = useState(notificationData)
   const { setTheme, theme } = useTheme()
   const { data: session, status } = useSession();
-  const unreadCount = notificationsData.filter((n) => !n.read).length
+  // const unreadCount2 = notificationsData.filter((n) => !n.read).length
 
-  const filteredNotifications =
-    notificationFilter === "all"
-      ? notificationsData
-      : notificationFilter === "unread"
-        ? notificationsData.filter((n) => !n.read)
-        : notificationsData.filter((n) => n.type === notificationFilter)
+  // const filteredNotifications =
+  //   notificationFilter === "all"
+  //     ? notificationsData
+  //     : notificationFilter === "unread"
+  //       ? notificationsData.filter((n) => !n.read)
+  //       : notificationsData.filter((n) => n.type === notificationFilter)
 
-  const markAsRead = (id: number) => {
-    setNotificationsData((prev) =>
-      prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-    )
-  }
+  // const markAsRead2 = (id: number) => {
+  //   setNotificationsData((prev) =>
+  //     prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
+  //   )
+  // }
 
   const markAllAsRead = () => {
     setNotificationsData((prev) => prev.map((notification) => ({ ...notification, read: true })))
@@ -104,8 +122,29 @@ export function TopNav() {
         return <div className="h-2 w-2 rounded-full bg-gray-500"></div>
     }
   }
- console.log("session", session);
+ console.log("notificationData", notificationData);
+   const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(1);
+   const [isOpen, setIsOpen] = useState(false);
  
+   // Request notification permission
+   useEffect(() => {
+     if ('Notification' in window) {
+       Notification.requestPermission();
+     }
+   }, []);
+   useEffect(() => {
+    setNotificationsData((prev) => {
+      // If prev is null, just use notifications
+      if (!prev) return notifications;
+      // Find new notifications not already in prev (by id)
+      const newOnes = notifications.filter(
+      (n) => !prev.some((p) => p.id === n.id)
+      );
+      return [...prev, ...newOnes];
+    });
+   }, [notifications]);
+   console.log("countUnread", countUnread);
+   
   return (
     <header className="border-b bg-background sticky top-0 z-10">
       <div className="container mx-auto max-w-7xl">
@@ -154,9 +193,9 @@ export function TopNav() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="relative">
                   <Bell className="h-4 w-4" />
-                  {unreadCount > 0 && (
+                  {countUnread > 0 && (
                     <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]">
-                      {unreadCount}
+                      {countUnread}
                     </Badge>
                   )}
                 </Button>
@@ -183,7 +222,7 @@ export function TopNav() {
                         </DropdownMenuRadioGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                    {unreadCount > 0 && (
+                    {countUnread > 0 && (
                       <Button variant="ghost" size="sm" onClick={markAllAsRead}>
                         <Check className="mr-1 h-3 w-3" />
                         Mark all read
@@ -193,18 +232,22 @@ export function TopNav() {
                 </div>
                 <DropdownMenuSeparator />
                 <ScrollArea className="h-[300px]">
-                  {filteredNotifications.length > 0 ? (
-                    filteredNotifications.map((notification) => (
+                  {notificationsData && notificationsData.length > 0 ? (
+                    notificationsData.map((notification) => (
                       <DropdownMenuItem key={notification.id} className="cursor-pointer p-0">
-                        <div className={`flex w-full p-3 ${!notification.read ? "bg-muted/50" : ""}`}>
+                        <div className={`flex w-full p-3 ${!notification.readAt ? "bg-muted/50" : ""}`}>
                           <div className="flex items-start gap-3 w-full">
-                            <div className="mt-1.5">{getNotificationIcon(notification.type)}</div>
+                            {/* <div className="mt-1.5">{getNotificationIcon(notification.type)}</div> */}
                             <div className="flex-1 space-y-1">
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-medium">{notification.title}</p>
                                 <div className="flex items-center gap-1">
-                                  <p className="text-xs text-muted-foreground">{notification.time}</p>
-                                  {!notification.read && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {notification.createdAt instanceof Date
+                                      ? notification.createdAt.toLocaleString()
+                                      : String(notification.createdAt)}
+                                  </p>
+                                  {!notification.readAt && (
                                     <Button
                                       variant="ghost"
                                       size="icon"
@@ -219,7 +262,7 @@ export function TopNav() {
                                   )}
                                 </div>
                               </div>
-                              <p className="text-xs text-muted-foreground">{notification.description}</p>
+                              <p className="text-xs text-muted-foreground">{notification.message}</p>
                             </div>
                           </div>
                         </div>
@@ -268,6 +311,10 @@ export function TopNav() {
             </DropdownMenu>
           </div>
         </div>
+      </div>
+      <div>
+              {/* <NotificationCenter userId={1} /> */}
+
       </div>
     </header>
   )
