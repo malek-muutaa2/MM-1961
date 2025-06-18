@@ -104,7 +104,9 @@ export async function POST(request: NextRequest) {
 
       console.log("config?.fileType : ", config?.fileType);
       console.log("file.type : ", file?.type);
-      if(file.type && !config.fileType.split(",").map((type) => type.trim().toLowerCase()).includes(file.type.toLowerCase())) {
+      if(file.type && !config.fileType.split(",").map((type) => type.trim().toLowerCase()).some(
+            (type) =>  file.type.split('/').includes(type)
+      )) {
         return NextResponse.json(
             {
                 status: "failed",

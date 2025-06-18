@@ -70,6 +70,21 @@ export class ValidationService {
 
     // Parse headers
     const headerLine = lines[0]
+    // check if respect delimiter
+    if (!headerLine.includes(this.config.delimiter)) {
+      errors.push({
+        code: "INVALID_DELIMITER",
+        message: `Header line does not contain the expected delimiter '${this.config.delimiter}'`,
+        line: 1,
+      })
+      return {
+        isValid: false,
+        errors,
+        processedRows: [],
+        totalRows: lines.length - 1,
+        validRows: 0,
+      }
+    }
     const headers = this.parseCSVLine(headerLine, this.config.delimiter)
 
     // Validate headers
