@@ -86,6 +86,37 @@ export async function POST(request: NextRequest) {
       )
     }
 
+      console.log("config?.maxFileSize : ", config?.maxFileSize);
+      console.log("file.size : ", file.size);
+
+      if(config?.maxFileSize && file.size > config?.maxFileSize) {
+        return NextResponse.json(
+            {
+                status: "failed",
+                error: {
+                    code: "FILE_TOO_LARGE",
+                    message: `File size exceeds the maximum limit of ${config.maxFileSize} bytes`,
+                },
+            } as UploadResponse,
+            { status: 400 },
+        )
+      }
+
+      console.log("config?.fileType : ", config?.fileType);
+      console.log("file.type : ", file?.type);
+      if(file.type && !config.fileType.split(",").map((type) => type.trim().toLowerCase()).includes(file.type.toLowerCase())) {
+        return NextResponse.json(
+            {
+                status: "failed",
+                error: {
+                code: "INVALID_FILE_TYPE",
+                message: `File type ${file.type} is not allowed. Allowed types: ${config.fileType}`,
+                },
+            } as UploadResponse,
+            { status: 400 },
+        )
+      }
+
     const columns = await db
         .select()
         .from(uploadConfigurationColumns)

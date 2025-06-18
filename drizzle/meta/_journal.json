@@ -57,6 +57,20 @@
       "when": 1749484164505,
       "tag": "0007_vengeful_scarlet_spider",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1750255064782,
+      "tag": "0008_jazzy_epoch",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1750256312025,
+      "tag": "0009_heavy_nova",
+      "breakpoints": true
     }
   ]
 }

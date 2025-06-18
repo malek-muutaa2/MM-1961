@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Download, Trash2, Eye, FileText } from "lucide-react"
 import FileDetailsModal from "./file-details-modal"
+import {useToast} from "@/hooks/use-toast";
 
 interface UploadedFile {
   id: string
@@ -23,6 +24,7 @@ export default function FileManager() {
   const [loading, setLoading] = useState(true)
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -83,11 +85,21 @@ export default function FileManager() {
         if (response.ok) {
           setFiles((prev) => prev.filter((f) => f.id !== fileId))
         } else {
-          alert("Failed to delete file")
+          toast({
+            title: "Error",
+            description: "Failed to delete file. Please try again.",
+            variant: "destructive",
+          })
+          // alert("Failed to delete file")
         }
       } catch (error) {
         console.error("Failed to delete file:", error)
-        alert("Failed to delete file")
+        // alert("Failed to delete file")
+        toast({
+            title: "Error",
+            description: "Failed to delete file. Please try again.",
+            variant: "destructive",
+        })
       }
     }
   }

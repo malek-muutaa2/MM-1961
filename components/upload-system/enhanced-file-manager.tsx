@@ -12,6 +12,7 @@ import { Download, Trash2, Eye, FileText, Search, Info, Cloud, HardDrive, Globe 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import FileDetailsModal from "./file-details-modal"
 import FilePropertiesModal from "./file-properties-modal"
+import {useToast} from "@/hooks/use-toast";
 
 interface UploadedFile {
   id: string
@@ -43,7 +44,7 @@ export default function EnhancedFileManager() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedConfig, setSelectedConfig] = useState<string>("all")
   const [selectedStorageType, setSelectedStorageType] = useState<string>("all")
-
+  const { toast } = useToast()
   useEffect(() => {
     fetchData()
   }, [])
@@ -159,11 +160,22 @@ export default function EnhancedFileManager() {
           setFiles((prev) => prev.filter((f) => f.id !== file.id))
         } else {
           const error = await response.json()
-          alert(`Failed to delete file: ${error.message}`)
+          // alert(`Failed to delete file: ${error.message}`)
+          toast({
+            title: "Error",
+            description: `Failed to delete file: ${error.message}`,
+            variant: "destructive",
+          })
         }
       } catch (error) {
         console.error("Failed to delete file:", error)
-        alert("Failed to delete file")
+        // alert("Failed to delete file")
+        toast({
+            title: "Error",
+            description: "Failed to delete file. Please try again.",
+            variant: "destructive",
+        })
+
       }
     }
   }

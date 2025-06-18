@@ -12,6 +12,7 @@ import {Badge} from "@/components/ui/badge"
 import {Upload, FileText, AlertCircle, CheckCircle, X, Download} from "lucide-react"
 import type {UploadConfiguration, UploadResponse} from "@/types/upload"
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
+import {useToast} from "@/hooks/use-toast";
 
 interface UploadInterfaceProps {
     configurations: UploadConfiguration[]
@@ -25,7 +26,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
     const [uploadResult, setUploadResult] = useState<UploadResponse | null>(null)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
-
+    const { toast } = useToast();
     const selectedConfiguration = configurations.find((c) => c.id === Number(selectedConfig))
 
     const handleDrag = useCallback((e: React.DragEvent) => {
@@ -50,7 +51,12 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
 
     const handleFileSelection = (file: File) => {
         if (!selectedConfiguration) {
-            alert("Please select a configuration first")
+            toast({
+                title: "select a configuration",
+                description:"Please select a configuration first",
+                variant: 'destructive'
+            })
+            // alert("Please select a configuration first")
             return
         }
 
@@ -59,13 +65,23 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
         const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
         if (!allowedTypes.includes(fileExtension || "")) {
-            alert(`File type not allowed. Allowed types: ${allowedTypes.join(", ")}`)
+            toast({
+                title: "File types",
+                description: `File type not allowed. Allowed types: ${allowedTypes.join(", ")}`,
+                variant: 'destructive'
+            })
+            // alert(`File type not allowed. Allowed types: ${allowedTypes.join(", ")}`)
             return
         }
 
         // Validate file size
-        if (file.size > selectedConfiguration.max_file_size) {
-            alert(`File too large. Maximum size: ${formatFileSize(selectedConfiguration.max_file_size)}`)
+        if (selectedConfiguration?.max_file_size && file.size > selectedConfiguration?.max_file_size) {
+            toast({
+                title: "File too large",
+                description: `File too large. Maximum size: ${formatFileSize(selectedConfiguration?.max_file_size)}`,
+                variant: 'destructive'
+            })
+            // alert(`File too large. Maximum size: ${formatFileSize(selectedConfiguration.max_file_size)}`)
             return
         }
 
@@ -217,7 +233,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                                     </div>
                                     <div>
                                         <span className="font-medium">Max Size:</span>
-                                        <p className="text-muted-foreground">{formatFileSize(selectedConfiguration.max_file_size)}</p>
+                                        <p className="text-muted-foreground">{formatFileSize(selectedConfiguration?.max_file_size)}</p>
                                     </div>
                                     <div>
                                         <span className="font-medium">Max Rows:</span>

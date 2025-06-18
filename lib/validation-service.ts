@@ -35,6 +35,9 @@ export class ValidationService {
     const errors: ValidationError[] = []
     const processedRows: any[] = []
     console.log("line length : ", lines?.length)
+
+
+
     if (lines.length === 0) {
       errors.push({
         code: "EMPTY_FILE",
@@ -87,6 +90,25 @@ export class ValidationService {
     // Validate data rows
     const dataLines = lines.slice(1)
     let validRowCount = 0
+
+    console.log("dataLines length : ", dataLines?.length)
+
+    console.log("this.config.maxRows =: ", this.config.maxRows)
+
+    if(dataLines?.length > this.config.maxRows) {
+        errors.push({
+            code: "MAX_ROWS_EXCEEDED",
+            message: `File exceeds maximum allowed rows (${this.config.maxRows})`,
+            line: 1,
+        })
+        return {
+            isValid: false,
+            errors,
+            processedRows: [],
+            totalRows: dataLines.length,
+            validRows: 0,
+        }
+    }
 
     dataLines.forEach((line, index) => {
       const lineNumber = index + 2 // +2 because we skip header and arrays are 0-indexed

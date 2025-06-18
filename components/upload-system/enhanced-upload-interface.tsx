@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect} from "react"
+import React, {useEffect, useLayoutEffect} from "react"
 import { useState, useCallback, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Upload, FileText, AlertCircle, CheckCircle, X, AlertTriangle } from "lucide-react"
 import ConfigurationSelector from "./configuration-selector"
 import type { UploadConfiguration, UploadResponse, ValidationError } from "@/types/upload"
-import {UserRole} from "@/contexts/role-context";
+import {useToast} from "@/hooks/use-toast";
 
 interface EnhancedUploadInterfaceProps {
   configurations: UploadConfiguration[]
@@ -30,11 +30,11 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [selectedConfiguration, setSelectedConfiguration] = useState<UploadConfiguration | null | undefined >(configurations.find((c) => c.id === selectedConfig))
   // const selectedConfiguration = configurations.find((c) => c.id === selectedConfig)
+  const { toast } = useToast();
 
 
   useEffect(() => {
     const initConfiguration = (typeof window !== "undefined" && localStorage.getItem("selectedConfiguration")) as string;
-    // console.log("Initial role from localStorage:", initConfiguration);
     if (!initConfiguration) {
       localStorage.setItem("selectedConfiguration", configurations[0]?.id.toString())
       setSelectedConfig(configurations[0]?.id)
@@ -53,7 +53,7 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
     } else if (e.type === "dragleave") {
       setDragActive(false)
     }
-  }, [])
+  }, [selectedConfiguration])
 
 
   const handleDrop = useCallback((e: React.DragEvent) => {
@@ -61,14 +61,20 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
     e.stopPropagation()
     setDragActive(false)
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      // console.log( "rerfd", selectedConfig, selectedConfiguration)
       handleFileSelection(e.dataTransfer.files[0])
     }
-  }, [])
+  }, [selectedConfiguration])
 
   const handleFileSelection = (file: File) => {
-    console.log(selectedConfig, selectedConfiguration)
+    // console.log(selectedConfig, selectedConfiguration)
     if (!selectedConfiguration) {
-      alert("Please select a configuration first")
+      toast({
+        title: "select a configuration",
+        description:"Please select a configuration first",
+        variant: 'destructive'
+      })
+      // alert("Please select a configuration first")
       return
     }
 
@@ -77,13 +83,23 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
     const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
     if (!allowedTypes.includes(fileExtension || "")) {
-      alert(`File type not allowed. Allowed types: ${allowedTypes.join(", ")}`)
+      toast({
+        title: "File types",
+        description: `File type not allowed. Allowed types: ${allowedTypes.join(", ")}`,
+        variant: 'destructive'
+      })
+      // alert(`File type not allowed. Allowed types: ${allowedTypes.join(", ")}`)
       return
     }
 
     // Validate file size
-    if (file.size > selectedConfiguration.max_file_size) {
-      alert(`File too large. Maximum size: ${formatFileSize(selectedConfiguration.max_file_size)}`)
+    if (selectedConfiguration?.max_file_size && file.size > selectedConfiguration?.max_file_size) {
+      toast({
+        title: "File too large",
+        description: `File too large. Maximum size: ${formatFileSize(selectedConfiguration?.max_file_size)}`,
+        variant: 'destructive'
+      })
+      // alert(`File too large. Maximum size: ${formatFileSize(selectedConfiguration.max_file_size)}`)
       return
     }
 

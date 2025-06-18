@@ -258,7 +258,7 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
                     </div>
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Max File Size</label>
-                      <p className="text-sm">{formatFileSize(configDetails.max_file_size)}</p>
+                      <p className="text-sm">{formatFileSize(configDetails?.max_file_size)}</p>
                     </div>
                     <div className="col-span-2">
                       <label className="text-sm font-medium text-muted-foreground">Description</label>

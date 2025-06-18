@@ -370,7 +370,8 @@ export default function ConfigurationManager({
                                                     <Input
                                                         id="max_file_size"
                                                         type="number"
-                                                        value={editingConfig.max_file_size ? editingConfig.max_file_size / (1024 * 1024) : ""}
+                                                        min={1}
+                                                        value={editingConfig?.max_file_size ? editingConfig?.max_file_size / (1024 * 1024) : ""}
                                                         onChange={(e) =>
                                                             handleConfigChange("max_file_size", Number.parseInt(e.target.value) * 1024 * 1024)
                                                         }
@@ -383,6 +384,7 @@ export default function ConfigurationManager({
                                                     <Input
                                                         id="max_rows"
                                                         type="number"
+                                                        min={1}
                                                         value={editingConfig.max_rows || ""}
                                                         onChange={(e) =>
                                                             handleConfigChange("max_rows", Number.parseInt(e.target.value) || undefined)
@@ -492,6 +494,7 @@ export default function ConfigurationManager({
                                                                             <Label>Min Length</Label>
                                                                             <Input
                                                                                 type="number"
+                                                                                min={1}
                                                                                 value={column.min_length || ""}
                                                                                 onChange={(e) =>
                                                                                     updateColumn(index, "min_length", Number.parseInt(e.target.value) || undefined)
@@ -502,6 +505,7 @@ export default function ConfigurationManager({
                                                                             <Label>Max Length</Label>
                                                                             <Input
                                                                                 type="number"
+                                                                                min={1}
                                                                                 value={column.max_length || ""}
                                                                                 onChange={(e) =>
                                                                                     updateColumn(index, "max_length", Number.parseInt(e.target.value) || undefined)
@@ -524,6 +528,7 @@ export default function ConfigurationManager({
                                                                             <Label>Min Value</Label>
                                                                             <Input
                                                                                 type="number"
+                                                                                min={1}
                                                                                 value={column.min_value || ""}
                                                                                 onChange={(e) =>
                                                                                     updateColumn(index, "min_value", Number.parseFloat(e.target.value) || undefined)
@@ -534,6 +539,7 @@ export default function ConfigurationManager({
                                                                             <Label>Max Value</Label>
                                                                             <Input
                                                                                 type="number"
+                                                                                min={1}
                                                                                 value={column.max_value || ""}
                                                                                 onChange={(e) =>
                                                                                     updateColumn(index, "max_value", Number.parseFloat(e.target.value) || undefined)

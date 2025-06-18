@@ -47,7 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // For simplicity in this demo, we'll just use CSV for all formats
     // In a real implementation, you would use the xlsx library for Excel files
-    const delimiter = config.delimiter
+    const delimiter = config.delimiter || ','
     const headerRow = headers.join(delimiter)
     const exampleRow = exampleData.join(delimiter)
     const csvContent = `${headerRow}\n${exampleRow}`
