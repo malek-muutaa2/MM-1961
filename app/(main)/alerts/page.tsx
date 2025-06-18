@@ -37,7 +37,7 @@ async function getAlerts(searchParams: {
     ...(order && { order }),
   })
 
-  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/alerts?${params}`, {
+  const response = await fetch(`/api/alerts?${params}`, {
     cache: "no-store",
   })
 
