@@ -9,9 +9,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@node-rs/argon2'],
-  },
+
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
