@@ -91,12 +91,12 @@ export function TopNav( { notificationData , countUnread }: TopNavProps
   const { data: session, status } = useSession();
   // const unreadCount2 = notificationsData.filter((n) => !n.read).length
 
-  // const filteredNotifications =
-  //   notificationFilter === "all"
-  //     ? notificationsData
-  //     : notificationFilter === "unread"
-  //       ? notificationsData.filter((n) => !n.read)
-  //       : notificationsData.filter((n) => n.type === notificationFilter)
+  const filteredNotifications =
+    notificationFilter === "all"
+      ? notificationsData
+      : notificationFilter === "unread"
+        ? notificationsData.filter((n) => !n.readAt)
+        : notificationsData.filter((n) => n.typeName === notificationFilter)
 
   // const markAsRead2 = (id: number) => {
   //   setNotificationsData((prev) =>
@@ -232,12 +232,12 @@ export function TopNav( { notificationData , countUnread }: TopNavProps
                 </div>
                 <DropdownMenuSeparator />
                 <ScrollArea className="h-[300px]">
-                  {notificationsData && notificationsData.length > 0 ? (
-                    notificationsData.map((notification) => (
+                  {filteredNotifications && filteredNotifications.length > 0 ? (
+                    filteredNotifications.map((notification) => (
                       <DropdownMenuItem key={notification.id} className="cursor-pointer p-0">
                         <div className={`flex w-full p-3 ${!notification.readAt ? "bg-muted/50" : ""}`}>
                           <div className="flex items-start gap-3 w-full">
-                            {/* <div className="mt-1.5">{getNotificationIcon(notification.type)}</div> */}
+                            <div className="mt-1.5">{getNotificationIcon(notification.typeName)}</div>
                             <div className="flex-1 space-y-1">
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-medium">{notification.title}</p>

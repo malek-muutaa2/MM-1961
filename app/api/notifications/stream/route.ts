@@ -2,7 +2,8 @@
 import { NextRequest } from 'next/server';
 import { Client } from 'pg';
 export const runtime = 'nodejs'; // 👈 force Node.js environment
-
+export const maxDuration = 300; 
+export const dynamic = 'force-dynamic';
 import dns from 'dns';
 process.env.PG_NATIVE = 'false'; // Disable pg-native
 export async function GET(request: NextRequest) {
