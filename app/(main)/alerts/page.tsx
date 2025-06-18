@@ -16,10 +16,8 @@ interface AlertsPageProps {
   }>
 }
 
-
-
 export default async function AlertsPage({ searchParams }: AlertsPageProps) {
-  // Await searchParams first --
+  // Await searchParams first
 
 
 
