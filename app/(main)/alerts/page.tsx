@@ -49,7 +49,7 @@ async function getAlerts(searchParams: {
 }
 
 export default async function AlertsPage({ searchParams }: AlertsPageProps) {
-  // Await searchParams first --
+  // Await searchParams first
   const resolvedSearchParams = await searchParams
 
   const data = await getAlerts(resolvedSearchParams)
@@ -64,7 +64,6 @@ export default async function AlertsPage({ searchParams }: AlertsPageProps) {
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Alerts</h2>
         </div>
-
 
         <div className="grid gap-4 md:grid-cols-7">
           <Card className="md:col-span-5">
