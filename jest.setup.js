@@ -1,5 +1,4 @@
 require("@testing-library/jest-dom");
-// const { TextEncoder, TextDecoder } = require('util');
 //
 require("jest-fetch-mock").enableMocks();
 require("dotenv").config();
