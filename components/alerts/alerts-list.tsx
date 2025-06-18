@@ -333,6 +333,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                 {Math.min(pagination.currentPage * pagination.limit, pagination.totalCount)} of {pagination.totalCount}{" "}
                 alerts
               </div>
+              
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -345,6 +346,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                         className={!pagination.hasPreviousPage ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>
+                  
                   <PaginationItem>
                     <PaginationPrevious
                         href="#"
@@ -368,6 +370,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                         className={!pagination.hasNextPage ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>
+                  
                   <PaginationItem>
                     <PaginationLast
                         href="#"
