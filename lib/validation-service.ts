@@ -110,10 +110,10 @@ export class ValidationService {
 
     console.log("this.config.maxRows =: ", this.config.maxRows)
 
-    if(dataLines?.length > this.config.maxRows) {
+    if(this.config?.maxRows && dataLines?.length > this.config?.maxRows) {
         errors.push({
             code: "MAX_ROWS_EXCEEDED",
-            message: `File exceeds maximum allowed rows (${this.config.maxRows})`,
+            message: `File exceeds maximum allowed rows (${this.config?.maxRows || 0})`,
             line: 1,
         })
         return {
