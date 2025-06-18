@@ -32,7 +32,7 @@ export function AlertCommentDialog({ alert, open, onOpenChange, onSuccess }: Ale
         if (!comment.trim()) {
             toast({
                 title: "Error",
-                description: "Please enter a comment",
+                description: "Please enter a comment!",
                 variant: "destructive",
             })
             return
