@@ -49,7 +49,7 @@ async function getAlerts(searchParams: {
 }
 
 export default async function AlertsPage({ searchParams }: AlertsPageProps) {
-  // Await searchParams first
+  // Await searchParams first --
   const resolvedSearchParams = await searchParams
 
   const data = await getAlerts(resolvedSearchParams)
