@@ -192,13 +192,17 @@ useEffect(() => {
 const newAnnotated = notifications
   .filter(n => !prev.some(p => p.id === n.id))
   .map(n => {
-    const dateObj = new Date(n.created_at);
-    return {
+    const date = new Date(n.created_at);
+        return {
       ...n,
-      created_at: dateObj.toISOString(),
+      // This will be a string like: 2025-06-19T09:19:30.505Z
+      created_at: new Date(), // convert to Date object
+            created_at_str: n.created_at, // optional for debugging
+      redirectUrl: n.redirect_url ?? null,
       typeName: typeMap.get(n.type_id) ?? 'Unknown',
     };
   });
+
 
     
     if (newAnnotated.length === 0) return prev;
@@ -222,8 +226,8 @@ useEffect(() => {
   setNotificationsData(notificationData);
 }, [notificationData, router,markAsRead]);
 
-   console.log("notificationsData", notificationsData);
-   
+   console.log("notificationsnotifications", notifications);
+  
   return (
     <header className="border-b bg-background sticky top-0 z-10">
       <div className="container mx-auto max-w-7xl">
@@ -320,7 +324,7 @@ useEffect(() => {
                               <div className="flex-1 space-y-1">
                                 <div className="flex items-center justify-between">
                                   <p className="text-sm font-medium">
-                                    {notification.redirectUrl ? (
+                                    {notification.redirectUrl  ? (
                                       <Link
                                         href={notification.redirectUrl}
                                         className="text-primary underline hover:opacity-80"

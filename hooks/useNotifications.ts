@@ -42,66 +42,59 @@ export function useNotifications(userId: number) {
     }
   }, []);
 
- useEffect(() => {
-  if (!userId) return;
+useEffect(() => {
+    if (!userId) return;
+    let eventSource: EventSource | null = null;
+    let refreshTimer: NodeJS.Timeout;
+    let reconnectTimer: NodeJS.Timeout;
 
-  let eventSource: EventSource | null = null;
-  let reconnectTimer: NodeJS.Timeout;
-  let refreshTimer: NodeJS.Timeout;
-
-  const setupEventSource = () => {
-    // Close existing connection if any
-    if (eventSource) {
-      eventSource.close();
-    }
-
-    // Create new EventSource connection
-    eventSource = new EventSource(`/api/notifications/stream`);
-
-    eventSource.addEventListener('initial', (event) => {
-      const data = JSON.parse(event.data) as Notification[];
-      setNotifications(data);
-      setUnreadCount(data.filter(n => !n.read_at).length);
-      setIsConnected(true);
-      
-      // Schedule refresh before Vercel's 5-minute limit (refresh at 4 minutes)
-      refreshTimer = setTimeout(() => {
-        setupEventSource(); // Create new connection before timeout
-      }, 4 * 60 * 1000); // 4 minutes
-    });
-
-    eventSource.addEventListener('update', (event) => {
-      const newNotifications = JSON.parse(event.data) as notificationTypes;
-      const notificationArray = Array.isArray(newNotifications) ? newNotifications : [newNotifications];
-      const filteredNotifications = notificationArray.filter(n => n.user_id === userId);
-      
-      setNotifications(prev => [...filteredNotifications, ...prev]);
-      setUnreadCount(prev => prev + notificationArray.filter(n => !n.read_at).length);
-    });
-
-    eventSource.onerror = () => {
-      setIsConnected(false);
+    const cleanup = () => {
       if (eventSource) eventSource.close();
-      
-      // Clear any pending refresh (since we're in error state)
       clearTimeout(refreshTimer);
-      
-      // Attempt reconnect after 5 seconds
-      reconnectTimer = setTimeout(() => {
-        setupEventSource();
-      }, 5000);
+      clearTimeout(reconnectTimer);
     };
+
+    const setup = () => {
+      cleanup();
+      eventSource = new EventSource('/api/notifications/stream');
+
+      eventSource.addEventListener('open', () => {
+        setIsConnected(true);
+      });
+
+      eventSource.addEventListener('initial', (event) => {
+        const data = JSON.parse(event.data) as notificationTypes[];
+        setNotifications(data);
+        setUnreadCount(data.filter(n => !n.read_at).length);
+        setIsConnected(true);
+
+        // reconnect after 4 mins to avoid 5min timeout
+      refreshTimer = setTimeout(setup, 4 * 60 * 1000);      });
+
+      eventSource.addEventListener('update', (event) => {
+        const payload = JSON.parse(event.data) as notificationTypes | notificationTypes[];
+        const arr = Array.isArray(payload) ? payload : [payload];
+        const filtered = arr.filter(n => n.user_id === userId);
+
+        setNotifications(prev => [...filtered, ...prev]);
+        setUnreadCount(prev => prev + arr.filter(n => !n.read_at).length);
+              refreshTimer = setTimeout(setup, 4 * 60 * 1000);
+      });
+
+     eventSource.onerror = () => {
+      setIsConnected(false);
+      cleanup();
+      reconnectTimer = setTimeout(setup, 4000);
+    };
+    // ...initial, update listeners...
+    refreshTimer = setTimeout(setup, 4 * 60 * 1000);
   };
 
-  // Initial setup
-  setupEventSource();
+    setup();
 
-  return () => {
-    // Cleanup on unmount
-    if (eventSource) eventSource.close();
-    clearTimeout(reconnectTimer);
-    clearTimeout(refreshTimer);
-  };
-}, [userId]);
+    return () => {
+      cleanup();
+    };
+  }, [userId]);
   return { notifications, unreadCount, markAsRead, isConnected };
 }
