@@ -155,7 +155,7 @@ export class ValidationService {
               // If the error for this column already exists, skip adding it again
               console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
               rowErrors.push({
-                code: "UNKNOWN_COLUMN",
+                code: "UNEXPECTED_COLUMN",
                 message: `Column '${header}' is not defined in the configuration`,
                 column: header,
                 row: rowNumber,
@@ -236,6 +236,24 @@ export class ValidationService {
         })
       }
     })
+
+
+    // Vérifier l'ordre des colonnes
+    const expectedOrder = this.columns.map((col) => col.name)
+    let orderMismatch = false
+    for (let i = 0; i < Math.min(headers.length, expectedOrder.length); i++) {
+      if (headers[i] !== expectedOrder[i]) {
+        orderMismatch = true
+        break
+      }
+    }
+    if (orderMismatch) {
+      errors.push({
+        code: "COLUMN_ORDER_MISMATCH",
+        message: `Columns are not in the expected order. \n Expected: [${expectedOrder.join(", ")}], \n Found: [${headers.join(", ")}]`,
+        line: 1,
+      })
+    }
 
     return errors
   }
