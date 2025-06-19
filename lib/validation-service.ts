@@ -476,7 +476,8 @@ export class ValidationService {
 
   private validateWithFormat(dateString: string, format: string): boolean {
     // Create regex based on format
-    let regexPattern = format
+    const normalizedFormat = format.toLowerCase();
+    let regexPattern = normalizedFormat
         .replace(/yyyy/g, '\\d{4}')
         .replace(/yy/g, '\\d{2}')
         .replace(/MM/g, '(0[1-9]|1[0-2])')
@@ -489,10 +490,13 @@ export class ValidationService {
     const formatRegex = new RegExp(`^${regexPattern}$`);
 
     // Check format match
-    if (!formatRegex.test(dateString)) return false;
+    if (!formatRegex.test(dateString)) {
+      console.log("format not match ::: 1")
+      return false;
+    }
 
     // Extract date components based on format
-    const formatParts = format.split(/[\/\-]/);
+    const formatParts = normalizedFormat.split(/[\/\-]/);
     const dateParts = dateString.split(/[\/\-]/);
 
     const dateObj: any = {};
@@ -502,10 +506,11 @@ export class ValidationService {
 
     // Create Date object (months are 0-indexed in JavaScript)
     const year = dateObj.yyyy || (dateObj.yy ? 2000 + dateObj.yy : null);
-    const month = (dateObj.MM || dateObj.M) - 1;
+    const month = (dateObj.mm || dateObj.m) - 1;
     const day = dateObj.dd || dateObj.d;
 
     const date = new Date(year, month, day);
+
 
     // Validate date (check if rolled over to next month)
     return (
@@ -528,7 +533,7 @@ export class ValidationService {
       try {
         // const regex = new RegExp(columnConfig.pattern)
         // if (!regex.test(value)) {
-        if (!this.validateWithFormat(value, columnConfig.pattern)) {
+        if (!this.validateWithFormat(value, columnConfig?.pattern)) {
           errors.push({
             code: "DATE_FORMAT_MISMATCH",
             message: `${columnConfig.display_name} must match the required date format`,
