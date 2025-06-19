@@ -46,9 +46,10 @@ export function useNotifications(userId: number) {
     // Ensure newNotifications is always an array of objects
     const notificationArray = Array.isArray(newNotifications) ? newNotifications : [newNotifications];
 
-    setNotifications(prev => [...notificationArray, ...prev]);
+    const filteredNotifications = notificationArray.filter(n => n.user_id === userId);
+    setNotifications(prev => [...filteredNotifications, ...prev]);
       setUnreadCount(prev => prev + notificationArray.filter(n => !n.read_at).length);
-      console.log('New notificationssqqs received:', notificationArray);
+      console.log('New notificationssqqs received:', filteredNotifications);
       
     //   // Show toast for new notifications
     //   newNotifications.forEach(notification => {

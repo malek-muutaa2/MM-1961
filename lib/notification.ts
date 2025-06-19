@@ -1,6 +1,9 @@
+"use server";
 import { and, count, desc, eq, isNull } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import {  notifications, notificationTypes } from "./db/schema";
+import { use } from "react";
+import { revalidatePath } from "next/cache";
 
 
 
@@ -13,7 +16,7 @@ export type Notification = {
     redirectUrl: string | null;
     data: unknown;
     readAt: Date | null;
-    createdAt: Date;
+    created_at: Date;
     typeName: string | null;
     };
 export const getNotificationByUserId = async (userId: number) => {
@@ -26,7 +29,7 @@ const res :Notification[] =  await db.select({
     redirectUrl: notifications.redirect_url,
     data: notifications.data,
     readAt: notifications.read_at,
-    createdAt: notifications.created_at,
+    created_at: notifications.created_at,
     typeName: notificationTypes.name,
 })
   .from(notifications)
@@ -47,3 +50,39 @@ export const CountUnreadNotifications = async (userId: number) => {
     ))
   return result[0]?.count ?? 0;
 };
+
+export const markNotificationAsRead = async (notificationId: number) => {
+  const result = await db
+    .update(notifications)
+    .set({ read_at: new Date() })
+    .where(eq(notifications.id, notificationId))
+    .returning();
+
+  return result[0];
+}
+export const markAllNotificationsAsRead = async (userId: number) => {
+  const result = await db
+    .update(notifications)
+    .set({ read_at: new Date() })
+    .where(eq(notifications.user_id, userId))
+    .returning();
+
+  return result;
+}
+export type NotificationType = {
+  id: number;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  created_at: Date;
+};
+export const notificationTypesList = async () => {
+  const res = await db.select().from(notificationTypes);
+  return res;
+}
+export const markasread  = async (userId: number) => {
+  const res = await markAllNotificationsAsRead(userId);
+     revalidatePath('/', 'layout')
+  
+    return{ sucess: "Notification marked as read", notification: res };
+}

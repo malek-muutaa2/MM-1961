@@ -4,26 +4,47 @@ import { Client } from 'pg';
 export const runtime = 'nodejs'; // 👈 force Node.js environment
 export const maxDuration = 300; 
 export const dynamic = 'force-dynamic';
-import dns from 'dns';
 process.env.PG_NATIVE = 'false'; // Disable pg-native
 export async function GET(request: NextRequest) {
-  const headers = { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' };
   const stream = new ReadableStream({
-    async start(ctrl) {
-      const client = new Client({ connectionString: process.env.DATABASE_URL.replace('-pooler','') });
+    async start(controller) {
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL.replace('-pooler', '')
+      });
       await client.connect();
-      await client.query(`LISTEN notifications`);
+      await client.query('LISTEN notifications');
 
-      client.on('notification', msg => {
-        ctrl.enqueue(`event: update\ndata: ${msg.payload}\n\n`);
-      });
+      let closed = false;
 
-      request.signal.addEventListener('abort', async () => {
-        await client.query('UNLISTEN notifications');
-        await client.end();
-      });
+      const handler = (msg) => {
+        if (closed) return;
+        try {
+          controller.enqueue(`event: update\ndata: ${msg.payload}\n\n`);
+        } catch (err) {
+          closed = true;
+          cleanup(); // Ensure immediate cleanup on overflow
+        }
+      };
+
+      client.on('notification', handler);
+
+      async function cleanup() {
+        closed = true;
+        client.off('notification', handler);
+        try { await client.query('UNLISTEN notifications'); } catch {}
+        try { await client.end(); } catch {}
+        try { controller.close(); } catch {}
+      }
+
+      request.signal.addEventListener('abort', cleanup);
     }
   });
 
-  return new Response(stream, { headers });
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache'
+    }
+  });
 }
+

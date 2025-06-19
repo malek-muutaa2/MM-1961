@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getToken } from "next-auth/jwt"
-
+// import { startNotificationListener } from "./lib/listenAndEmail";
+// startNotificationListener();
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
-  console.log("token", token);
   
   const isAuthenticated = !!token
     const { pathname } = request.nextUrl

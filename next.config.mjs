@@ -8,7 +8,8 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-  },
+  }, 
+     serverExternalPackages: ['pg'],
    webpack: (config, { isServer }) => {
         config.externals.push('cloudflare:sockets'); 
     if (!isServer) {

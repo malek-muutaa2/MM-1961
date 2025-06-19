@@ -7,7 +7,7 @@ import { LayoutProvider } from "@/components/layout-provider"
 import { AuthProvider } from "@/components/auth/auth-provider"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { getServerAuthSession } from "@/lib/auth"
-import { CountUnreadNotifications, getNotificationByUserId } from "@/lib/notification"
+import { CountUnreadNotifications, getNotificationByUserId, notificationTypesList } from "@/lib/notification"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -33,11 +33,12 @@ export default async function  RootLayout({
     countUnread = await CountUnreadNotifications(userinfo?.id);
   } //(1)
 
-
+const notificationtypes = await notificationTypesList();
+console.log("Notification data:", notificationData);
 
   return (
     <div>
-            <LayoutProvider countUnread={countUnread} notificationData={notificationData}    
+            <LayoutProvider notificationtypes={notificationtypes} countUnread={countUnread} notificationData={notificationData}    
               error={authSession?.error ?? ""}
  userinfo={userinfo}>{children}</LayoutProvider>
 
