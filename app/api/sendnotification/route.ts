@@ -31,12 +31,61 @@ export async function POST(req: NextRequest) {
     .where(inArray(users.id, userIds),
 );
 
-  const batchRequests = userEmails.map(({ email }) => ({
+const batchRequests = userEmails.map(({ email }) => ({
     from: "Muutaa Inc. Optivian <muutaa@no-reply.demandamp.plus>",
-    to: email,
-    subject: title,
-    html: `<p>${message}</p><p><a href="${redirectUrl}">View</a></p>`,
-  }));
+  to: email,
+  subject: title,
+  html: `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width">
+      <title>${title}</title>
+    </head>
+    <body style="margin:0; padding:0; background:#f4f4f4; font-family:Arial,sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f4f4">
+        <tr><td align="center" style="padding:20px 0;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; background:#ffffff; border-radius:8px; overflow:hidden;">
+            <!-- Header -->
+            <tr>
+              <td style="background:#004080; padding:20px; text-align:center;">
+                <h1 style="color:#ffffff; font-size:24px; margin:0;">${title}</h1>
+              </td>
+            </tr>
+            <!-- Content -->
+            <tr>
+              <td style="padding:20px; color:#333333; font-size:16px; line-height:1.5;">
+                <p>${message}</p>
+              </td>
+            </tr>
+            <!-- CTA Button -->
+            <tr>
+              <td align="center" style="padding-bottom:20px;">
+                <a href="${redirectUrl}" style="
+                  background:#004080;
+                  color:#ffffff;
+                  padding:12px 24px;
+                  text-decoration:none;
+                  border-radius:4px;
+                  display:inline-block;
+                  font-size:16px;">View Notification</a>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="background:#f0f0f0; padding:16px; text-align:center; font-size:12px; color:#777777;">
+                <p style="margin:0;">© ${new Date().getFullYear()} Muutaa Inc.</p>
+                <p style="margin:4px 0 0;">If you no longer wish to receive these emails, you can unsubscribe here.</p>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>
+  `,
+}));
 
   // 3️⃣ Send all emails via batch
   try {

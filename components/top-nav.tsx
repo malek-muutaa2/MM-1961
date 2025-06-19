@@ -189,9 +189,17 @@ useEffect(() => {
     if (!prev) return notifications;
 
     const typeMap = new Map(notificationtypes.map(t => [t.id, t.name]));
-    const newAnnotated = notifications
-      .filter(n => !prev.some(p => p.id === n.id))
-      .map(n => ({ ...n, typeName: typeMap.get(n.type_id) ?? 'Unknown' }));
+const newAnnotated = notifications
+  .filter(n => !prev.some(p => p.id === n.id))
+  .map(n => {
+    const dateObj = new Date(n.created_at);
+    return {
+      ...n,
+      created_at: dateObj.toISOString(),
+      typeName: typeMap.get(n.type_id) ?? 'Unknown',
+    };
+  });
+
     
     if (newAnnotated.length === 0) return prev;
 
@@ -212,8 +220,9 @@ useEffect(() => {
 
 useEffect(() => {
   setNotificationsData(notificationData);
-}, [notificationData, router]);
-   console.log("newNotificationMeta", newNotificationMeta);
+}, [notificationData, router,markAsRead]);
+
+   console.log("notificationsData", notificationsData);
    
   return (
     <header className="border-b bg-background sticky top-0 z-10">
@@ -270,7 +279,7 @@ useEffect(() => {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[380px]">
+              <DropdownMenuContent align="end" className="w-[450px]">
                 <div className="flex items-center justify-between p-2">
                   <DropdownMenuLabel className="text-base font-semibold">Notifications</DropdownMenuLabel>
                   <div className="flex items-center gap-1">
@@ -336,6 +345,12 @@ useEffect(() => {
                                         onClick={(e) => {
                                           e.stopPropagation()
                                           markAsRead(notification.id)
+                                           setNotificationsData(prev => 
+          prev.map(n => 
+            n.id === notification.id ? { ...n, read_at: new Date() } : n
+          )
+        );
+        setCountUnread(prev => prev - 1);
                                         }}
                                       >
                                         <X className="h-3 w-3" />
