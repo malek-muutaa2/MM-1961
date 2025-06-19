@@ -150,14 +150,20 @@ export class ValidationService {
             }
           }else {
             // uknown column find in configuration
-            rowErrors.push({
-              code: "UNKNOWN_COLUMN",
-              message: `Column '${header}' is not defined in the configuration`,
-              column: header,
-              row: rowNumber,
-              line: lineNumber,
-              value: value,
-            })
+            // check if the header exists in rowErrors
+            if (rowErrors.some((error) => error.column !== header)) {
+              // If the error for this column already exists, skip adding it again
+              console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
+              rowErrors.push({
+                code: "UNKNOWN_COLUMN",
+                message: `Column '${header}' is not defined in the configuration`,
+                column: header,
+                row: rowNumber,
+                line: lineNumber,
+                value: value,
+              })
+            }
+
           }
         })
 
