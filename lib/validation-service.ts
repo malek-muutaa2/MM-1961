@@ -123,6 +123,8 @@ export class ValidationService {
             totalRows: dataLines.length,
             validRows: 0,
         }
+    }else {
+      console.log("dataLines length is within maxRows limit")
     }
 
     dataLines.forEach((line, index) => {
@@ -186,7 +188,7 @@ export class ValidationService {
   private validateHeaders(headers: string[]): ValidationError[] {
     const errors: ValidationError[] = []
     const requiredColumns = this.columns.filter((col) => col.required)
-
+    console.log("headers :: ", headers)
     // Check for missing required columns
     requiredColumns.forEach((column) => {
       if (!headers.includes(column.name)) {
@@ -230,8 +232,9 @@ export class ValidationService {
   ): ValidationError[] {
     const errors: ValidationError[] = []
 
+    // todo : check if valuesRequired
     // Required field validation
-    if (columnConfig.required && !value) {
+    if (columnConfig.valuesRequired && !value || columnConfig.valuesRequired && value.trim() === "") {
       errors.push({
         code: "MISSING_REQUIRED_VALUE",
         message: `${columnConfig.display_name} is required`,
@@ -241,10 +244,20 @@ export class ValidationService {
         value: value,
       })
       return errors // Don't continue validation if required field is empty
+    } else if (columnConfig.valuesRequired && ["null", "undefined", "NaN"].includes(value)) {
+        errors.push({
+            code: "INVALID_REQUIRED_VALUE",
+            message: `${columnConfig.display_name} cannot be null, undefined, or NaN`,
+            column: columnConfig.name,
+            row: rowNumber,
+            line: lineNumber,
+            value: value,
+        })
+        return errors // Don't continue validation if required field is invalid
     }
 
     // Skip further validation for empty optional fields
-    if (!value && !columnConfig.required) {
+    if (!value && !columnConfig.valuesRequired) {
       return errors
     }
 
@@ -275,6 +288,27 @@ export class ValidationService {
   ): ValidationError[] {
     const errors: ValidationError[] = []
 
+    if (columnConfig.valuesRequired && !value || columnConfig.valuesRequired && value.trim() === "") {
+      errors.push({
+        code: "MISSING_REQUIRED_VALUE",
+        message: `${columnConfig.display_name} is required`,
+        column: columnConfig.name,
+        row: rowNumber,
+        line: lineNumber,
+        value: value,
+      })
+      return errors // Don't continue validation if required field is empty
+    } else if (columnConfig.valuesRequired && ["null", "undefined", "NaN"].includes(value)) {
+      errors.push({
+        code: "INVALID_REQUIRED_VALUE",
+        message: `${columnConfig.display_name} cannot be null, undefined, or NaN`,
+        column: columnConfig.name,
+        row: rowNumber,
+        line: lineNumber,
+        value: value,
+      })
+      return errors // Don't continue validation if required field is invalid
+    }
     // Length validation
     if (columnConfig.min_length && value.length < columnConfig.min_length) {
       errors.push({
@@ -494,7 +528,7 @@ export class ValidationService {
         }
       } else if (char === delimiter && !inQuotes) {
         // End of field
-        result.push(current)
+        result.push(current?.trim()?.replace("\r", "")?.replace("\n", ""))
         current = ""
         i++
       } else {
@@ -504,7 +538,7 @@ export class ValidationService {
     }
 
     // Add the last field
-    result.push(current)
+    result.push(current?.trim()?.replace("\r", "")?.replace("\n", ""))
     return result
   }
 

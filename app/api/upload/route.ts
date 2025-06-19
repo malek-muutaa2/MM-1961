@@ -9,6 +9,7 @@ import {
 import { eq } from "drizzle-orm"
 import { StorageService } from "@/lib/storage"
 import type { UploadResponse, ValidationError } from "@/types/upload"
+import {getCurrentUser} from "@/lib/getCurrentUser";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,6 +17,9 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File
     const configIdString = formData.get("config_id") as string
     const configId = configIdString ? parseInt(configIdString, 10) : null
+    const user = await getCurrentUser();
+    const userId = user?.id;
+
     if(isNaN(<number>configId)) {
         return NextResponse.json(
             {
@@ -121,17 +125,16 @@ export async function POST(request: NextRequest) {
     })
 
     const uploadResult = await storageService.uploadFile(file, {
-      organization_id: "org-1", // This would come from the authenticated user
-      user_id: "user-1", // This would come from the authenticated user
+      organization_id: "MUUTAA", // This would come from the authenticated user
+      user_id: userId, // This would come from the authenticated user
     })
 
-    // todo: add user id
     // Create operation record in database
     const [operation] = await db
       .insert(uploadOperations)
       .values({
         configId: configId,
-        userId: 1, // This would come from the authenticated user
+        userId: userId,
         fileName: file.name,
         filePath: uploadResult.pathname,
         fileSize: file.size,
@@ -215,6 +218,8 @@ async function processFileContent(content: string, config: any) {
 
   // Validate headers
   const requiredColumns = config.columns.filter((col: any) => col.required)
+
+  // todo :  add check for valuesRequired
   for (const requiredCol of requiredColumns) {
     if (!headers.includes(requiredCol.name)) {
       rowErrors.push({
@@ -254,7 +259,7 @@ async function processFileContent(content: string, config: any) {
 
 function validateColumnValue(value: string, columnConfig: any, rowNumber: number): ValidationError | null {
   // Required check
-  if (columnConfig.required && !value) {
+  if (columnConfig.valuesRequired && !value) {
     return {
       code: "MISSING_REQUIRED_VALUE",
       message: `${columnConfig.displayName} is required`,

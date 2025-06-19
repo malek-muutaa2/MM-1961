@@ -5,7 +5,9 @@ import { eq } from "drizzle-orm"
 
 export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    const body = await request.json()
+      const { id } = params; // No need to await here in API routes
+
+      const body = await request.json()
 
     const [updatedConfig] = await db
       .update(uploadStorageConfigurations)
@@ -22,7 +24,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
         accessType: body.access_type,
         updatedAt: new Date(),
       })
-      .where(eq(uploadStorageConfigurations.id, params.id))
+      .where(eq(uploadStorageConfigurations.id, id))
       .returning()
 
     if (!updatedConfig) {
@@ -52,14 +54,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   try {
+      const { id } = params; // No need to await here in API routes
 
     // await db.delete(uploadStorageConfigurations).where(eq(uploadStorageConfigurations.id, params.id))
-      // todo : update deletedAt instead of deleting
       await db.update(
         uploadStorageConfigurations
       ).set({
         deletedAt: new Date(),
-      }).where(eq(uploadStorageConfigurations.id, params.id));
+      }).where(eq(uploadStorageConfigurations.id, id));
 
 
     return NextResponse.json({ success: true })

@@ -5,8 +5,10 @@ import { db } from "@/lib/db/dbpostgres"
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   try {
+    const { id } = params; // No need to await here in API routes
+
     // Get configuration with columns
-    const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, params.id))
+    const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, id))
 
     if (!config) {
       return NextResponse.json({ error: "Configuration not found" }, { status: 404 })
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     const columns = await db
       .select()
       .from(uploadConfigurationColumns)
-      .where(eq(uploadConfigurationColumns.configId, params.id))
+      .where(eq(uploadConfigurationColumns.configId, id))
       .orderBy(uploadConfigurationColumns.position)
 
     if (columns.length === 0) {

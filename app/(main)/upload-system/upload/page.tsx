@@ -12,7 +12,7 @@ import {useToast} from "@/hooks/use-toast";
 export default function HomePage() {
   const [configurations, setConfigurations] = useState<UploadConfiguration[]>([])
   const [storageConfigs, setStorageConfigs] = useState<UploadStorageConfiguration[]>([])
-  const [organizationTypes, setOrganizationTypes] = useState<OrganizationType[]>([])
+  // const [organizationTypes, setOrganizationTypes] = useState<OrganizationType[]>([])
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
@@ -22,21 +22,25 @@ export default function HomePage() {
         setLoading(true)
 
         // Fetch all data in parallel
-        const [configsRes, storageRes, orgTypesRes] = await Promise.all([
+        const [configsRes, storageRes,
+          // orgTypesRes
+        ] = await Promise.all([
           fetch("/api/configurations"),
           fetch("/api/storage-configurations"),
-          fetch("/api/organization-types"),
+          // fetch("/api/organization-types"),
         ])
 
-        const [configsData, storageData, orgTypesData] = await Promise.all([
+        const [configsData, storageData,
+          // orgTypesData
+        ] = await Promise.all([
           configsRes.json(),
           storageRes.json(),
-          orgTypesRes.json(),
+          // orgTypesRes.json(),
         ])
 
         setConfigurations(configsData)
         setStorageConfigs(storageData)
-        setOrganizationTypes(orgTypesData)
+        // setOrganizationTypes(orgTypesData)
       } catch (error) {
         console.error("Failed to fetch data:", error)
       } finally {
@@ -227,7 +231,7 @@ export default function HomePage() {
                   apiCallLoading={loading}
                   configurations={configurations}
                   storageConfigs={storageConfigs}
-                  organizationTypes={organizationTypes}
+                  // organizationTypes={organizationTypes}
                   onSaveConfig={handleSaveConfiguration}
                   onDeleteConfig={handleDeleteConfiguration}
                   onSaveStorage={handleSaveStorageConfig}

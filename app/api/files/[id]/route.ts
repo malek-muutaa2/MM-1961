@@ -6,6 +6,9 @@ import { StorageService } from "@/lib/storage"
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
     try {
+
+        const { id } = params; // No need to await here in API routes
+
         // Get file operation with storage configuration
         const [operation] = await db
             .select({
@@ -28,7 +31,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
             .from(uploadOperations)
             .leftJoin(uploadConfigurations, eq(uploadOperations.configId, uploadConfigurations.id))
             .leftJoin(uploadStorageConfigurations, eq(uploadConfigurations.storageConfigId, uploadStorageConfigurations.id))
-            .where(eq(uploadOperations.id, params.id))
+            .where(eq(uploadOperations.id, id))
 
         if (!operation) {
             return NextResponse.json({ error: "File not found" }, { status: 404 })
@@ -60,11 +63,11 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
         }
 
         // Delete from database
-        // await db.delete(uploadOperations).where(eq(uploadOperations.id, params.id))
+        // await db.delete(uploadOperations).where(eq(uploadOperations.id, id))
         // update deleted_At to mark as deleted
         await db
             .update(uploadOperations).set({ deletedAt: new Date() })
-            .where(eq(uploadOperations.id, params.id))
+            .where(eq(uploadOperations.id, id))
 
         return NextResponse.json({ success: true })
     } catch (error: any) {

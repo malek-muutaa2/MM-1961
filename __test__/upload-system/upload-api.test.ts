@@ -47,6 +47,7 @@ describe("Enhanced Upload API", () => {
         displayName: "Test Column",
         dataType: "string",
         required: true,
+        valuesRequired: false,
         position: 0,
       },
     ]

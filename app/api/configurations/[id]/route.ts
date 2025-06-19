@@ -5,7 +5,9 @@ import {uploadConfigurationColumns, uploadConfigurations} from "@/lib/db/schema"
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, params.id))
+    const { id } = params; // No need to await here in API routes
+
+    const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, id))
 
     if (!config) {
       return NextResponse.json({ error: "Configuration not found" }, { status: 404 })
@@ -14,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
     const columns = await db
       .select()
       .from(uploadConfigurationColumns)
-      .where(eq(uploadConfigurationColumns.configId, params.id))
+      .where(eq(uploadConfigurationColumns.configId, id))
 
     return NextResponse.json({
       id: config.id,
@@ -39,6 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         display_name: col.displayName,
         data_type: col.dataType,
         required: col.required,
+        valuesRequired: col.valuesRequired,
         pattern: col.pattern,
         min_length: col.minLength,
         max_length: col.maxLength,
@@ -57,7 +60,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
   try {
     const body = await request.json()
-    if(!params.id ){
+    const { id } = params; // No need to await here in API routes
+    if(!id ){
         return NextResponse.json({ error: "Configuration ID is required" }, { status: 400 })
     }
     // Update the configuration
@@ -78,7 +82,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
         active: body.active,
         updatedAt: new Date(),
       })
-      .where(eq(uploadConfigurations.id, params.id))
+      .where(eq(uploadConfigurations.id, id))
       .returning()
 
     if (!updatedConfig) {
@@ -87,15 +91,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 
     // Delete existing columns and insert new ones
     if (body.columns) {
-      await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, params.id))
+      await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, id))
 
       if (body.columns.length > 0) {
         const columnsToInsert = body.columns.map((column: any) => ({
-          configId: params.id,
+          configId: id,
           name: column.name,
           displayName: column.display_name,
           dataType: column.data_type,
           required: column.required ?? false,
+          valuesRequired: column.valuesRequired ?? false,
           pattern: column.pattern,
           minLength: column.min_length,
           maxLength: column.max_length,
@@ -135,16 +140,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   try {
     // Delete columns first (cascade should handle this, but being explicit)
-    // todo : don't delete columns if they are used in operations
-    // await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, params.id))
-
+    // await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, id))
+    const { id } = params; // No need to await here in API routes
     // Delete the configuration
-    // await db.delete(uploadConfigurations).where(eq(uploadConfigurations.id, params.id))
+    // await db.delete(uploadConfigurations).where(eq(uploadConfigurations.id, id))
     // update deleted_At to mark as deleted
     await db
       .update(uploadConfigurations)
       .set({ deletedAt: new Date() })
-      .where(eq(uploadConfigurations.id, params.id))
+      .where(eq(uploadConfigurations.id, id))
 
     return NextResponse.json({ success: true })
   } catch (error) {

@@ -32,7 +32,7 @@ interface ConfigurationManagerProps {
     apiCallLoading: boolean
     configurations: UploadConfiguration[]
     storageConfigs: UploadStorageConfiguration[]
-    organizationTypes: OrganizationType[]
+    // organizationTypes: OrganizationType[]
     onSaveConfig: (config: Partial<UploadConfiguration>) => void
     onDeleteConfig: (id: number) => void
     onSaveStorage: (config: Partial<UploadStorageConfiguration>) => void
@@ -43,7 +43,7 @@ export default function ConfigurationManager({
                                                  apiCallLoading,
                                                  configurations,
                                                  storageConfigs,
-                                                 organizationTypes,
+                                                 // organizationTypes,
                                                  onSaveConfig,
                                                  onDeleteConfig,
                                                  onSaveStorage,
@@ -55,7 +55,7 @@ export default function ConfigurationManager({
     const [isEditing, setIsEditing] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [submitLoading, setSubmitLoading] = useState(false)
-    const [liveErrors, setLiveErrors] = useState<string[]>([])
+    // const [liveErrors, setLiveErrors] = useState<string[]>([])
     const { toast } = useToast()
     // const selectedOrgType = organizationTypes?.find((org) => org.id === editingConfig.organization_type) ?? ""
 
@@ -137,13 +137,19 @@ export default function ConfigurationManager({
             display_name: "",
             data_type: "string",
             required: false,
+            valuesRequired: false,
             position: columns.length,
         }
         setColumns((prev) => [...prev, newColumn])
     }
 
     const updateColumn = (index: number, field: keyof UploadConfigurationColumn, value: any) => {
-        setColumns((prev) => prev.map((col, i) => (i === index ? {...col, [field]: value} : col)))
+        setColumns((prev) => prev.map((col, i) => (i === index ? {
+            ...col,
+            [field]: value,
+            ...(field === "required" && !value ? { valuesRequired: false } : {}),
+
+        } : col)))
     }
 
     const removeColumn = (index: number) => {
@@ -433,7 +439,7 @@ export default function ConfigurationManager({
                                                 ) : columns?.length ?
                                                     columns.map((column, index) => (
                                                         <Card key={column.id} className="p-4">
-                                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                                            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                                                                 <div>
                                                                     <Label>Column Name</Label>
                                                                     <Input
@@ -470,15 +476,27 @@ export default function ConfigurationManager({
                                                                         </SelectContent>
                                                                     </Select>
                                                                 </div>
-                                                                <div className="flex items-end gap-2">
-                                                                    <div className="flex items-center space-x-2">
-                                                                        <Switch
-                                                                            checked={column.required}
-                                                                            onCheckedChange={(checked) => updateColumn(index, "required", checked)}
-                                                                        />
-                                                                        <Label className="text-sm">Required</Label>
+                                                                <div className="flex items-end gap-0">
+                                                                    <div className=" flex flex-col items-start justify-start mx-0">
+                                                                        <div className="flex flex-row items-end justify-items-center justify-center mb-2">
+                                                                            <Switch
+                                                                                className={"h-4 w-9 [&>span]:h-3 [&>span]:w-3 mr-1"}
+                                                                                checked={column.required}
+                                                                                onCheckedChange={(checked) => updateColumn(index, "required", checked)}
+                                                                            />
+                                                                            <Label className="text-xs">Required</Label>
+                                                                        </div>
+                                                                        <div className="flex flex-row items-end justify-items-center justify-center">
+                                                                            <Switch
+                                                                                className={"h-4 w-9 [&>span]:h-3 [&>span]:w-3 mr-1"}
+                                                                                checked={column.valuesRequired}
+                                                                                onCheckedChange={(checked) => updateColumn(index, "valuesRequired", checked)}
+                                                                            />
+                                                                            <Label className="text-xs">Values Required</Label>
+                                                                        </div>
                                                                     </div>
-                                                                    <Button variant="outline" size="sm"  disabled={isLoading || submitLoading || apiCallLoading}
+
+                                                                    <Button variant="outline" size="sm" className={"ml-2 p-2"} disabled={isLoading || submitLoading || apiCallLoading}
                                                                             onClick={() => removeColumn(index)}>
                                                                         <Trash2 className="h-4 w-4"/>
                                                                     </Button>

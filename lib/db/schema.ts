@@ -217,6 +217,7 @@ export const uploadConfigurationColumns = pgTable("upload_configuration_columns"
     displayName: varchar("display_name", { length: 255 }).notNull(),
     dataType: varchar("data_type", { length: 50 }).notNull(),
     required: boolean("required").default(false).notNull(),
+    valuesRequired: boolean("valuesRequired").default(false).notNull(),
     pattern: varchar("pattern", { length: 500 }),
     minLength: integer("min_length"),
     maxLength: integer("max_length"),

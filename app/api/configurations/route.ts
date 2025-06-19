@@ -1,7 +1,7 @@
 import {type NextRequest, NextResponse} from "next/server"
 import {db} from "@/lib/db/dbpostgres"
 import {uploadConfigurations, uploadConfigurationColumns, uploadStorageConfigurations} from "@/lib/db/schema"
-import {eq} from "drizzle-orm"
+import {and, eq, isNull} from "drizzle-orm"
 
 export async function GET() {
     try {
@@ -31,6 +31,10 @@ export async function GET() {
             })
             .from(uploadConfigurations)
             .leftJoin(uploadStorageConfigurations, eq(uploadConfigurations.storageConfigId, uploadStorageConfigurations.id))
+            .where(and(
+                isNull(uploadConfigurations.deletedAt),
+                isNull(uploadStorageConfigurations.deletedAt) // Ensure storage config is not deleted
+            ))
 
         const formattedConfigs = configs.map((config: any) => ({
             id: config.id,

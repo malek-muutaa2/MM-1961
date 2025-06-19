@@ -116,8 +116,10 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
   }
 
   const handleUpload = async () => {
+
     if (!selectedFile || !selectedConfiguration) return
 
+    clearFile()
     setUploading(true)
     setUploadProgress(0)
 
@@ -208,7 +210,7 @@ export default function EnhancedUploadInterface({ configurations }: Readonly<Enh
   }
 
   const getErrorSeverity = (errorCode: string) => {
-    const criticalErrors = ["MISSING_REQUIRED_COLUMN", "MISSING_REQUIRED_VALUE", "EMPTY_FILE", "ROW_NOT_FOUND"]
+    const criticalErrors = ["MISSING_REQUIRED_COLUMN", "MISSING_REQUIRED_VALUE", "INVALID_REQUIRED_VALUE", "EMPTY_FILE", "ROW_NOT_FOUND"]
     return criticalErrors.includes(errorCode) ? "critical" : "warning"
   }
 

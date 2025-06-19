@@ -1,10 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db/dbpostgres"
 import { uploadStorageConfigurations } from "@/lib/db/schema"
+import {isNull} from "drizzle-orm";
 
 export async function GET() {
   try {
-    const storageConfigs = await db.select().from(uploadStorageConfigurations)
+    const storageConfigs = await db.select().
+    from(uploadStorageConfigurations)
+        .where(isNull(uploadStorageConfigurations.deletedAt))
 
     const formattedConfigs = storageConfigs.map((config: any) => ({
       id: config.id,
