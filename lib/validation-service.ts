@@ -445,6 +445,76 @@ export class ValidationService {
     return errors
   }
 
+  // private isValidDate(dateString: string, format?: string): boolean {
+  //   // If format is provided, use it
+  //   if (format) {
+  //     return validateWithFormat(dateString, format);
+  //   }
+  //
+  //   // Otherwise use general pattern validation
+  //   return validateGeneralPattern(dateString);
+  // }
+  private validateGeneralPattern(dateString: string): boolean {
+    // Test against common patterns
+    const patterns = [
+      /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+      /^\d{2}\/\d{2}\/\d{4}$/, // MM/DD/YYYY
+      /^\d{2}-\d{2}-\d{4}$/, // MM-DD-YYYY
+      /^\d{4}\/\d{2}\/\d{2}$/, // YYYY/MM/DD
+      /^\d{1,2}\/\d{1,2}\/\d{4}$/, // M/D/YYYY
+      /^\d{1,2}-\d{1,2}-\d{4}$/ // M-D-YYYY
+    ];
+
+    // Check if any pattern matches
+    const patternMatch = patterns.some(pattern => pattern.test(dateString));
+    if (!patternMatch) return false;
+
+    // Convert to Date object and validate
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  }
+
+  private validateWithFormat(dateString: string, format: string): boolean {
+    // Create regex based on format
+    let regexPattern = format
+        .replace(/yyyy/g, '\\d{4}')
+        .replace(/yy/g, '\\d{2}')
+        .replace(/MM/g, '(0[1-9]|1[0-2])')
+        .replace(/M/g, '([1-9]|1[0-2])')
+        .replace(/dd/g, '(0[1-9]|[12][0-9]|3[01])')
+        .replace(/d/g, '([1-9]|[12][0-9]|3[01])')
+        .replace(/\//g, '\\/')
+        .replace(/-/g, '\\-');
+
+    const formatRegex = new RegExp(`^${regexPattern}$`);
+
+    // Check format match
+    if (!formatRegex.test(dateString)) return false;
+
+    // Extract date components based on format
+    const formatParts = format.split(/[\/\-]/);
+    const dateParts = dateString.split(/[\/\-]/);
+
+    const dateObj: any = {};
+    formatParts.forEach((part, i) => {
+      dateObj[part] = parseInt(dateParts[i], 10);
+    });
+
+    // Create Date object (months are 0-indexed in JavaScript)
+    const year = dateObj.yyyy || (dateObj.yy ? 2000 + dateObj.yy : null);
+    const month = (dateObj.MM || dateObj.M) - 1;
+    const day = dateObj.dd || dateObj.d;
+
+    const date = new Date(year, month, day);
+
+    // Validate date (check if rolled over to next month)
+    return (
+        date.getFullYear() === year &&
+        date.getMonth() === month &&
+        date.getDate() === day
+    );
+  }
+
   private validateDateValue(
     value: string,
     columnConfig: any,
@@ -456,8 +526,9 @@ export class ValidationService {
     // If pattern is specified, validate against it first
     if (columnConfig.pattern) {
       try {
-        const regex = new RegExp(columnConfig.pattern)
-        if (!regex.test(value)) {
+        // const regex = new RegExp(columnConfig.pattern)
+        // if (!regex.test(value)) {
+        if (!this.validateWithFormat(value, columnConfig.pattern)) {
           errors.push({
             code: "DATE_FORMAT_MISMATCH",
             message: `${columnConfig.display_name} must match the required date format`,
@@ -483,8 +554,9 @@ export class ValidationService {
     }
 
     // Try to parse the date
-    const parsedDate = new Date(value)
-    if (isNaN(parsedDate.getTime())) {
+    // const parsedDate = new Date(value)
+    // if (isNaN(parsedDate.getTime())) {
+    if (!this.validateGeneralPattern(value)) {
       errors.push({
         code: "INVALID_DATE",
         message: `${columnConfig.display_name} is not a valid date`,
@@ -535,6 +607,9 @@ export class ValidationService {
       "^\\d{2}-\\d{2}-\\d{4}$": "DD-MM-YYYY (e.g., 15-01-2024)",
       "^\\d{4}/\\d{2}/\\d{2}$": "YYYY/MM/DD (e.g., 2024/01/15)",
       "^\\d{1,2}/\\d{1,2}/\\d{4}$": "M/D/YYYY (e.g., 1/15/2024)",
+      "^\d{1,2}-\d{1,2}-\d{4}$" : "M-D-YYYY (e.g., 1-15-2024)",
+      "^\d{2}-\d{2}-\d{4}$": "MM-DD-YYYY (e.g., 01-15-2024)",
+
     }
 
     return formatExamples[pattern] || `Pattern: ${pattern}`
