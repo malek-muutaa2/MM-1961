@@ -148,6 +148,16 @@ export class ValidationService {
             if (columnErrors.length === 0) {
               rowData[header] = this.convertValue(value, columnConfig.data_type)
             }
+          }else {
+            // uknown column find in configuration
+            rowErrors.push({
+              code: "UNKNOWN_COLUMN",
+              message: `Column '${header}' is not defined in the configuration`,
+              column: header,
+              row: rowNumber,
+              line: lineNumber,
+              value: value,
+            })
           }
         })
 
