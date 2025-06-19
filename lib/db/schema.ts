@@ -339,3 +339,15 @@ export const uploadOperationErrorsRelations = relations(uploadOperationErrors, (
         references: [uploadOperations.id],
     }),
 }))
+
+
+export type UploadConfigurationType = typeof uploadConfigurations.$inferSelect
+export type NewUploadConfiguration = typeof uploadConfigurations.$inferInsert
+export type UploadConfigurationColumnType = typeof uploadConfigurationColumns.$inferSelect
+export type NewUploadConfigurationColumn = typeof uploadConfigurationColumns.$inferInsert
+export type UploadStorageConfigurationType = typeof uploadStorageConfigurations.$inferSelect
+export type NewUploadStorageConfiguration = typeof uploadStorageConfigurations.$inferInsert
+export type UploadOperationType = typeof uploadOperations.$inferSelect
+export type NewUploadOperation = typeof uploadOperations.$inferInsert
+export type UploadOperationErrorType = typeof uploadOperationErrors.$inferSelect
+export type NewUploadOperationError = typeof uploadOperationErrors.$inferInsert

@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { uploadConfigurations, uploadConfigurationColumns } from "@/lib/db/schema";
+import {uploadConfigurations, uploadConfigurationColumns, UploadConfigurationColumnType} from "@/lib/db/schema";
 import { eq } from "drizzle-orm"
 import { db } from "@/lib/db/dbpostgres"
 
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // Generate example data
     const headers = columns.map((col: { name: any }) => col.name)
-    const exampleData = columns.map((col: { dataType: string; required: boolean, pattern: string }) => {
+    const exampleData = columns.map((col: UploadConfigurationColumnType) => {
       switch (col.dataType) {
         case "string":
           return col.required ?  "Example Text" : ""
