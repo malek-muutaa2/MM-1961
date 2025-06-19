@@ -17,12 +17,12 @@ export interface ValidationResult {
 }
 
 export class ValidationService {
-    private config: any
-    private columns: any[]
+    private readonly config: any
+    private readonly columns: any[]
 
     constructor(config: any, columns: any[]) {
         this.config = config
-        this.columns = columns.sort((a, b) => a.position - b.position)
+        this.columns = columns.toSorted((a, b) => a.position - b.position)
     }
 
     async validateFile(file: File): Promise<ValidationResult> {
@@ -674,6 +674,106 @@ export class ValidationService {
         }
     }
 
+    private isValidDateFormat(format: string): boolean {
+        const DATE_FORMAT_REGEX = /^((yyyy|yy)([\/-])(mm|m)\3(dd|d))|((mm|m)([\/-])(dd|d)\7(yyyy|yy))|((dd|d)([\/-])(mm|m)\11(yyyy|yy))$/;
+        return DATE_FORMAT_REGEX.test(format.toLowerCase());
+    }
+
+
+    /**
+     * Validates a date string against a specified format
+     * @param dateString The date string to validate (e.g., "12-31-2023")
+     * @param format The format pattern (e.g., "MM-DD-YYYY")
+     * @returns boolean indicating if the date is valid
+     */
+    private validateDateWithFormat(dateString: string, format: string): boolean {
+        try {
+            // Normalize the format to lowercase and validate structure
+            const normalizedFormat = format.toLowerCase();
+            const separator = /[/-]/.exec(normalizedFormat)?.[0] || '-';
+            // const pattern = /^(yyyy|yy)([\/\-]?(mm|m)([\/\-]?(dd|d))|((mm|m)([\/\-]?(dd|d)([\/\-]?(yyyy|yy)))|((dd|d)([\/\-]?(mm|m)([\/\-]?(yyyy|yy))))$/
+            // if (!pattern.test(normalizedFormat)) {
+            //     throw new Error('INVALID_FORMAT_PATTERN');
+            // }
+            if (!this.isValidDateFormat(normalizedFormat)) {
+                throw new Error('INVALID_FORMAT_PATTERN');
+            }
+
+            // Parse the format components
+            const formatParts = normalizedFormat.split(separator);
+            const componentMap: Record<string, {index: number, pattern: string, type: string}> = {};
+
+            formatParts.forEach((part, index) => {
+                if (part.includes('yy')) {
+                    componentMap.year = {
+                        index,
+                        pattern: part === 'yyyy' ? '\\d{4}' : '\\d{2}',
+                        type: 'year'
+                    };
+                } else if (part.includes('m')) {
+                    componentMap.month = {
+                        index,
+                        pattern: part === 'mm' ? '(0[1-9]|1[0-2])' : '([1-9]|1[0-2])',
+                        type: 'month'
+                    };
+                } else if (part.includes('d')) {
+                    componentMap.day = {
+                        index,
+                        pattern: part === 'dd' ? '(0[1-9]|[12][0-9]|3[01])' : '([1-9]|[12][0-9]|3[01])',
+                        type: 'day'
+                    };
+                }
+            });
+
+            // Build regex pattern
+            const regexParts = formatParts.map(part => {
+                if (part.includes('yy')) return componentMap.year.pattern;
+                if (part.includes('m')) return componentMap.month.pattern;
+                if (part.includes('d')) return componentMap.day.pattern;
+                return '';
+            });
+
+            const regexPattern = `^${regexParts.join(`\\${separator}`)}$`;
+            const formatRegex = new RegExp(regexPattern);
+
+            // Test format match
+            if (!formatRegex.test(dateString)) {
+                return false;
+            }
+
+            // Extract date components
+            const dateParts = dateString.split(separator);
+            const getValue = (type: string) => {
+                const part = componentMap[type];
+                return parseInt(dateParts[part.index], 10);
+            };
+
+            let year = getValue('year');
+            const month = getValue('month') - 1;
+            const day = getValue('day');
+
+            // Adjust 2-digit years
+            if (componentMap.year.pattern === '\\d{2}') {
+                year = 2000 + year;
+            }
+
+            // Validate date components
+            if (month < 0 || month > 11) return false;
+            if (day < 1 || day > 31) return false;
+
+            // Check if date is valid
+            const date = new Date(year, month, day);
+            return (
+                date.getFullYear() === year &&
+                date.getMonth() === month &&
+                date.getDate() === day
+            );
+        } catch (error) {
+            console.error('Date validation error:', error);
+            return false;
+        }
+    }
+
     private validateDateValue(
         value: string,
         columnConfig: any,
@@ -687,7 +787,8 @@ export class ValidationService {
             try {
                 // const regex = new RegExp(columnConfig.pattern)
                 // if (!regex.test(value)) {
-                if (!this.validateWithFormat(value, columnConfig?.pattern)) {
+                // if (!this.validateWithFormat(value, columnConfig?.pattern)) {
+                if (!this.validateDateWithFormat(value, columnConfig?.pattern)) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
                         message: `${columnConfig.display_name} must match the required date format`,
