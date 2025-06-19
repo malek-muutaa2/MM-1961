@@ -28,6 +28,12 @@ import { UserType } from "@/lib/getCurrentUser"
 import { useRouter } from "next/navigation"
 import { formatDistanceToNow } from 'date-fns';
 import Link from "next/link"
+import {
+  AlertCircle,
+  BellRing,
+  CheckCircle,
+  Lightbulb,
+} from 'lucide-react';
 // Sample notifications data
 const notifications2 = [
   {
@@ -156,20 +162,24 @@ setCountUnread(0)
 setNewNotificationMeta({ count: 0, ids: [] })
     }
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case "alert":
-        return <div className="h-2 w-2 rounded-full bg-red-500"></div>
-      case "action":
-        return <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-      case "success":
-        return <div className="h-2 w-2 rounded-full bg-green-500"></div>
-      case "insight":
-        return <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-      default:
-        return <div className="h-2 w-2 rounded-full bg-gray-500"></div>
-    }
+
+const getNotificationIcon = (type: string, size = 20, className = '') => {
+  const props = { size, color: 'currentColor', strokeWidth: 2, className };
+
+  switch (type) {
+    case 'alert':
+      return <AlertCircle {...props} className="text-red-500" />;
+    case 'action':
+      return <BellRing {...props} className="text-blue-500" />;
+    case 'success':
+      return <CheckCircle {...props} className="text-green-500" />;
+    case 'insight':
+      return <Lightbulb {...props} className="text-purple-500" />;
+    default:
+      return <BellRing {...props} className="text-gray-500" />;
   }
+};
+
    const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(userinfo?.id || 0);
    const [isOpen, setIsOpen] = useState(false);
  
