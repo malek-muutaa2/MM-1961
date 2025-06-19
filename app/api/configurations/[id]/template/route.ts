@@ -30,14 +30,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // Generate example data
     const headers = columns.map((col: { name: any }) => col.name)
-    const exampleData = columns.map((col: { dataType: string; required: boolean }) => {
+    const exampleData = columns.map((col: { dataType: string; required: boolean, pattern: string }) => {
       switch (col.dataType) {
         case "string":
           return col.required ?  "Example Text" : ""
         case "number":
           return col.required ? "123" : ""
         case "date":
-          return col.required ? "2023-01-01" : ""
+          return col.required ?
+              col.pattern ?
+                    col.pattern?.toLowerCase().replace("yyyy", "2023").replace("mm", "01").replace("dd", "01")
+                :
+                  "2023-01-01" : ""
         case "boolean":
           return col.required ? "true" : ""
         case "email":
@@ -46,6 +50,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
           return ""
       }
     })
+
+    // generate date following the pattern if provided
+
 
     // For simplicity in this demo, we'll just use CSV for all formats
     // In a real implementation, you would use the xlsx library for Excel files
