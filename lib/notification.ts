@@ -1,5 +1,5 @@
 "use server";
-import { and, count, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNotNull, isNull } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import {  notifications, notificationTypes } from "./db/schema";
 import { use } from "react";
@@ -19,8 +19,15 @@ export type Notification = {
     created_at: Date;
     typeName: string | null;
     };
-export const getNotificationByUserId = async (userId: number) => {
-const res :Notification[] =  await db.select({
+export const getNotificationByUserId = async (userId: number, page: number = 1,
+
+  size: number = 10,unread: boolean,typeId? : number) => {
+      const offset = (page - 1) * size;
+ let res: Notification[] = [];
+ console.log("undread", unread);
+ 
+if(typeId){
+   res  =  await db.select({
     id: notifications.id,
     userId: notifications.user_id,
     typeId: notifications.type_id,
@@ -34,11 +41,57 @@ const res :Notification[] =  await db.select({
 })
   .from(notifications)
   .leftJoin(notificationTypes, eq(notifications.type_id, notificationTypes.id))
-    .where(eq(notifications.user_id, userId))
+    .where(
+      and(      eq(notifications.user_id, userId),
+      eq(notifications.type_id, typeId),
+))
     .orderBy(desc(notifications.created_at))
-    .limit(100);
-
-
+   .limit(size)
+    .offset(offset);
+}else if(unread){
+   res =  await db.select({
+    id: notifications.id,
+    userId: notifications.user_id,
+    typeId: notifications.type_id,
+    title: notifications.title,
+    message: notifications.message,
+    redirectUrl: notifications.redirect_url,
+    data: notifications.data,
+    readAt: notifications.read_at,
+    created_at: notifications.created_at,
+    typeName: notificationTypes.name,
+})
+  .from(notifications)
+  .leftJoin(notificationTypes, eq(notifications.type_id, notificationTypes.id))
+    .where(
+      and(      eq(notifications.user_id, userId),
+      unread ? isNull(notifications.read_at) : isNotNull(notifications.read_at)
+))
+    .orderBy(desc(notifications.created_at))
+   .limit(size)
+    .offset(offset);
+}
+else{
+     res  =  await db.select({
+    id: notifications.id,
+    userId: notifications.user_id,
+    typeId: notifications.type_id,
+    title: notifications.title,
+    message: notifications.message,
+    redirectUrl: notifications.redirect_url,
+    data: notifications.data,
+    readAt: notifications.read_at,
+    created_at: notifications.created_at,
+    typeName: notificationTypes.name,
+})
+  .from(notifications)
+  .leftJoin(notificationTypes, eq(notifications.type_id, notificationTypes.id))
+    .where(
+   eq(notifications.user_id, userId))
+    .orderBy(desc(notifications.created_at))
+   .limit(size)
+    .offset(offset);
+}
   return res;
 }
 export const CountUnreadNotifications = async (userId: number) => {
