@@ -1,7 +1,7 @@
 "use server";
-import { and, count, desc, eq, isNotNull, isNull } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, isNull } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
-import {  notifications, notificationTypes } from "./db/schema";
+import {  notifications, notificationTypes, userNotificationSettings } from "./db/schema";
 import { use } from "react";
 import { revalidatePath } from "next/cache";
 
@@ -138,4 +138,64 @@ export const markasread  = async (userId: number) => {
      revalidatePath('/', 'layout')
   
     return{ sucess: "Notification marked as read", notification: res };
+}
+export type UserNotificationSettings = {
+  id: number;
+  user_id: number;
+  channel_preference: string; // mail/email/user/inbox
+};
+export const fetchUsernotificationSettings = async (
+  userId: number
+): Promise<UserNotificationSettings | null> => {
+  try {
+    const res = await db
+      .select()
+      .from(userNotificationSettings)
+      .where(eq(userNotificationSettings.user_id, userId));
+    return res[0] || null;
+  } catch (e: any) {
+    console.log("fetchUsernotificationSettings error", e?.message);
+    return null;
+  }
+};
+export const fetchUsersnotificationSettings = async (
+  userIds: number[]
+): Promise<UserNotificationSettings[]> => {
+  try {
+    if (!userIds.length) return [];
+    const res = await db
+      .select()
+      .from(userNotificationSettings)
+      .where(and(inArray(userNotificationSettings.user_id, userIds),
+    eq(userNotificationSettings.channel_preference, "email")));
+    return res;
+  } catch (e: any) {
+    console.log("fetchUsersnotificationSettings error", e?.message);
+    return [];
+  }
+};
+export const EnableUserNotifcationEmail = async (
+  userId: number,
+  channelPreference: string
+): Promise<UserNotificationSettings | null> => {
+  try {
+    const existingSettings = await fetchUsernotificationSettings(userId);
+    if (existingSettings) {
+      const res = await db
+        .update(userNotificationSettings)
+        .set({ channel_preference: channelPreference })
+        .where(eq(userNotificationSettings.user_id, userId))
+        .returning();
+      return res[0];
+    } else {
+      const res = await db
+        .insert(userNotificationSettings)
+        .values({ user_id: userId, channel_preference: channelPreference })
+        .returning();
+      return res[0];
+    }
+  } catch (e: any) {
+    console.log("EnableUserNotifcationEmail error", e?.message);
+    return null;
+  }
 }

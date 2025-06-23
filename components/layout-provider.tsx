@@ -17,13 +17,11 @@ export function LayoutProvider({
   children,
   userinfo,
   error,
-  notificationData,
   countUnread,
   notificationtypes
 }: {
   children: React.ReactNode
   userinfo: UserType | null,
-  notificationData : Notification[] | null,
   countUnread: number,
   error? : string,
   notificationtypes : NotificationType[] 
@@ -77,7 +75,7 @@ const isAdminPage =
         <div className="flex h-screen w-screen overflow-hidden">
           <AppSidebar userinfo={userinfo!} />
           <div className="flex flex-col flex-1 w-full overflow-hidden">
-            <TopNav notificationtypes={notificationtypes} userinfo={userinfo!} countUnread={countUnread} notificationData={notificationData} />
+            <TopNav notificationtypes={notificationtypes} userinfo={userinfo!} countUnread={countUnread}  />
             <main className="flex-1 w-full overflow-auto bg-background">
                   {isAdminPage ? (
                   userinfo?.role === "Admin" ? (

@@ -29,7 +29,6 @@ export default async function  RootLayout({
   const userinfo = await getCurrentUser();
   const authSession: any = await getServerAuthSession();
   if(userinfo){
-    notificationData = await getNotificationByUserId(userinfo?.id)
     countUnread = await CountUnreadNotifications(userinfo?.id);
   } //(1)
 
@@ -38,7 +37,7 @@ console.log("Notification data:", notificationData);
 
   return (
     <div>
-            <LayoutProvider notificationtypes={notificationtypes} countUnread={countUnread} notificationData={notificationData}    
+            <LayoutProvider notificationtypes={notificationtypes} countUnread={countUnread}    
               error={authSession?.error ?? ""}
  userinfo={userinfo}>{children}</LayoutProvider>
 

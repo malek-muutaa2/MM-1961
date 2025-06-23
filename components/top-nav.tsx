@@ -120,13 +120,15 @@ function getRelativeTime(date: Date | string | number): string {
   return rtf.format(0, 'second');
 }
 
-export function TopNav( { notificationData , countUnread , userinfo , notificationtypes }: TopNavProps
+export function TopNav( { countUnread , userinfo , notificationtypes }: TopNavProps
 ) {
   const [countUnread2, setCountUnread] = useState(countUnread)
 const [newNotificationMeta, setNewNotificationMeta] = useState<{
   count: number;
   ids: number[];
 }>({ count: 0, ids: [] });
+const [isOpen, setIsOpen] = useState(false);
+const [hasDropdownOpened, setHasDropdownOpened] = useState(false);
   const [notificationFilter, setNotificationFilter] = useState("all")
  const [notificationsData, setNotificationsData] = useState<Notificationuser[]>([]);
   const { setTheme, theme } = useTheme()
@@ -207,7 +209,6 @@ const getNotificationIcon = (type: string, size = 20, className = '') => {
   }, []);
 
    const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(userinfo?.id || 0);
-   const [isOpen, setIsOpen] = useState(false);
  const [page, setPage] = useState(1);
 const [hasMore, setHasMore] = useState(true);
 const [loading, setLoading] = useState(false);
@@ -272,16 +273,21 @@ const uniqueNotifications = useMemo(() => {
 }, [filteredNotifications]);
 
 useEffect(() => {
-  console.log("Loading notifications for user:");
-  
-  loadMoreNotifications();
- 
-}, [router,userinfo]);
+  if (isOpen && !hasDropdownOpened) {
+    setPage(1);
+    setHasMore(true);
+    loadMoreNotifications(true);
+    setHasDropdownOpened(true);
+  }
+}, [isOpen, hasDropdownOpened, loadMoreNotifications]);
 useEffect(() => {
   const el = scrollRef.current;
 
   if (!el) {
+    if(isOpen){
     loadMoreNotifications(true)
+
+    }
     console.warn("Scroll ref not attached to element");
     return;
   }
@@ -425,7 +431,7 @@ console.log("notification ids", filteredNotifications);
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DropdownMenu>
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
               <DropdownMenuTrigger asChild>
                 <Button  variant="outline" size="icon" className="relative">
                   <Bell className="h-4 w-4" />
