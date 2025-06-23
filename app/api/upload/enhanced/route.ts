@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
 
       console.log("config?.maxFileSize : ", config?.maxFileSize);
       console.log("file.size : ", file.size);
+      console.log("file.name : ", file.name);
 
       if(config?.maxFileSize && file.size > config?.maxFileSize) {
         return NextResponse.json(
@@ -192,7 +193,7 @@ export async function POST(request: NextRequest) {
     const storageService = new StorageService({
       storage_type: config.storageConfig?.storageType as any,
       base_path: config.storageConfig?.basePath || "uploads",
-      path_template: config.storageConfig?.pathTemplate || "{base_path}/{uuid}.{ext}",
+      path_template: config.storageConfig?.pathTemplate || "{base_path}/{file_name}.{ext}",
       access_type: config.storageConfig?.accessType as any,
       bucket_name: config.storageConfig?.bucketName || "optivians-bucket",
       region: config.storageConfig?.region || "us-east-1",

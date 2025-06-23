@@ -305,6 +305,10 @@ export class ValidationService {
             case "date":
                 errors.push(...this.validateDateValue(value, columnConfig, rowNumber, lineNumber))
                 break
+            case "datetime":
+                // For datetime, we can use the same validation as date for now
+                errors.push(...this.validateDatetimeValue(value, columnConfig, rowNumber, lineNumber))
+                break
             case "boolean":
                 errors.push(...this.validateBooleanValue(value, columnConfig, rowNumber, lineNumber))
                 break
@@ -679,6 +683,57 @@ export class ValidationService {
         return DATE_FORMAT_REGEX.test(format.toLowerCase());
     }
 
+    /**
+     * Valide une chaîne datetime selon un format spécifié
+     * @param dateTimeString La chaîne datetime à valider (ex: "2024-01-15T10:30:00")
+     * @param format Le format attendu (ex: "yyyy-mm-ddThh:mm:ss")
+     * @returns boolean indiquant si le datetime est valide
+     */
+    private validateDateTimeWithFormat(dateTimeString: string, format: string): boolean {
+        try {
+            // On sépare la partie date et heure du format
+            const [dateFormat, timeFormat] = format.toLowerCase().split(/[ t]/);
+            const [datePart, timePart] = dateTimeString.split(/[ t]/);
+
+            // Valider la partie date
+            if (!this.validateDateWithFormat(datePart, dateFormat)) {
+                return false;
+            }
+
+            // Si un format d'heure est spécifié, valider la partie heure
+            if (timeFormat && timePart) {
+                // Construire le regex pour l'heure
+                // Exemples de timeFormat: "hh:mm:ss", "hh:mm"
+                let timeRegexPattern = timeFormat
+                    .replace(/hh/g, '\\d{2}')
+                    .replace(/mm/g, '\\d{2}')
+                    .replace(/ss/g, '\\d{2}')
+                    .replace(/:/g, '\\:');
+                const timeRegex = new RegExp(`^${timeRegexPattern}$`);
+                if (!timeRegex.test(timePart)) {
+                    return false;
+                }
+                // Vérifier la validité des composantes de l'heure
+                const [hh, mm, ss] = timePart.split(':').map(Number);
+                if (
+                    isNaN(hh) || hh < 0 || hh > 23 ||
+                    isNaN(mm) || mm < 0 || mm > 59 ||
+                    (timeFormat.includes('ss') && (isNaN(ss) || ss < 0 || ss > 59))
+                ) {
+                    return false;
+                }
+            } else if (timeFormat && !timePart) {
+                // Format d'heure attendu mais non présent
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Datetime validation error:', error);
+            return false;
+        }
+    }
+
 
     /**
      * Validates a date string against a specified format
@@ -774,6 +829,7 @@ export class ValidationService {
         }
     }
 
+
     private validateDateValue(
         value: string,
         columnConfig: any,
@@ -829,6 +885,64 @@ export class ValidationService {
                 expected_format: columnConfig.pattern
                     ? this.getDateFormatExample(columnConfig.pattern)
                     : "Valid date (e.g., 2024-01-15, 01/15/2024, 2024-01-15T10:30:00)",
+            })
+        }
+
+        return errors
+    }
+
+    private validateDatetimeValue(
+        value: string,
+        columnConfig: any,
+        rowNumber: number,
+        lineNumber: number,
+    ): ValidationError[] {
+        const errors: ValidationError[] = []
+
+        // If pattern is specified, validate against it first
+        if (columnConfig.pattern) {
+            try {
+                // if (!this.validateWithFormat(value, columnConfig?.pattern)) {
+                if (!this.validateDateTimeWithFormat(value, columnConfig?.pattern)) {
+                    errors.push({
+                        code: "DATETIME_FORMAT_MISMATCH",
+                        message: `${columnConfig.display_name} must match the required datetime format`,
+                        column: columnConfig.name,
+                        row: rowNumber,
+                        line: lineNumber,
+                        value: value,
+                        expected_format: this.getDateFormatExample(columnConfig.pattern),
+                    })
+                    return errors
+                }
+            } catch (regexError: any) {
+                console.log("regexError : ", regexError.message)
+                console.log("format not match :::  ", columnConfig?.pattern)
+                errors.push({
+                    code: "INVALID_DATETIME_PATTERN",
+                    message: `Invalid datetime pattern configuration for ${columnConfig.display_name}`,
+                    column: columnConfig.name,
+                    row: rowNumber,
+                    line: lineNumber,
+                    value: value,
+                })
+                return errors
+            }
+        }
+
+        // Try to parse the datetime
+        const parsedDate = new Date(value)
+        if (isNaN(parsedDate.getTime())) {
+            errors.push({
+                code: "INVALID_DATETIME",
+                message: `${columnConfig.display_name} is not a valid datetime`,
+                column: columnConfig.name,
+                row: rowNumber,
+                line: lineNumber,
+                value: value,
+                expected_format: columnConfig.pattern
+                    ? this.getDateFormatExample(columnConfig.pattern)
+                    : "Valid datetime (e.g., 2024-01-15T10:30:00, 01/15/2024 10:30 AM)",
             })
         }
 

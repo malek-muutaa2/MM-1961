@@ -16,9 +16,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {Plus, Edit, Trash2, Database} from "lucide-react"
+import {Plus, Edit, Trash2, Database, Info} from "lucide-react"
 import type {UploadStorageConfiguration} from "@/types/upload"
 import {AWS_S3_REGIONS} from "@/lib/storage/aws-s3";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
 interface StorageConfigurationManagerProps {
     storageConfigs: UploadStorageConfiguration[]
@@ -203,7 +204,41 @@ export default function StorageConfigurationManager({
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="path_template">Path Template</Label>
+                                        <Label htmlFor="path_template">
+                                            <div className={"flex flex-row justify-start items-center gap-2"}>
+                                                <p>Path Template</p>
+                                            {/*    tooltip possibility info, using info icon*/}
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button variant="ghost" size="sm">
+                                                                <Info className="h-4 w-4" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p>
+                                                                Use the following placeholders in your path template:
+                                                            </p>
+                                                            <ul className="list-disc pl-5 mt-2 h-[100px] overflow-y-auto">
+                                                                <li><code>{`{base_path}`}</code> - Base path for uploads</li>
+                                                                <li><code>{`{organization_id}`}</code> - Organization ID (if applicable)</li>
+                                                                <li><code>{`{user_id}`}</code> - User ID of the uploader</li>
+                                                                <li><code>{`{year}`}</code> - Current year</li>
+                                                                <li><code>{`{month}`}</code> - Current month (01-12)</li>
+                                                                <li><code>{`{day}`}</code> - Current day (01-31)</li>
+                                                                <li><code>{`{hour}`}</code> - Current hour (00-23)</li>
+                                                                <li><code>{`{minute}`}</code> - Current minute (00-59)</li>
+                                                                <li><code>{`{second}`}</code> - Current second (00-59)</li>
+                                                                <li><code>{`{uuid}`}</code> - Unique identifier for the file</li>
+                                                                <li><code>{`{timestamp}`}</code> - Unix timestamp of upload</li>
+                                                                <li><code>{`{file_name}`}</code> - Original file name without extension</li>
+                                                                <li><code>{`{ext}`}</code> - File extension</li>
+                                                            </ul>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                        </Label>
                                         <Input
                                             id="path_template"
                                             value={editingConfig.path_template || ""}

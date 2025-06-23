@@ -21,7 +21,7 @@ export interface UploadConfigurationColumn {
   config_id: number | undefined
   name: string
   display_name: string
-  data_type: "string" | "number" | "date" | "boolean" | "email"
+  data_type: "string" | "number" | "date" | "boolean" | "datetime"
   required: boolean
   valuesRequired: boolean
   pattern?: string

@@ -272,6 +272,7 @@ export class StorageService {
     private generateFilePath(fileName: string, metadata: Record<string, any>): string {
         const now = new Date()
         const fileExtension = fileName?.split(".")?.pop()
+        const fileNameWithoutExt = fileName?.substring(0, fileName.lastIndexOf(".")) || "file_" + now.getFullYear() + "_" +  now.getMonth() + "_" + now.getDate() + "_" + now.getHours() + "_" + now.getMinutes() + "_" + now.getSeconds()
 
         let path = this.config.path_template || "{base_path}/{uuid}.{ext}"
 
@@ -288,6 +289,7 @@ export class StorageService {
             second: now.getSeconds().toString().padStart(2, "0"),
             uuid: crypto?.randomUUID?.() || Math.random().toString(36).substring(2, 15) + "_" + metadata.user_id,
             timestamp: now.getTime().toString(),
+            file_name: fileNameWithoutExt,
             ext: fileExtension ?? "bin",
         }
 

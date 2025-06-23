@@ -155,7 +155,13 @@ export default function ConfigurationManager({
     const removeColumn = (index: number) => {
         setColumns((prev) => prev.filter((_, i) => i !== index))
     }
-
+    const isValidDatePattern = (format: string) => {
+        // Accepte : YYYY-MM-DD, DD/MM/YYYY, MM-DD-YYYY, etc.
+        const regex1 = /^(y{2,4})[-\/](m{1,2})[-\/](d{1,2})$/i;
+        const regex2 = /^(d{1,2})[-\/](m{1,2})[-\/](y{2,4})$/i;
+        const regex3 = /^(m{1,2})[-\/](d{1,2})[-\/](y{2,4})$/i;
+        return regex1.test(format.trim()) || regex2.test(format.trim()) || regex3.test(format.trim());
+    }
     const handleSave = () => {
         setIsLoading(true)
         if(columns?.filter((x) => !x.name || !x.display_name).length > 0) {
@@ -186,6 +192,37 @@ export default function ConfigurationManager({
             setIsLoading(false)
             return
         }
+        columns
+            ?.filter((col) => col.data_type === "date" || col.data_type==="datetime")
+            ?.forEach((col) => {
+                if(col?.pattern) {
+                    // return when user provide not good or incomplete date format as patern (with yyyy mm dd and - or /) for date. can you check it if it's good pattern
+
+
+                // Vérifie si le pattern de date est valide (doit contenir yyyy, mm, dd et un séparateur - ou /, dans n'importe quel ordre)
+
+                if ((col.data_type === "date" || col.data_type === "datetime") && col.pattern && !isValidDatePattern(col.pattern)) {
+                    toast({
+                        title: "Erreur",
+                        description: "Le format de date doit être du type YYYY-MM-DD, DD/MM/YYYY, ou similaire.",
+                        variant: "destructive",
+                    });
+                    setIsLoading(false);
+                    return;
+                    // throw new Error("Format de date invalide");
+                }
+                if(col.data_type === "datetime" && col.pattern && !col.pattern.includes("HH:mm")) {
+                    toast({
+                        title: "Erreur",
+                        description: "Le format de date-heure doit inclure HH:mm pour l'heure.",
+                        variant: "destructive",
+                    });
+                    setIsLoading(false);
+                    return;
+                }
+                }
+            })
+
 
         const configToSave = {
             ...editingConfig,
@@ -470,9 +507,9 @@ export default function ConfigurationManager({
                                                                                 value="string">String</SelectItem>
                                                                             <SelectItem
                                                                                 value="number">Number</SelectItem>
+                                                                            <SelectItem value="boolean">Boolean</SelectItem>
                                                                             <SelectItem value="date">Date</SelectItem>
-                                                                            <SelectItem
-                                                                                value="boolean">Boolean</SelectItem>
+                                                                            <SelectItem value="datetime">Datetime</SelectItem>
                                                                         </SelectContent>
                                                                     </Select>
                                                                 </div>
@@ -567,15 +604,26 @@ export default function ConfigurationManager({
                                                                     </>
                                                                 )}
                                                                 {/*  data type equal to Date add input string for format */}
-                                                                {column.data_type === "date" && (
+                                                                {(column.data_type === "date") && (
                                                                     <>
-
                                                                         <div>
-                                                                            <Label>Date Format</Label>
+                                                                            <Label>Datetime Format</Label>
                                                                             <Input
                                                                                 value={column.pattern || ""}
                                                                                 onChange={(e) => updateColumn(index, "pattern", e.target.value)}
                                                                                 placeholder="e.g., YYYY-MM-DD"
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                                {(column.data_type === "datetime") && (
+                                                                    <>
+                                                                        <div>
+                                                                            <Label>Datetime Format</Label>
+                                                                            <Input
+                                                                                value={column.pattern || ""}
+                                                                                onChange={(e) => updateColumn(index, "pattern", e.target.value)}
+                                                                                placeholder="e.g., YYYY-MM-DD HH:mm:ss"
                                                                             />
                                                                         </div>
                                                                     </>
