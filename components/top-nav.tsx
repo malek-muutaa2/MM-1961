@@ -405,7 +405,7 @@ console.log("notification ids", filteredNotifications);
           <div className="ml-auto flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button data-testid="theme-button" variant="outline" size="icon">
                   {theme === "light" ? (
                     <Sun className="h-4 w-4" />
                   ) : theme === "dark" ? (
@@ -433,7 +433,7 @@ console.log("notification ids", filteredNotifications);
 
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
               <DropdownMenuTrigger asChild>
-                <Button  variant="outline" size="icon" className="relative">
+                <Button    data-testid="notifications-button" variant="outline" size="icon" className="relative">
                   <Bell className="h-4 w-4" />
                   {countUnread2+newNotificationMeta.count > 0 && (
                     <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]">
@@ -442,14 +442,14 @@ console.log("notification ids", filteredNotifications);
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent  align="end" className="w-[450px]">
+              <DropdownMenuContent   aria-label="Notifications"  align="end" className="w-[450px]">
                 <div           ref={scrollRef}
  className="flex items-center justify-between p-2">
                   <DropdownMenuLabel className="text-base font-semibold">Notifications</DropdownMenuLabel>
                   <div className="flex items-center gap-1">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button   aria-label="Filter notifications"   data-testid="filter-button" variant="ghost" size="icon" className="h-8 w-8">
                           <Filter className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -495,7 +495,7 @@ console.log("notification ids", filteredNotifications);
 >
   {/* Loading state (skeleton) */}
   {loading  && (
-    <div className="space-y-3 p-4">
+    <div data-testid="loading-skeleton" role="status" aria-live="polite" aria-busy="true" className="space-y-3 p-4">
       {[...Array(5)].map((_, i) => (
         <div key={`skeleton-${i}`} className="flex items-start gap-3 p-3">
           <div className="h-5 w-5 rounded-full bg-muted animate-pulse mt-1.5" />
@@ -569,7 +569,7 @@ console.log("notification ids", filteredNotifications);
 
       {/* Loading more indicator */}
       {loadingMore && (
-        <div className="space-y-3 p-4">
+        <div data-testid="loading-skeleton" className="space-y-3 p-4">
           {[...Array(3)].map((_, i) => (
             <div key={`more-loading-${i}`} className="flex items-start gap-3 p-3">
               <div className="h-5 w-5 rounded-full bg-muted animate-pulse mt-1.5" />
