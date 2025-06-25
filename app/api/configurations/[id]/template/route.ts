@@ -7,6 +7,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
   try {
     const { id } = params; // No need to await here in API routes
 
+    if(!id){
+        return NextResponse.json({ error: "Configuration ID is required" }, { status: 400 })
+    }
     // Get configuration with columns
     const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, id))
 
@@ -26,7 +29,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // Determine file extension based on configuration
     const fileExtension = config.fileType.split(",")[0].trim().toLowerCase()
-    const fileName = `${config.name.replace(/\s+/g, "_")}_template.${fileExtension}`
+    // datetime string and joined by _
+    const dateTimeString = new Date().toISOString().replace(/[:.]/g, "-").replace("T", "_").split("Z")[0]
+    const fileName = `${config.name.replace(/\s+/g, "_")}_templ_${dateTimeString}.${fileExtension}`
 
     // Generate example data
     const headers = columns.map((col: { name: any }) => col.name)
@@ -39,9 +44,22 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
         case "date":
           return col.required ?
               col.pattern ?
-                    col.pattern?.toLowerCase().replace("yyyy", "2023").replace("mm", "01").replace("dd", "01")
+                    col.pattern?.toLowerCase()
+                        .replace("yyyy", "2023")
+                        .replace("mm", "01")
+                        .replace("dd", "01")
                 :
                   "2023-01-01" : ""
+        case "datetime":
+          return  col.required ?
+                col.pattern ?
+                      col.pattern?.toLowerCase()
+                          .replace("yyyy", "2023")
+                          .replace("mm", "01")
+                          .replace("dd", "01")
+                          .replace("hh", "12")
+                          .replace("mm", "00")
+                          .replace("ss", "00") : "2023-01-01 12:00:00" : ""
         case "boolean":
           return col.required ? "true" : ""
         case "email":

@@ -5,10 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 // import UploadInterface from "@/components/upload-system/upload-interface"
 import ConfigurationManager from "@/components/upload-system/configuration-manager"
 // import EnhancedFileManager from "@/components/upload-system/enhanced-file-manager"
-import type { UploadConfiguration, UploadStorageConfiguration, OrganizationType } from "@/types/upload"
+import type { UploadConfiguration, UploadStorageConfiguration } from "@/types/upload"
 import EnhancedUploadInterface from "@/components/upload-system/enhanced-upload-interface"
 import {useToast} from "@/hooks/use-toast";
 
+
+//   title:  "File upload system | MUUTAA.ML",
+//   description:"Generic file upload with configurable business rules and validation",
+// }
+// export const metadata: Metadata = {
 export default function HomePage() {
   const [configurations, setConfigurations] = useState<UploadConfiguration[]>([])
   const [storageConfigs, setStorageConfigs] = useState<UploadStorageConfiguration[]>([])

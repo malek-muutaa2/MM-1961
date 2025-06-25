@@ -679,8 +679,18 @@ export class ValidationService {
     }
 
     private isValidDateFormat(format: string): boolean {
-        const DATE_FORMAT_REGEX = /^((yyyy|yy)([\/-])(mm|m)\3(dd|d))|((mm|m)([\/-])(dd|d)\7(yyyy|yy))|((dd|d)([\/-])(mm|m)\11(yyyy|yy))$/;
-        return DATE_FORMAT_REGEX.test(format.toLowerCase());
+        const normalizedFormat = format.toLowerCase();
+        const DATE_FORMAT_REGEX =
+            /^(?:(y{2,4}|m{1,2}|d{1,2})([\/-])(y{2,4}|m{1,2}|d{1,2})\2(y{2,4}|m{1,2}|d{1,2})|(?:(y{2,4}|m{1,2}|d{1,2})([\/-])(y{2,4}|m{1,2}|d{1,2})\6(y{2,4}|m{1,2}|d{1,2})))$/;
+        const parts = normalizedFormat.split(/[-/]/);
+
+        const allowedParts = ['yyyy', 'yy', 'mm', 'm', 'dd', 'd'];
+
+        const hasValidParts = parts.length === 3 && parts.every((p) => allowedParts.includes(p));
+
+        const hasSameSeparator = /^([dmy]{1,4})([-/])([dmy]{1,4})\2([dmy]{1,4})$/i.test(normalizedFormat);
+
+        return hasValidParts && hasSameSeparator;
     }
 
     /**
@@ -780,6 +790,8 @@ export class ValidationService {
                 }
             });
 
+            // console.log("componentMap = ", componentMap)
+
             // Build regex pattern
             const regexParts = formatParts.map(part => {
                 if (part.includes('yy')) return componentMap.year.pattern;
@@ -788,9 +800,11 @@ export class ValidationService {
                 return '';
             });
 
+            console.log(" regexParts = ", regexParts)
+
             const regexPattern = `^${regexParts.join(`\\${separator}`)}$`;
             const formatRegex = new RegExp(regexPattern);
-
+            console.log("formatRegex = ", formatRegex)
             // Test format match
             if (!formatRegex.test(dateString)) {
                 return false;
