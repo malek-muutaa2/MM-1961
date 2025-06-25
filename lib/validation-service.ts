@@ -800,11 +800,11 @@ export class ValidationService {
                 return '';
             });
 
-            console.log(" regexParts = ", regexParts)
+            // console.log(" regexParts = ", regexParts)
 
             const regexPattern = `^${regexParts.join(`\\${separator}`)}$`;
             const formatRegex = new RegExp(regexPattern);
-            console.log("formatRegex = ", formatRegex)
+            // console.log("format ;Regex = ", formatRegex)
             // Test format match
             if (!formatRegex.test(dateString)) {
                 return false;
