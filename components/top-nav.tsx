@@ -321,19 +321,9 @@ useEffect(() => {
        Notification.requestPermission();
      }
    }, []);
-// const handleScroll = () => {
-//   const el = scrollRef.current;
-//   if (!el) return;
-
-//   const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 40;
-//   if (nearBottom) {
-//         console.log("📜 Near bottom, loading...");
-//     loadMoreNotifications();
-//   }
-// };
 
 
-// Prevent double execution in React StrictMode (dev only) by using a ref
+
 
 useEffect(() => {
  
@@ -382,11 +372,7 @@ useEffect(() => {
     console.warn('Ref not attached - check component rendering');
   }
 }, []);
-// useEffect(() => {
-//   setNotificationsData(notificationData);
-// }, [notificationData, router,markAsRead]);
-console.log("notification ids", filteredNotifications);
-   console.log("loading", loading);
+
   return (
     <header className="border-b bg-background sticky top-0 z-10">
       <div className="container mx-auto max-w-7xl">
@@ -544,13 +530,6 @@ console.log("notification ids", filteredNotifications);
                         className="h-6 w-6"
                         onClick={(e) => {
                           e.stopPropagation()
-                          //    setNotificationsData(prev => 
-                          //   prev.map(n => 
-                          //     n.id === notification.id ? { ...n, read_at: new Date() } : n
-                          //   )
-                          // );
-                          // setCountUnread(prev => prev - 1);
-                          // markAsRead(notification.id)
                           markAsReadNotification(notification.id)
                        
                         }}

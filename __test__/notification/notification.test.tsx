@@ -6,7 +6,11 @@ import { useSession } from 'next-auth/react';
 import { TopNav } from '../../components/top-nav';
 import { SidebarProvider } from '../../components/ui/sidebar';
 import userEvent from '@testing-library/user-event';
-
+import { NextRequest } from 'next/server';
+import { POST } from '../../app/api/sendnotification/route';
+import { db } from '../../lib/db/dbpostgres';
+import { notifications, users } from '../../lib/db/schema';
+import { Resend } from 'resend';
 // Mock dependencies
 jest.mock('../../components/theme-provider');
 jest.mock('next/navigation');
@@ -59,7 +63,7 @@ const mockNotificationTypes = [
   { id: 2, name: "system" }
 ];
 
-describe('TopNav Component', () => {
+describe('notification Component', () => {
   beforeEach(() => {
     mockUseTheme.mockReturnValue({
       theme: 'light',
@@ -446,6 +450,158 @@ it('opens and closes notification dropdown', async () => {
     });
   });
 
+  it('applies correct link attributes', async () => {
+      const testUrl = 'https://v0-ra-test-2-pigomshw8-muutaa.vercel.app/kpis/continuous-operations';
+     global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ 
+          notifications: Array(3).fill(0).map((_, i) => ({
+            id: i+1,
+            title: `Notification ${i+1}`,
+            message: "Test",
+            readAt: null,
+            created_at: new Date(),
+            redirectUrl: testUrl,
+            typeName: "alert"
+          }))
+        }),
+      })
+    ) as jest.Mock;
+      render(
+       <SidebarProvider>
+      <TopNav 
+        countUnread={1} 
+        userinfo={{ id: 1 }} // Need userinfo for notifications to load
+        notificationtypes={mockNotificationTypes} 
+      />
+    </SidebarProvider>
+    );
+    const button = screen.getByTestId('notifications-button');
+    await userEvent.click(button);    
+      const linkElement = screen.getByText('Notification 1');
+    expect(linkElement).toBeInTheDocument();
+    
+    // Verify the link attributes
+    expect(linkElement).toHaveAttribute('href', testUrl);
+    expect(linkElement).toHaveAttribute('target', '_blank');
+    expect(linkElement).toHaveAttribute('rel', 'noopener noreferrer');
+    
+    // Check the parent paragraph
+    const paragraph = linkElement.parentElement;
+    expect(paragraph).toHaveClass('text-sm font-medium');
+    
+    expect(linkElement).toHaveClass('text-primary underline hover:opacity-80');
+  });
 
+});
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn().mockImplementation((data, options) => ({
+      json: () => Promise.resolve(data),
+      status: options?.status || 200,
+    })),
+  },
+}));
 
+// Mock the database and external dependencies
+jest.mock('../../lib/db/dbpostgres');
+jest.mock('resend', () => {
+  return {
+    Resend: jest.fn().mockImplementation(() => ({
+      batch: {
+        send: jest.fn().mockResolvedValue({
+          data: [{ id: 'email-1' }]
+        })
+      }
+    }))
+  };
+});
+
+jest.mock('../../lib/notification', () => ({
+  fetchUsersnotificationSettings: jest.fn(),
+  fetchUsernotificationSettings: jest.fn(),
+}));
+jest.mock('../../lib/getCurrentUser');
+describe('POST /api/notifications', () => {
+  // Mock request helper
+  const mockRequest = (body: any): NextRequest => ({
+    json: jest.fn().mockResolvedValue(body),
+    headers: new Headers(),
+  } as any);
+
+  const mockUsers = [
+    { id: 1, email: 'user1@example.com' },
+    { id: 2, email: 'user2@example.com' },
+  ];
+
+  const mockNotificationSettings = [
+    { user_id: 1, email_notifications: true },
+    { user_id: 2, email_notifications: false },
+  ];
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    // Mock database responses
+    (db.insert as jest.Mock).mockReturnValue({
+      values: jest.fn().mockReturnValue({
+        returning: jest.fn().mockResolvedValue([
+          { id: 1, user_id: 1, title: 'Test', message: 'Test message' },
+        ]),
+      }),
+    });
+
+    (db.select as jest.Mock).mockReturnValue({
+      from: jest.fn().mockReturnValue({
+        where: jest.fn().mockResolvedValue(mockUsers),
+      }),
+    });
+
+    // Mock notification settings
+    (require('../../lib/notification').fetchUsersnotificationSettings.mockResolvedValue(
+      mockNotificationSettings
+    ));
+  });
+
+  it('should return 400 if required fields are missing', async () => {
+    const req = mockRequest({});
+    const response = await POST(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.error).toBe('Missing required fields');
+  });
+
+  it('should insert notifications for all user IDs', async () => {
+    const req = mockRequest({
+      userIds: [1, 2],
+      typeId: 1,
+      title: 'Test Notification',
+      message: 'This is a test',
+    });
+
+    await POST(req);
+
+    expect(db.insert).toHaveBeenCalledWith(notifications);
+    expect((db.insert as jest.Mock).mock.results[0].value.values).toHaveBeenCalledWith([
+      {
+        user_id: 1,
+        type_id: 1,
+        title: 'Test Notification',
+        message: 'This is a test',
+        redirect_url: null,
+        data: {},
+      },
+      {
+        user_id: 2,
+        type_id: 1,
+        title: 'Test Notification',
+        message: 'This is a test',
+        redirect_url: null,
+        data: {},
+      },
+    ]);
+  });
+
+  // Add more test cases as needed
 });
