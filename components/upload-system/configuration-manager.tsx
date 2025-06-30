@@ -160,7 +160,21 @@ export default function ConfigurationManager({
         const regex1 = /^(y{2,4})[-\/](m{1,2})[-\/](d{1,2})$/i;
         const regex2 = /^(d{1,2})[-\/](m{1,2})[-\/](y{2,4})$/i;
         const regex3 = /^(m{1,2})[-\/](d{1,2})[-\/](y{2,4})$/i;
+
         return regex1.test(format.trim()) || regex2.test(format.trim()) || regex3.test(format.trim());
+    }
+
+    function isValidDateTimeFormat(format: string): boolean {
+        // All supported tokens
+        const tokenPattern =
+            /y{2,4}|M{1,2}|d{1,2}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S{1,3}|a|Z{1,2}|T|[\/:.\- à]/ig;
+
+        // Remove all valid tokens from the format
+        const cleaned = format.toLocaleLowerCase().replace(tokenPattern, '');
+        console.log("cleaned ", cleaned)
+
+        // If anything is left, it's invalid
+        return cleaned.length === 0;
     }
     const handleSave = () => {
         setIsLoading(true)
@@ -192,36 +206,42 @@ export default function ConfigurationManager({
             setIsLoading(false)
             return
         }
+        let errorCount = 0
         columns
             ?.filter((col) => col.data_type === "date" || col.data_type==="datetime")
             ?.forEach((col) => {
+
                 if(col?.pattern) {
                     // return when user provide not good or incomplete date format as patern (with yyyy mm dd and - or /) for date. can you check it if it's good pattern
 
 
                 // Vérifie si le pattern de date est valide (doit contenir yyyy, mm, dd et un séparateur - ou /, dans n'importe quel ordre)
 
-                if ((col.data_type === "date" || col.data_type === "datetime") && col.pattern && !isValidDatePattern(col.pattern)) {
+                if (col.data_type === "date" && col.pattern && !isValidDatePattern(col.pattern)) {
                     toast({
                         title: "Erreur",
                         description: "Le format de date doit être du type YYYY-MM-DD, DD/MM/YYYY, ou similaire.",
                         variant: "destructive",
                     });
                     setIsLoading(false);
-                    return;
+                    ++errorCount;
                     // throw new Error("Format de date invalide");
                 }
-                if(col.data_type === "datetime" && col.pattern && !col.pattern.includes("HH:mm")) {
+                if(col.data_type === "datetime" && col.pattern && !isValidDateTimeFormat(col.pattern)) {
                     toast({
                         title: "Erreur",
                         description: "Le format de date-heure doit inclure HH:mm pour l'heure.",
                         variant: "destructive",
                     });
                     setIsLoading(false);
-                    return;
+                    ++errorCount;
                 }
                 }
             })
+
+        if(errorCount > 0) {
+            return;
+        }
 
 
         const configToSave = {

@@ -1,3 +1,5 @@
+import { isMatch } from "date-fns"
+
 export interface ValidationError {
     code: string
     message: string
@@ -151,16 +153,31 @@ export class ValidationService {
                         // uknown column find in configuration
                         // check if the header exists in rowErrors
                         if (rowErrors.some((error) => error.column !== header)) {
-                            // If the error for this column already exists, skip adding it again
-                            console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
-                            rowErrors.push({
-                                code: "UNEXPECTED_COLUMN",
-                                message: `Column '${header}' is not defined in the configuration`,
-                                column: header,
-                                row: rowNumber,
-                                line: lineNumber,
-                                value: value,
-                            })
+                            // If the error for this code already exists, update it with the new value
+                            // if(rowErrors.some((error) => error.code === "UNEXPECTED_COLUMN")) {
+                            //     // update the existing error
+                            //     let existingError: any = rowErrors.find((error) => error.code === "UNEXPECTED_COLUMN")
+                            //     existingError = {
+                            //         ...existingError,
+                            //         column: [...existingError.column, header],
+                            //         row: [...existingError.row, rowNumber],
+                            //         line: [...existingError.line, lineNumber],
+                            //         value: [...existingError.value, value],
+                            //     }
+                            //     rowErrors[rowErrors.indexOf(existingError)] = existingError;
+                            //     console.log("relacing done for UNEXPECTED_COLUMN")
+                            // }else {
+                                console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
+                                rowErrors.push({
+                                    code: "UNEXPECTED_COLUMN",
+                                    message: `Column '${header}' is not defined in the configuration`,
+                                    column: header,
+                                    row: rowNumber,
+                                    line: lineNumber,
+                                    value: value,
+                                })
+                            // }
+
                         }
 
                     }
@@ -680,8 +697,6 @@ export class ValidationService {
 
     private isValidDateFormat(format: string): boolean {
         const normalizedFormat = format.toLowerCase();
-        const DATE_FORMAT_REGEX =
-            /^(?:(y{2,4}|m{1,2}|d{1,2})([\/-])(y{2,4}|m{1,2}|d{1,2})\2(y{2,4}|m{1,2}|d{1,2})|(?:(y{2,4}|m{1,2}|d{1,2})([\/-])(y{2,4}|m{1,2}|d{1,2})\6(y{2,4}|m{1,2}|d{1,2})))$/;
         const parts = normalizedFormat.split(/[-/]/);
 
         const allowedParts = ['yyyy', 'yy', 'mm', 'm', 'dd', 'd'];
@@ -692,6 +707,7 @@ export class ValidationService {
 
         return hasValidParts && hasSameSeparator;
     }
+
 
     /**
      * Valide une chaîne datetime selon un format spécifié
@@ -853,12 +869,13 @@ export class ValidationService {
         const errors: ValidationError[] = []
 
         // If pattern is specified, validate against it first
-        if (columnConfig.pattern) {
+        if (columnConfig?.pattern && columnConfig?.pattern.trim() !== "") {
             try {
                 // const regex = new RegExp(columnConfig.pattern)
                 // if (!regex.test(value)) {
                 // if (!this.validateWithFormat(value, columnConfig?.pattern)) {
-                if (!this.validateDateWithFormat(value, columnConfig?.pattern)) {
+                // if (!this.validateDateWithFormat(value, columnConfig?.pattern)) {
+                if (!isMatch(value,  columnConfig?.pattern.toLocaleLowerCase())) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
                         message: `${columnConfig.display_name} must match the required date format`,
@@ -889,6 +906,7 @@ export class ValidationService {
         // const parsedDate = new Date(value)
         // if (isNaN(parsedDate.getTime())) {
         if (!this.validateGeneralPattern(value)) {
+        //  if(!isValid(value)){
             errors.push({
                 code: "INVALID_DATE",
                 message: `${columnConfig.display_name} is not a valid date`,

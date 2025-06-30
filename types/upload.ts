@@ -70,6 +70,8 @@ export interface UploadResponse {
   operation_id?: string
   processed_rows?: number
   total_rows?: number
+  started_at?: Date,
+  completed_at?: Date,
   error?: {
     code: string
     message: string

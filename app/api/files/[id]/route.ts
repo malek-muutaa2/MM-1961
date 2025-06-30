@@ -7,7 +7,7 @@ import { StorageService } from "@/lib/storage"
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
     try {
 
-        const { id } = params; // No need to await here in API routes
+        const { id } = await params; // No need to await here in API routes
 
         // Get file operation with storage configuration
         const [operation] = await db
