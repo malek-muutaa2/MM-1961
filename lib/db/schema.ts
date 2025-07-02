@@ -11,6 +11,7 @@ import {
   index,
   numeric,
   date,
+  jsonb,
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
@@ -72,6 +73,7 @@ export const twoFactorAuth = pgTable("two_factor_auth", {
 // Export types
 export type UserType = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
+export type typenotifications = typeof notifications.$inferInsert
 
 // Users table
 
@@ -209,3 +211,31 @@ export const classificationsRelations = relations(classifications, ({ one }) => 
     references: [classificationLevels.id],
   }),
 }))
+// Notification types table
+export const notificationTypes = pgTable('notification_types', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  icon: text('icon'),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
+
+// User notification settings table
+export const userNotificationSettings = pgTable('user_notification_settings', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').notNull().references(() => users.id),
+  channel_preference: text('channel_preference').notNull(), // mail/email/user/inbox
+});
+
+// Notifications table
+export const notifications = pgTable('notifications', {
+  id: serial('id').primaryKey(),
+  user_id: integer('user_id').notNull().references(() => users.id),
+  type_id: integer('type_id').notNull().references(() => notificationTypes.id),
+  title: text('title').notNull(),
+  message: text('message').notNull(),
+  redirect_url: text('redirect_url'),
+  data: jsonb('data'),
+  read_at: timestamp('read_at'),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+});
