@@ -46,13 +46,14 @@ export default function ConfigurationSelector({
             </CardHeader>
             <CardContent className="space-y-6">
                 {/* Configuration Selection */}
-                <div className="space-y-2">
+                <div className="space-y-2" role="combobox">
                     <label className="text-sm font-medium">Choose Configuration</label>
                     <Select value={selectedConfigId ? String(selectedConfigId) : ""} onValueChange={(value: string) => {
                         localStorage.setItem("selectedConfiguration", value)
 
                         onConfigurationSelect(Number(value))
-                    }}>
+                    }}
+                    >
                         <SelectTrigger>
                             <SelectValue placeholder="Select an upload configuration"/>
                         </SelectTrigger>

@@ -115,6 +115,7 @@ export class StorageService {
 
         try {
             const result = await s3Service.uploadFile(file, filePath)
+
             return {
                 ...result,
                 storage_type: "s3",

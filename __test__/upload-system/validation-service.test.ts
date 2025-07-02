@@ -3,7 +3,7 @@ import type { UploadConfigurationColumn } from "@/types/upload"
 
 describe("ValidationService", () => {
   const mockConfig = {
-    id: "test-config",
+    id: 1,
     name: "Test Configuration",
     delimiter: ",",
     allow_partial_upload: false,
@@ -24,7 +24,7 @@ describe("ValidationService", () => {
     },
     {
       id: 2,
-      config_id: 2,
+      config_id: 1,
       name: "age",
       display_name: "Age",
       data_type: "number",
@@ -36,18 +36,18 @@ describe("ValidationService", () => {
     },
     {
       id: 3,
-      config_id: 3,
+      config_id: 1,
       name: "birth_date",
       display_name: "Birth Date",
       data_type: "date",
       required: true,
       valuesRequired: true,
-      pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+      pattern: "YYYY-MM-DD",
       position: 2,
     },
     {
       id: 4,
-      config_id: 2,
+      config_id: 1,
       name: "active",
       display_name: "Active Status",
       data_type: "boolean",
@@ -97,7 +97,7 @@ describe("ValidationService", () => {
       const csvContent = "name,age,birth_date,active\nA,30,1993-01-15,true"
 
       const result = validationService.validateContent(csvContent)
-
+      console.log('Validation Result:', result.errors)
       const lengthErrors = result.errors.filter((e) => e.code === "VALUE_TOO_SHORT")
       expect(lengthErrors).toHaveLength(1)
       expect(lengthErrors[0].column).toBe("name")
@@ -169,8 +169,8 @@ describe("ValidationService", () => {
       const csvContent = "name,age,birth_date,active\nJohn Doe,30,2023-13-45,true"
 
       const result = validationService.validateContent(csvContent)
-
-      const dateErrors = result.errors.filter((e) => e.code === "INVALID_DATE")
+      // console.log('Validation Result:', result)
+      const dateErrors = result.errors.filter((e) => e.code === "DATE_FORMAT_MISMATCH")
       expect(dateErrors).toHaveLength(1)
       expect(dateErrors[0].column).toBe("birth_date")
     })
@@ -221,7 +221,6 @@ describe("ValidationService", () => {
       const csvContent = "name,age,birth_date,active\nJohn Doe,30,1993-01-15,true\n,invalid,bad-date,maybe"
 
       const result = validationService.validateContent(csvContent)
-
       expect(result.isValid).toBe(true)
       expect(result.validRows).toBe(1)
       expect(result.totalRows).toBe(2)

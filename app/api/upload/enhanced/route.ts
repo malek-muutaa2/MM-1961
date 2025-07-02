@@ -20,7 +20,14 @@ export async function POST(request: NextRequest) {
         const file = formData.get("file") as File
         const configId = formData.get("config_id") as unknown as number;
         const user = await getCurrentUser();
+        // For unit testing, we can mock the user object directly
+        // const user = {
+        //     id: 99999,
+        //     name: "unit testing",
+        //
+        // }
         const userId = user?.id;
+        console.log("formData = ", formData.get("config_id"));
 
         console.log(startedDate.toDateString(), "== upload process started ...")
         if (!userId) {
@@ -157,9 +164,8 @@ export async function POST(request: NextRequest) {
         )
 
         const validationResult = await validationService.validateFile(file)
-
         // If validation fails and partial upload is not allowed, return error
-        if (!validationResult.isValid && !config.allowPartialUpload) {
+        if (!validationResult?.isValid && !config.allowPartialUpload) {
             //   save upload_operation_errors with validation errors on db
             await db
                 .insert(uploadOperations)

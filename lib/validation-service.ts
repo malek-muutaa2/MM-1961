@@ -107,9 +107,9 @@ export class ValidationService {
         const dataLines = lines.slice(1)
         let validRowCount = 0
 
-        console.log("dataLines length : ", dataLines?.length)
+        // console.log("dataLines length : ", dataLines?.length)
 
-        console.log("this.config.maxRows =: ", this.config.maxRows)
+        // console.log("this.config.maxRows =: ", this.config.maxRows)
 
         if (this.config?.maxRows && dataLines?.length > this.config?.maxRows) {
             errors.push({
@@ -206,8 +206,9 @@ export class ValidationService {
             }
         })
 
-        const isValid = errors.length === 0 || (this.config.allow_partial_upload && validRowCount > 0)
-
+        // const isValid = errors.length === 0 || (this.config.allow_partial_upload && validRowCount > 0)
+        const isValid = errors.length === 0 || (this.config.allow_partial_upload)
+        console.log("we reach the end", isValid)
         return {
             isValid,
             errors,
@@ -878,7 +879,7 @@ export class ValidationService {
                 if (!isMatch(value,  columnConfig?.pattern.toLocaleLowerCase())) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
-                        message: `${columnConfig.display_name} must match the required date format`,
+                        message: `${columnConfig.display_name} must match the required date format : ${columnConfig.pattern}`,
                         column: columnConfig.name,
                         row: rowNumber,
                         line: lineNumber,

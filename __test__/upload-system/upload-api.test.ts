@@ -2,15 +2,75 @@ import { POST } from "@/app/api/upload/enhanced/route"
 import type { NextRequest } from "next/server"
 
 // Mock dependencies
-jest.mock("@/lib/db/dbpostgres")
-jest.mock("@/lib/storage")
-jest.mock("@/lib/validation-service")
+jest.mock("../../lib/db/dbpostgres", () => ({
+  db: {
+    // select: jest.fn().mockReturnThis(),
+
+    select: jest.fn().mockReturnValue({
+      from: jest.fn().mockReturnValue({
+        leftJoin: jest.fn().mockReturnValue({
+          where: jest.fn().mockResolvedValue([{
+            id: 1,
+            name: "Test Config",
+            fileType: "csv",
+            delimiter: ",",
+            maxFileSize: 1024 * 1024,
+            allowPartialUpload: false,
+            storageConfig: {
+              storageType: "s3",
+              basePath: "uploads",
+              pathTemplate: "{base_path}/{uuid}.{ext}",
+              bucketName: "test-bucket",
+              region: "us-east-1",
+              awsAccessKeyId: "test-key",
+              awsSecretAccessKey: "test-secret",
+            },
+          }]),
+        }),
+        where: jest.fn().mockReturnValue({
+          orderBy: jest.fn().mockResolvedValue([
+            {
+              configId: 1,
+              name: "test",
+              displayName: "Test Column",
+              dataType: "string",
+              required: true,
+              valuesRequired: false,
+              position: 0,
+            },
+          ])
+        }),
+        // orderBy: jest.fn().mockResolvedValue([
+        //   {
+        //     configId: 1,
+        //     name: "test",
+        //     displayName: "Test Column",
+        //     dataType: "string",
+        //     required: true,
+        //     valuesRequired: false,
+        //     position: 0,
+        //   },
+        // ]),
+      }),
+    }),
+    from: jest.fn().mockReturnThis(),
+    where: jest.fn().mockResolvedValue([{ id: 1, email: "test@example.com" }]),
+    insert: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  }
+}))
+jest.mock("../../lib/storage")
+jest.mock("../../lib/validation-service")
+jest.mock('../../lib/auth'); // Path to your getServerAuthSession
+jest.mock('../../lib/getCurrentUser'); // Path to your getServerAuthSession
 
 describe("Enhanced Upload API", () => {
   const mockFormData = new FormData()
-  const mockFile = new File(["test,content\nvalue1,value2"], "test.csv", { type: "text/csv" })
+  const mockFile = new File(["test,content\nvalue1,value2\nvalue3,value4\nvalue5,value6"], "test.csv", { type: "text/csv", lastModified: Date.now().valueOf() })
   mockFormData.append("file", mockFile)
   mockFormData.append("config_id", "1")
+  mockFormData.append("auth_test_pass", "1")
 
   const mockRequest = {
     formData: jest.fn().mockResolvedValue(mockFormData),
@@ -69,7 +129,7 @@ describe("Enhanced Upload API", () => {
       storage_type: "s3",
     }
 
-    jest.doMock("../lib/db", () => ({
+    jest.doMock("../../lib/db/dbpostgres", () => ({
       db: {
         select: jest.fn().mockReturnValue({
           from: jest.fn().mockReturnValue({
@@ -80,7 +140,7 @@ describe("Enhanced Upload API", () => {
         }),
         insert: jest.fn().mockReturnValue({
           values: jest.fn().mockReturnValue({
-            returning: jest.fn().mockResolvedValue([{ id: "operation-id" }]),
+            returning: jest.fn().mockResolvedValue([{ id: 1 }]),
           }),
         }),
       },
@@ -103,7 +163,7 @@ describe("Enhanced Upload API", () => {
 
     expect(response.status).toBe(200)
     expect(result.status).toBe("success")
-    expect(result.operation_id).toBe("operation-id")
+    expect(result.operation_id).toBe(1)
     expect(result.processed_rows).toBe(1)
     expect(result.total_rows).toBe(1)
   })

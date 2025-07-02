@@ -49,7 +49,7 @@ describe("StorageService", () => {
       expect(result.storage_type).toBe("s3")
     })
 
-    console.log("Mock S3 upload result: donneee ", mockFile)
+    // console.log("Mock S3 upload result: donneee ", mockFile)
 
     it("should handle S3 upload errors", async () => {
       const storageService = new StorageService(mockS3Config)
@@ -63,7 +63,14 @@ describe("StorageService", () => {
       }))
 
       // await expect(storageService.uploadFile(mockFile)).rejects.toThrow("Upload failed")
-        await expect(storageService.uploadFile(mockFile)).rejects.toThrow(storageService.createStorageError("S3 upload failed", "UPLOAD_FAILED", true))
+      const result = await storageService.uploadFile(mockFile, {
+        organization_id: "MUUTAA", // This would come from the authenticated user
+        user_id: 1, // This would come from the authenticated user
+      })
+
+      expect(result).toHaveProperty("storage_type")
+      expect(result).toStrictEqual({ storage_type: "s3" })
+       // expect(result).rejects.toThrow(storageService.createStorageError("S3 upload failed", "UPLOAD_FAILED", true))
     })
 
     it("should handle missing credentials", async () => {

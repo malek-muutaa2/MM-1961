@@ -11,11 +11,11 @@ const mockConfigurations: UploadConfiguration[] = [
     source_type: "EMR",
     file_type: "csv,xlsx",
     delimiter: ",",
-    max_file_size: 10 * 1024 * 1024,
+    max_file_size: 50 * 1024 * 1024,
     max_rows: 10000,
     storage_config_id: 1,
     active: true,
-    allow_partial_upload: true,
+    allow_partial_upload: false,
     created_at: new Date(),
     updated_at: new Date(),
   },
@@ -27,10 +27,10 @@ const mockConfigurations: UploadConfiguration[] = [
     source_type: "Core Banking",
     file_type: "csv",
     delimiter: ";",
-    max_file_size: 50 * 1024 * 1024,
+    max_file_size: 10 * 1024 * 1024,
     storage_config_id: 2,
     active: true,
-    allow_partial_upload: false,
+    allow_partial_upload: true,
     created_at: new Date(),
     updated_at: new Date(),
   },
@@ -47,24 +47,26 @@ describe("ConfigurationSelector", () => {
   it("should render configuration selector", () => {
     render(
       <ConfigurationSelector
-        configurations={mockConfigurations}
-        selectedConfigId={1}
-        onConfigurationSelect={mockOnConfigurationSelect}
-        onDownloadTemplate={mockOnDownloadTemplate}
+          configurations={mockConfigurations}
+          selectedConfigId={1}
+          onConfigurationSelect={mockOnConfigurationSelect}
+          onDownloadTemplate={mockOnDownloadTemplate}
+          uploading={false}
       />,
     )
 
     expect(screen.getByText("Upload Configuration")).toBeInTheDocument()
-    expect(screen.getByText("Select an upload configuration")).toBeInTheDocument()
+    expect(screen.getByText("Choose Configuration")).toBeInTheDocument()
   })
 
   it("should display configuration details when selected", () => {
     render(
       <ConfigurationSelector
         configurations={mockConfigurations}
-        selectedConfigId={1}
+        selectedConfigId={2}
         onConfigurationSelect={mockOnConfigurationSelect}
         onDownloadTemplate={mockOnDownloadTemplate}
+        uploading={false}
       />,
     )
 
@@ -81,6 +83,7 @@ describe("ConfigurationSelector", () => {
         selectedConfigId={1}
         onConfigurationSelect={mockOnConfigurationSelect}
         onDownloadTemplate={mockOnDownloadTemplate}
+        uploading={false}
       />,
     )
 
@@ -94,6 +97,7 @@ describe("ConfigurationSelector", () => {
         selectedConfigId={1}
         onConfigurationSelect={mockOnConfigurationSelect}
         onDownloadTemplate={mockOnDownloadTemplate}
+        uploading={false}
       />,
     )
 
@@ -110,6 +114,7 @@ describe("ConfigurationSelector", () => {
         selectedConfigId={1}
         onConfigurationSelect={mockOnConfigurationSelect}
         onDownloadTemplate={mockOnDownloadTemplate}
+        uploading={false}
       />,
     )
 

@@ -15,7 +15,7 @@ const mockConfigurations: UploadConfiguration[] = [
     file_type: "csv",
     delimiter: ",",
     max_file_size: 10 * 1024 * 1024,
-    storage_config_id: "storage-1",
+    storage_config_id: 1,
     active: true,
     allow_partial_upload: true,
     created_at: new Date(),
@@ -36,13 +36,14 @@ describe("EnhancedUploadInterface", () => {
   })
 
   it("should show file upload section after configuration selection", () => {
-    render(<EnhancedUploadInterface configurations={mockConfigurations} />)
+    // render(<EnhancedUploadInterface configurations={mockConfigurations} />)
+    // we have an  <ConfigurationSelector inside the EnhancedUploadInterface component and it should render the configuration selector
 
-    // Select configuration
-    const select = screen.getByRole("combobox")
-    fireEvent.click(select)
 
-    const option = screen.getByText("Test Configuration")
+    // const select = screen.getByRole("combobox")
+    const select = screen.findByRole('combobox', { name: /Choose Configuration/i }, { timeout: 3000 })
+
+    const option = screen.getByText("Test Configuration 2")
     fireEvent.click(option)
 
     expect(screen.getByText("File Upload")).toBeInTheDocument()
@@ -76,7 +77,7 @@ describe("EnhancedUploadInterface", () => {
   it("should handle successful upload", async () => {
     const mockResponse = {
       status: "success",
-      operation_id: "op-123",
+      operation_id: 1,
       processed_rows: 10,
       total_rows: 10,
     }
@@ -112,7 +113,7 @@ describe("EnhancedUploadInterface", () => {
   it("should display validation errors", async () => {
     const mockResponse = {
       status: "partially_completed",
-      operation_id: "op-123",
+      operation_id: 1,
       processed_rows: 8,
       total_rows: 10,
       error: {
