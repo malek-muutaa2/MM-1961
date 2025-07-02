@@ -21,11 +21,12 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
   const [isLoading, setIsLoading] = useState(false)
   const [avatarSrc, setAvatarSrc] = useState(UserInfo.image || "/abstract-geometric-shapes.png")
   const { toast } = useToast()
+  const [avatarRemoved, setAvatarRemoved] = useState(false)
 
-  // États pour les champs du formulaire
+  // Form field states
   const [formData, setFormData] = useState({
     name: UserInfo.name || "",
-    phone: "", // Pas dans le schéma actuel, mais on peut l'ajouter
+    phone: "", // Not in current schema, but can be added
     jobTitle: UserInfo.jobTitle || "",
     department: UserInfo.department || "",
     workDomain: UserInfo.workDomain || "",
@@ -45,14 +46,14 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
     setIsLoading(true)
 
     try {
-      // Préparer les données à envoyer
+      // Prepare data to send
       const dataToSend = {
         ...formData,
-        // Gérer l'image : envoyer undefined si c'est l'image par défaut
-        image: avatarSrc !== "/abstract-geometric-shapes.png" ? avatarSrc : undefined,
+        // Handle image: send null if removed, undefined if default image, or the new image
+        image: avatarRemoved ? null : avatarSrc !== "/abstract-geometric-shapes.png" ? avatarSrc : undefined,
       }
 
-      console.log("Données envoyées:", dataToSend)
+      console.log("Data sent:", dataToSend)
 
       const response = await fetch("/api/profile/update", {
         method: "PUT",
@@ -65,24 +66,44 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
       const data = await response.json()
 
       if (response.ok) {
+        // Update local state with newly saved values
+        setFormData((prev) => ({
+          ...prev,
+          ...formData, // Data that was just saved
+        }))
+
+        // Reset avatar removal flag
+        setAvatarRemoved(false)
+
+        // Update UserInfo reference for comparison
+        Object.assign(UserInfo, {
+          name: formData.name,
+          jobTitle: formData.jobTitle || null,
+          department: formData.department || null,
+          workDomain: formData.workDomain || null,
+          organization: formData.organization || null,
+          bio: formData.bio || null,
+          image: avatarRemoved ? null : avatarSrc !== "/abstract-geometric-shapes.png" ? avatarSrc : null,
+        })
+
         toast({
-          title: "Succès",
-          description: "Votre profil a été mis à jour avec succès",
+          title: "Success",
+          description: "Your profile has been updated successfully",
           variant: "default",
         })
       } else {
-        console.error("Erreur de l'API:", data)
+        console.error("API Error:", data)
         toast({
-          title: "Erreur",
-          description: data.error || "Une erreur est survenue lors de la mise à jour",
+          title: "Error",
+          description: data.error || "An error occurred during the update",
           variant: "destructive",
         })
       }
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error)
+      console.error("Update error:", error)
       toast({
-        title: "Erreur",
-        description: "Une erreur réseau est survenue",
+        title: "Error",
+        description: "A network error occurred",
         variant: "destructive",
       })
     } finally {
@@ -93,11 +114,11 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Vérifier la taille du fichier (max 2MB)
+      // Check file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         toast({
-          title: "Erreur",
-          description: "L'image ne doit pas dépasser 2MB",
+          title: "Error",
+          description: "Image must not exceed 2MB",
           variant: "destructive",
         })
         return
@@ -108,6 +129,7 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
         if (event.target?.result) {
           const newAvatarSrc = event.target.result as string
           setAvatarSrc(newAvatarSrc)
+          setAvatarRemoved(false) // Reset flag as a new image is selected
         }
       }
       reader.readAsDataURL(file)
@@ -116,9 +138,10 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
 
   const handleRemoveAvatar = () => {
     setAvatarSrc("/abstract-geometric-shapes.png")
+    setAvatarRemoved(true) // Mark that avatar has been explicitly removed
   }
 
-  // Vérifier si le formulaire a été modifié
+  // Check if form has been modified
   const isFormModified = () => {
     return (
         formData.name !== (UserInfo.name || "") ||
@@ -127,26 +150,27 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
         formData.workDomain !== (UserInfo.workDomain || "") ||
         formData.organization !== (UserInfo.organization || "") ||
         formData.bio !== (UserInfo.bio || "") ||
-        avatarSrc !== (UserInfo.image || "/abstract-geometric-shapes.png")
+        avatarRemoved || // Consider explicit removal
+        (avatarSrc !== (UserInfo.image || "/abstract-geometric-shapes.png") && !avatarRemoved)
     )
   }
 
   return (
       <Card>
         <CardHeader>
-          <CardTitle>Informations personnelles</CardTitle>
-          <CardDescription>Mettez à jour vos détails personnels et préférences</CardDescription>
+          <CardTitle>Personal Information</CardTitle>
+          <CardDescription>Update your personal details and preferences</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
             <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={avatarSrc || "/placeholder.svg"} alt="Photo de profil" />
+                <AvatarImage src={avatarSrc || "/placeholder.svg"} alt="Profile picture" />
                 <AvatarFallback>{formData.name.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="avatar" className="text-sm font-medium">
-                  Photo de profil
+                  Profile Picture
                 </Label>
                 <div className="flex items-center space-x-2">
                   <Label
@@ -154,7 +178,7 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
                       className="cursor-pointer rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 inline-flex items-center"
                   >
                     <Upload className="mr-2 h-4 w-4" />
-                    Changer l'avatar
+                    Change Avatar
                   </Label>
                   <Input
                       id="avatar-upload"
@@ -164,15 +188,15 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
                       onChange={handleAvatarChange}
                   />
                   <Button variant="outline" size="sm" type="button" onClick={handleRemoveAvatar}>
-                    Supprimer
+                    Remove
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">JPG, GIF ou PNG. Taille max 2MB.</p>
+                <p className="text-xs text-muted-foreground">JPG, GIF or PNG. Max size 2MB.</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="full-name">Nom complet *</Label>
+              <Label htmlFor="full-name">Full Name *</Label>
               <Input
                   id="full-name"
                   value={formData.name}
@@ -184,53 +208,51 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" value={UserInfo.email} disabled className="bg-muted" />
-              <p className="text-xs text-muted-foreground">L'email ne peut pas être modifié</p>
+              <p className="text-xs text-muted-foreground">Email cannot be changed</p>
             </div>
-
-
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="job-title">Titre du poste</Label>
+                <Label htmlFor="job-title">Job Title</Label>
                 <Input
                     id="job-title"
                     value={formData.jobTitle}
                     onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                    placeholder="Gestionnaire de chaîne d'approvisionnement"
+                    placeholder="Supply Chain Manager"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="department">Département</Label>
+                <Label htmlFor="department">Department</Label>
                 <Input
                     id="department"
                     value={formData.department}
                     onChange={(e) => handleInputChange("department", e.target.value)}
-                    placeholder="Opérations"
+                    placeholder="Operations"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="work-domain">Domaine de travail</Label>
+              <Label htmlFor="work-domain">Work Domain</Label>
               <Select value={formData.workDomain} onValueChange={(value) => handleInputChange("workDomain", value)}>
                 <SelectTrigger id="work-domain">
-                  <SelectValue placeholder="Sélectionnez votre domaine de travail" />
+                  <SelectValue placeholder="Select your work domain" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="healthcare">Santé</SelectItem>
-                  <SelectItem value="pharmaceuticals">Pharmaceutique</SelectItem>
-                  <SelectItem value="manufacturing">Fabrication</SelectItem>
-                  <SelectItem value="retail">Commerce de détail</SelectItem>
-                  <SelectItem value="logistics">Logistique</SelectItem>
-                  <SelectItem value="government">Gouvernement</SelectItem>
-                  <SelectItem value="education">Éducation</SelectItem>
-                  <SelectItem value="other">Autre</SelectItem>
+                  <SelectItem value="healthcare">Healthcare</SelectItem>
+                  <SelectItem value="pharmaceuticals">Pharmaceuticals</SelectItem>
+                  <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                  <SelectItem value="retail">Retail</SelectItem>
+                  <SelectItem value="logistics">Logistics</SelectItem>
+                  <SelectItem value="government">Government</SelectItem>
+                  <SelectItem value="education">Education</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="organization">Organisation</Label>
+              <Label htmlFor="organization">Organization</Label>
               <Input
                   id="organization"
                   value={formData.organization}
@@ -240,10 +262,10 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Biographie</Label>
+              <Label htmlFor="bio">Biography</Label>
               <Textarea
                   id="bio"
-                  placeholder="Parlez-nous un peu de vous"
+                  placeholder="Tell us a bit about yourself"
                   className="min-h-[100px]"
                   value={formData.bio}
                   onChange={(e) => handleInputChange("bio", e.target.value)}
@@ -255,7 +277,7 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
               {isFormModified() && (
                   <>
                     <AlertCircle className="mr-1 h-4 w-4" />
-                    Modifications non sauvegardées
+                    Unsaved changes
                   </>
               )}
             </div>
@@ -263,12 +285,12 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
               {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sauvegarde...
+                    Saving...
                   </>
               ) : (
                   <>
                     <Check className="mr-2 h-4 w-4" />
-                    Sauvegarder les modifications
+                    Save Changes
                   </>
               )}
             </Button>
