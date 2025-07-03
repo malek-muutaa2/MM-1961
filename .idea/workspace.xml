@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-842-Upload-file-for-validation : fix version 9.2 : optimisation levels">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/develop.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/preview.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/prod.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="MM-842-Upload-file-for-validation" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="develop" />
+                    <option name="lastUsedInstant" value="1751474455" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="MM-1294-Update-Alerts-Interface-with-Dynamic-Data-Rendering" />
+                    <option name="lastUsedInstant" value="1750267243" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="MM-842-Upload-file-for-validation" />
+                    <option name="lastUsedInstant" value="1749675172" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="MM-1260-Fix-French-Text-on-Web-Pages" />
+                    <option name="lastUsedInstant" value="1749666258" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="MM-1179-Removing-or-Updating-the-profile-picture-doesn-t-work" />
+                    <option name="lastUsedInstant" value="1749483205" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2x5RSsRNuIia2n5ojeIVMchMDxG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Jest.ConfigurationSelector.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.Enhanced Upload API.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.Enhanced Upload API.should handle missing parameters.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.EnhancedUploadInterface.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.EnhancedUploadInterface.should show file upload section after configuration selection.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.StorageService.S3 Storage.should handle S3 upload errors.executor&quot;: &quot;Debug&quot;,
+    &quot;Jest.StorageService.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ValidationService.CSV Parsing.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ValidationService.Error Reporting.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ValidationService.Partial Upload Configuration.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ValidationService.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/optivian/.github/workflows&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/optivian/node_modules/jest&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/optivian/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ],
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/&quot;: [
+      &quot;PostgreSQL&quot;
+    ]
+  }
+}</component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.github/workflows" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/app/api/upload/enhanced" />
+      <recent name="$PROJECT_DIR$/app/api/files/[id]/properties" />
+      <recent name="$PROJECT_DIR$/app/api/files/[id]" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.github/workflows" />
+      <recent name="$PROJECT_DIR$/__test__/upload-system" />
+      <recent name="$PROJECT_DIR$/app/api" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Jest.Enhanced Upload API">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="optivian" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="optivian" />
+      <working_directory value="$PROJECT_DIR$" />
+      <go_parameters value="-i" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ConfigurationSelector" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/configuration-selector.test.tsx" />
+      <test-names>
+        <test-name value="ConfigurationSelector" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Enhanced Upload API" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-names>
+        <test-name value="Enhanced Upload API" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Enhanced Upload API.should handle missing parameters" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-names>
+        <test-name value="Enhanced Upload API" />
+        <test-name value="should handle missing parameters" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="StorageService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/storage-service.test.ts" />
+      <test-names>
+        <test-name value="StorageService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="ValidationService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/validation-service.test.ts" />
+      <test-names>
+        <test-name value="ValidationService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.Enhanced Upload API" />
+        <item itemvalue="Jest.Enhanced Upload API.should handle missing parameters" />
+        <item itemvalue="Jest.ConfigurationSelector" />
+        <item itemvalue="Jest.StorageService" />
+        <item itemvalue="Jest.ValidationService" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="" />
+      <created>1747225950617</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747225950617</updated>
+      <workItem from="1747225951989" duration="5606000" />
+      <workItem from="1747314353081" duration="11000" />
+      <workItem from="1747653478826" duration="719000" />
+      <workItem from="1747664878756" duration="23934000" />
+      <workItem from="1748523933104" duration="3692000" />
+      <workItem from="1748533624536" duration="9000" />
+      <workItem from="1748533788815" duration="3186000" />
+      <workItem from="1748611850082" duration="600000" />
+      <workItem from="1748859923507" duration="19589000" />
+      <workItem from="1749036824759" duration="22203000" />
+      <workItem from="1749458311604" duration="12608000" />
+      <workItem from="1749490742015" duration="29000" />
+      <workItem from="1749490779322" duration="9149000" />
+      <workItem from="1749554591730" duration="222000" />
+      <workItem from="1749554831399" duration="12304000" />
+      <workItem from="1749802113337" duration="8271000" />
+      <workItem from="1749818621691" duration="5390000" />
+      <workItem from="1749921756328" duration="3202000" />
+      <workItem from="1750074307193" duration="3399000" />
+      <workItem from="1750079657588" duration="46405000" />
+      <workItem from="1750249350276" duration="3676000" />
+      <workItem from="1750256110408" duration="1030000" />
+      <workItem from="1750267205788" duration="1311000" />
+      <workItem from="1750268630651" duration="9115000" />
+      <workItem from="1750329100141" duration="17688000" />
+      <workItem from="1750410625854" duration="12947000" />
+      <workItem from="1750672686062" duration="667000" />
+      <workItem from="1750715192986" duration="5280000" />
+      <workItem from="1750858585125" duration="4319000" />
+      <workItem from="1750926504452" duration="54373000" />
+      <workItem from="1751473154299" duration="1044000" />
+      <workItem from="1751474655516" duration="7800000" />
+      <workItem from="1751538943290" duration="625000" />
+    </task>
+    <task id="LOCAL-00001" summary="MM-842-Upload-file-for-validation : V7">
+      <option name="closed" value="true" />
+      <created>1749478984360</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749478984360</updated>
+    </task>
+    <task id="LOCAL-00002" summary="MM-842-Upload-file-for-validation : V8">
+      <option name="closed" value="true" />
+      <created>1749483130118</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1749483130118</updated>
+    </task>
+    <task id="LOCAL-00003" summary="build MM-1179-Removing-or-Updating-the-profile-picture-doesn-t-work">
+      <option name="closed" value="true" />
+      <created>1749483325504</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1749483325504</updated>
+    </task>
+    <task id="LOCAL-00004" summary="build MM-1179-Removing-or-Updating-the-profile-picture-doesn-t-work">
+      <option name="closed" value="true" />
+      <created>1749484726746</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749484726746</updated>
+    </task>
+    <task id="LOCAL-00005" summary="build MM-1179-Removing-or-Updating-the-profile-picture-doesn-t-work">
+      <option name="closed" value="true" />
+      <created>1749484963616</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1749484963616</updated>
+    </task>
+    <task id="LOCAL-00006" summary="build MM-842 upload file for validation">
+      <option name="closed" value="true" />
+      <created>1749490947230</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1749490947230</updated>
+    </task>
+    <task id="LOCAL-00007" summary="build MM-842 upload file for validation">
+      <option name="closed" value="true" />
+      <created>1749565792787</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1749565792787</updated>
+    </task>
+    <task id="LOCAL-00008" summary="build fix">
+      <option name="closed" value="true" />
+      <created>1749666328626</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1749666328626</updated>
+    </task>
+    <task id="LOCAL-00009" summary="build recomendation after quickoff on file upload">
+      <option name="closed" value="true" />
+      <created>1749809323409</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1749809323409</updated>
+    </task>
+    <task id="LOCAL-00010" summary="build recomendation after quickoff on file upload">
+      <option name="closed" value="true" />
+      <created>1750089541328</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1750089541328</updated>
+    </task>
+    <task id="LOCAL-00011" summary="MM-842-Upload-file-for-validation : fix version 8&#10;validation step and error management">
+      <option name="closed" value="true" />
+      <created>1750099530505</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1750099530505</updated>
+    </task>
+    <task id="LOCAL-00012" summary="MM-842-Upload-file-for-validation : fix version 8.3">
+      <option name="closed" value="true" />
+      <created>1750187744376</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1750187744376</updated>
+    </task>
+    <task id="LOCAL-00013" summary="MM-842-Upload-file-for-validation : fix version 8.3.1">
+      <option name="closed" value="true" />
+      <created>1750269924392</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1750269924392</updated>
+    </task>
+    <task id="LOCAL-00014" summary="MM-842-Upload-file-for-validation : fix version 8.4 : add other validation check">
+      <option name="closed" value="true" />
+      <created>1750333122778</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1750333122779</updated>
+    </task>
+    <task id="LOCAL-00015" summary="MM-842-Upload-file-for-validation : fix version 8.4.1 :check and block uknown column  not find in configuration">
+      <option name="closed" value="true" />
+      <created>1750333877551</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1750333877551</updated>
+    </task>
+    <task id="LOCAL-00016" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 :check and block uknown column  not find in configuration">
+      <option name="closed" value="true" />
+      <created>1750335375663</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1750335375663</updated>
+    </task>
+    <task id="LOCAL-00017" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 :check for COLUMN_ORDER_MISMATCH">
+      <option name="closed" value="true" />
+      <created>1750336856383</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1750336856383</updated>
+    </task>
+    <task id="LOCAL-00018" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750338152788</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750338152788</updated>
+    </task>
+    <task id="LOCAL-00019" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750339821669</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750339821669</updated>
+    </task>
+    <task id="LOCAL-00020" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750341669378</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1750341669378</updated>
+    </task>
+    <task id="LOCAL-00021" summary="MM-842-Upload-file-for-validation : fix version 8.4.2 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750345654244</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1750345654244</updated>
+    </task>
+    <task id="LOCAL-00022" summary="MM-842-Upload-file-for-validation : fix version 8.4.3 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750347889175</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1750347889175</updated>
+    </task>
+    <task id="LOCAL-00023" summary="MM-842-Upload-file-for-validation : fix version 8.4.4 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE">
+      <option name="closed" value="true" />
+      <created>1750347984193</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1750347984193</updated>
+    </task>
+    <task id="LOCAL-00024" summary="MM-842-Upload-file-for-validation : fix version 8.4.4 : avanced check for datetime  DATETIME_FORMAT_MISMATCH, INVALID_DATETIME_PATTERN&#10;INVALID_DATETIME&#10;and add an tooltip info for Path Template">
+      <option name="closed" value="true" />
+      <created>1750718704523</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1750718704523</updated>
+    </task>
+    <task id="LOCAL-00025" summary="MM-842-Upload-file-for-validation : fix version 8.5 : avanced check for datetime">
+      <option name="closed" value="true" />
+      <created>1751275292510</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1751275292510</updated>
+    </task>
+    <task id="LOCAL-00026" summary="MM-842-Upload-file-for-validation : fix version 9.2 : optimisation levels">
+      <option name="closed" value="true" />
+      <created>1751457452817</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1751457452817</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/Integration-Forecast-UserManagement" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merge pull request #3 from MUUTAA2/MM-1117-Implement-Security-Settings-Interface-for-Password-Update&#10;&#10;MM-1117-Implement-Security-Settings-Interface-for-Password-Update-Add…" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : V7" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : V8" />
+    <MESSAGE value="build MM-1179-Removing-or-Updating-the-profile-picture-doesn-t-work" />
+    <MESSAGE value="build MM-842 upload file for validation" />
+    <MESSAGE value="build fix" />
+    <MESSAGE value="build recomendation after quickoff on file upload" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8&#10;validation step and error management" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.3" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.3.1" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4 : add other validation check" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.1 :check and block uknown column  not find in configuration" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.2 :check and block uknown column  not find in configuration" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.2 :check for COLUMN_ORDER_MISMATCH" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.2 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.3 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.4 : avanced check for DATE_FORMAT_MISMATCH, INVALID_DATE" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.4 : avanced check for datetime  DATETIME_FORMAT_MISMATCH, INVALID_DATETIME_PATTERN" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.4.4 : avanced check for datetime  DATETIME_FORMAT_MISMATCH, INVALID_DATETIME_PATTERN&#10;INVALID_DATETIME&#10;and add an tooltip info for Path Template" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 8.5 : avanced check for datetime" />
+    <MESSAGE value="MM-842-Upload-file-for-validation : fix version 9.2 : optimisation levels" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-842-Upload-file-for-validation : fix version 9.2 : optimisation levels" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app/api/storage/s3/upload/route.ts</url>
+          <line>3</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
