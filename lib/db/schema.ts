@@ -12,7 +12,7 @@ import {
   numeric,
   date,
 } from "drizzle-orm/pg-core"
-import { relations } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 
 // Users table
 export const user_enum_role = pgEnum("role", ["Admin", "User"])
@@ -75,7 +75,7 @@ export const alertTemplateFields = pgTable("alert_template_fields", {
 
 // Alerts table - Updated with enum
 export const alerts = pgTable("alerts", {
-  id: serial("id").primaryKey(),
+  id: integer("id").primaryKey().default(sql`nextval('alerts_id_seq')`),
   alertTemplateId: integer("alert_template_id").references(() => alertTemplates.id),
   status: alertStatusEnum("status").notNull().default("active"),
   severity: varchar("severity", { length: 20 }),
