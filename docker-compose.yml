@@ -1,0 +1,47 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_URL=postgresql://postgres:postgres@db:5432/postgres?schema=public
+      - NEXTAUTH_URL=http://localhost:3000/
+      - NEXTAUTH_SECRET=Is4LEeaq7RSXT196ENskBOvyTMMCgb/IGQzi7uOVq+k=
+      - RESEND_API_KEY="re_fUrAky4u_Cvu4pHRAakFHVC74jJ9RxLcj"
+      - API_NODE_ENV=development
+    ports:
+      - "3000:3000"
+    # Set environment variables based on the .env file
+#    env_file:
+#      - .env
+    restart: always
+    networks:
+      - optivian_default
+  # Add more containers below (nginx, postgres, etc.)
+  db:
+    image: postgres:15.3
+    container_name: postgres
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sql/all_backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+    # Define a network, which allows containers to communicate
+    # with each other, by using their container name as a hostname
+
+networks:
+  optivian_default:
