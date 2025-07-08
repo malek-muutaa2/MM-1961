@@ -77,7 +77,10 @@ export type NewUser = typeof users.$inferInsert
 export const forecastExecutions = pgTable("forecast_executions", {
   id: serial("id").primaryKey(),
   dateExecution: timestamp("execution_date").notNull().defaultNow(),
+  forecast_type_id: integer("forecast_type_id").references(() => forecastTypes.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  created_by: integer("created_by").references(() => users.id),
+
 })
 
 // ForecastTypes table
@@ -153,6 +156,8 @@ export const forecastData = pgTable(
     forecastExecutionId: integer("forecast_execution_id").references(() => forecastExecutions.id), // NOUVEAU CHAMP
     date: date("date").notNull(),
     value: numeric("value").notNull(),
+    forecast_lower: numeric("forecast_lower"),
+    forecast_upper: numeric("forecast_upper"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     createdBy: integer("created_by"),
