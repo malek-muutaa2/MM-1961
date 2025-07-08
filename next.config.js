@@ -35,6 +35,15 @@ const nextConfig = {
   },
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    DATABASE_URL: process.env.DATABASE_URL,
+    DB_HOST: process.env.DB_HOST,
+    DB_NAME: process.env.DB_NAME,
+    DB_USERNAME: process.env.DB_USERNAME,
+    DB_PASSWORD: process.env.DB_PASSWORD,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
   // headers: () => [
   //   {
