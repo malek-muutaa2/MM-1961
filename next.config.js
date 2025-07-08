@@ -20,6 +20,7 @@ const cspHeader = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  missingSuspenseWithCSRBailout: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
