@@ -36,7 +36,6 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_APP_VERSION: packageJson.version,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NODE_ENV: process.env.NODE_ENV,
     DATABASE_URL: process.env.DATABASE_URL,
     DB_HOST: process.env.DB_HOST,
     DB_NAME: process.env.DB_NAME,
