@@ -5,6 +5,9 @@ import { eq, and } from "drizzle-orm"
 
 export async function GET(request: Request) {
     try {
+        if(!request?.url) {
+            return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
+        }
         const { searchParams } = new URL(request.url)
         const date = searchParams.get("date")
 

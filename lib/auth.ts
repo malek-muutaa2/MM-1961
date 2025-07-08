@@ -1,12 +1,10 @@
 //src/server/auth.ts
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { audit } from "./audit";
 import { findUniqueUser, findUserById } from "./user";
-import { db } from "./db/dbpostgres";
-import { users } from "./db/schema";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt", //(1)
@@ -14,13 +12,13 @@ export const authOptions: NextAuthOptions = {
     maxAge: 96 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile }: any) {
       if (account && account.type === "credentials") {
         //(2)
         token.userId = account.providerAccountId;
         const user2 = await findUserById(parseInt(token.userId));
 
-        // this is Id that coming from authorize() callback
+        // this is I'd that coming from authorize() callback
       }
       return token;
     },
@@ -74,7 +72,7 @@ export const authOptions: NextAuthOptions = {
           email: string;
           password: string;
         };
-        const user2 = await findUniqueUser(email);
+        const user2: any = await findUniqueUser(email);
 
         if (!user2[0]) {
           //(1)

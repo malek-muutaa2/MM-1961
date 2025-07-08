@@ -9,6 +9,9 @@ export const sendPasswordResetEmail = async (
   token: string,
   lang: string,
 ) => {
+  if(!domain) {
+    throw new Error("NEXTAUTH_URL is not defined in environment variables");
+  }
   const resetLink = `${domain}/login/new-password?token=${token}`;
   const emailContentEn = `
   <!DOCTYPE html>
