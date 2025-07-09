@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: build test">
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: build fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/forecast-data-all/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/forecast-data-all/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/forecast-data-complete/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/forecast-data-complete/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/forecast-data/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/forecast-data/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/auth/login2fa.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/login2fa.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/login.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/login.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mail.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/new-password.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/new-password.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(main)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/auth/authlogin.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/authlogin.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/auth/login-form-nextauth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/login-form-nextauth.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,40 +35,40 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.Dockerfile deps.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "develop",
-    "go.import.settings.migrated": "true",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "last_opened_file_path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "project.scopes",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.Dockerfile deps.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -87,6 +81,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/(main)" />
     </key>
   </component>
   <component name="RunManager" selected="Docker.Dockerfile deps">
@@ -110,35 +107,6 @@
       <method v="2" />
     </configuration>
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="optivian" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="optivian" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="Dockerfile deps" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
@@ -197,7 +165,8 @@
       <workItem from="1751626267477" duration="7490000" />
       <workItem from="1751637664273" duration="5288000" />
       <workItem from="1751877181699" duration="23576000" />
-      <workItem from="1751965170145" duration="8417000" />
+      <workItem from="1751965170145" duration="12113000" />
+      <workItem from="1751997741961" duration="999000" />
     </task>
     <task id="LOCAL-00001" summary="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules">
       <option name="closed" value="true" />
@@ -247,7 +216,31 @@
       <option name="project" value="LOCAL" />
       <updated>1751981615803</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="MM-1414: build fix">
+      <option name="closed" value="true" />
+      <created>1751982721028</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1751982721028</updated>
+    </task>
+    <task id="LOCAL-00008" summary="MM-1414: build fix">
+      <option name="closed" value="true" />
+      <created>1751984008343</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1751984008343</updated>
+    </task>
+    <task id="LOCAL-00009" summary="MM-1414: build fix">
+      <option name="closed" value="true" />
+      <created>1751984820603</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1751984820603</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,7 +249,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules" />
     <MESSAGE value="MM-1414: build test" />
-    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: build test" />
+    <MESSAGE value="MM-1414: build fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: build fix" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

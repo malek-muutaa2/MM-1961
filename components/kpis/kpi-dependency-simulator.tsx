@@ -366,6 +366,9 @@ Based on this simulation, the following actions are recommended:
 
     // Create a blob and download link
     const blob = new Blob([reportContent], { type: "text/plain" })
+    if(!blob){
+      return;
+    }
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url

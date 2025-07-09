@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     // console.log("secret", secret);
 
     // Check if otpauth_url is undefined
-    if (!secret.otpauth_url) {
+    if (!secret?.otpauth_url) {
       return NextResponse.json(
         { error: "failed to generate secret" },
         { status: 200 },
