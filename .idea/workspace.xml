@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: build fix">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f119ce1c-0c0f-41df-9c8d-1ca4c4e63a1c.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f119ce1c-0c0f-41df-9c8d-1ca4c4e63a1c.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/auth/authlogin.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/authlogin.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/auth/login-form-nextauth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/login-form-nextauth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +17,31 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="develop" />
+                    <option name="lastUsedInstant" value="1752066864" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="MM-842-Upload-file-for-validation" />
+                    <option name="lastUsedInstant" value="1752066853" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -167,6 +192,7 @@
       <workItem from="1751877181699" duration="23576000" />
       <workItem from="1751965170145" duration="12113000" />
       <workItem from="1751997741961" duration="999000" />
+      <workItem from="1752071227938" duration="1348000" />
     </task>
     <task id="LOCAL-00001" summary="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules">
       <option name="closed" value="true" />
@@ -245,6 +271,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules" />
