@@ -56,14 +56,14 @@ const mockPaginatedResponse = {
 beforeEach(() => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockImplementation((url) => {
-        if (url.toString().includes("/api/classifications")) {
+        if (url?.toString().includes("/api/classifications")) {
             return Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(mockClassifications),
             });
         }
 
-        if (url.toString().includes("/api/forecast-types")) {
+        if (url?.toString().includes("/api/forecast-types")) {
             return Promise.resolve({
                 ok: true,
                 json: () => Promise.resolve(mockForecastTypes),
