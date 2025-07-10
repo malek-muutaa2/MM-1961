@@ -114,7 +114,9 @@ export class StorageService {
         })
 
         try {
-            const result = await s3Service.uploadFile(file, filePath)
+            const result = file.size > 10 * 1024 * 1024
+                ? await s3Service.uploadLargeFile(file, filePath)
+                : await s3Service.uploadFile(file, filePath)
 
             return {
                 ...result,

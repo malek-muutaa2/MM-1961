@@ -1,4 +1,6 @@
-import { S3Client, PutObjectCommand, PutObjectRequest } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, CreateMultipartUploadCommand,
+  UploadPartCommand, CompleteMultipartUploadCommand, AbortMultipartUploadCommand } from "@aws-sdk/client-s3";
+import { Readable } from 'stream';
 // AWS S3 Storage Service Implementation
 
 export interface S3Config {
@@ -8,6 +10,21 @@ export interface S3Config {
   bucketName: string
 }
 
+// Helper function to convert Blob/File to Readable stream
+function blobToReadable(blob: Blob): Readable {
+  const reader = blob.stream().getReader();
+  return new Readable({
+    async read() {
+      const { done, value } = await reader.read();
+      if (done) {
+        this.push(null);
+      } else {
+        this.push(Buffer.from(value));
+      }
+    }
+  });
+}
+
 export class S3StorageService {
   private config: S3Config
 
@@ -15,54 +32,117 @@ export class S3StorageService {
     this.config = config
   }
 
-  async uploadFileSimulate(file: File, filePath: string): Promise<{ url: string; pathname: string; size: number }> {
-    try {
-      // In a real implementation, you would use the AWS SDK
-      // For this demo, we'll simulate the upload
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("key", filePath)
-      formData.append("bucket", this.config.bucketName)
 
-      if(!file || !filePath) {
-        throw new Error("File or file path is missing")
-      }
+  async uploadLargeFile(file: File, filePath: string): Promise<any> {
 
-      // Simulate AWS S3 upload with timeout
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
-
-      try {
-        // This would be replaced with actual AWS SDK call
-        const response = await fetch("/api/storage/s3/upload", {
-          method: "POST",
-          body: formData,
-          signal: controller.signal,
+    console.log("upload Large File started!");
+    const s3Client = new S3Client({
+      region: this.config.region,
+      credentials: {
+        accessKeyId: this.config.accessKeyId,
+        secretAccessKey: this.config.secretAccessKey,
+      },
+      requestHandler: {
+        requestTimeout: 20 * 60 * 1000, // 10 minutes
+      },
+      maxAttempts: 5, // Retry up to 5 times
+    });
+    // 1. Initiate multipart upload
+    const createUploadResponse = await s3Client.send(
+        new CreateMultipartUploadCommand({
+          Bucket: this.config.bucketName,
+          Key: filePath,
+          ContentType: file.type,
         })
+    );
+    const uploadId = createUploadResponse.UploadId;
 
-        clearTimeout(timeoutId)
+    try {
+      const partSize = 10 * 1024 * 1024; // 10MB chunks
+      const parts = [];
+      let partNumber = 1;
 
-        if (!response.ok) {
-          throw new Error(`S3 upload failed: ${response.statusText}`)
-        }
+      // 2. Upload parts
+      for (let start = 0; start < file.size; start += partSize) {
+        const end = Math.min(start + partSize, file.size);
+        const chunk = file.slice(start, end);
+        // const body = blobToReadable(chunk);
 
-        const result = await response.json()
+        // const chunkData = await (async () => {
+        //   if (typeof window === 'undefined') {
+        //     // Node.js environment
+        //     const { Readable } = await import('stream');
+        //     return Readable.from(chunk.stream());
+        //   } else {
+        //     // Browser environment
+        //     return await chunk.arrayBuffer();
+        //   }
+        // })();
+        const chunkData: any = await (async () => {
+          if (typeof window === 'undefined') {
+            // Environnement Node.js
+            const buffer = Buffer.from(await chunk.arrayBuffer());
+            return buffer;
+          } else {
+            // Environnement navigateur
+            return await chunk.arrayBuffer();
+          }
+        })();
+        const uploadPartResponse: any = await s3Client.send(
+            new UploadPartCommand({
+              Bucket: this.config.bucketName,
+              Key: filePath,
+              UploadId: uploadId!,
+              PartNumber: partNumber,
+              // Body: body,
+              Body: chunkData,
+              ContentLength: end - start,
+            })
+        );
 
-        return {
-          url: `https://${this.config.bucketName}.s3.${this.config.region}.amazonaws.com/${filePath}`,
-          pathname: filePath,
-          size: file.size,
-        }
-      } catch (error: any) {
-        clearTimeout(timeoutId)
-        if (error.name === "AbortError") {
-          throw new Error("S3 upload timeout - please try again")
-        }
-        throw error
+        parts.push({
+          PartNumber: partNumber,
+          ETag: uploadPartResponse.ETag,
+        });
+
+        partNumber++;
       }
-    } catch (error: any) {
-      console.error("S3 upload error : ", error)
-      throw new Error(`S3 upload failed : ${error.message}`)
+
+      // 3. Complete upload
+      await s3Client.send(
+          new CompleteMultipartUploadCommand({
+            Bucket: this.config.bucketName,
+            Key: filePath,
+            UploadId: uploadId,
+            MultipartUpload: { Parts: parts },
+          })
+      );
+      // Generate public URL (adjust based on your bucket configuration)
+      const publicUrl = `https://${this.config.bucketName}.s3.${this.config.region}.amazonaws.com/${filePath}`;
+
+      console.log("upload large file completed !");
+      return {
+        url: publicUrl,
+        pathname: filePath,
+        size: file.size,
+      };
+
+    } catch (error) {
+      // Handle error and potentially abort upload
+      console.error('Upload failed:', error);
+
+      if (uploadId) {
+        try {
+          await s3Client.send(new AbortMultipartUploadCommand({
+            Bucket: this.config.bucketName,
+            Key: filePath,
+            UploadId: uploadId,
+          }));
+        } catch (abortError) {
+          console.error('Error aborting upload:', abortError);
+        }
+      }
+      throw error;
     }
   }
   async uploadFile(file: File, filePath: string): Promise<{ url: string; pathname: string; size: number }> {
@@ -85,6 +165,10 @@ export class S3StorageService {
           accessKeyId: this.config.accessKeyId,
           secretAccessKey: this.config.secretAccessKey,
         },
+        requestHandler: {
+          requestTimeout: 20 * 60 * 1000, // 10 minutes
+        },
+        maxAttempts: 5, // Retry up to 5 times
       });
 
 
@@ -192,7 +276,61 @@ export class S3StorageService {
       throw new Error(`S3 list failed: ${error.message}`)
     }
   }
+
+  async uploadFileSimulate(file: File, filePath: string): Promise<{ url: string; pathname: string; size: number }> {
+    try {
+      // In a real implementation, you would use the AWS SDK
+      // For this demo, we'll simulate the upload
+      const formData = new FormData()
+      formData.append("file", file)
+      formData.append("key", filePath)
+      formData.append("bucket", this.config.bucketName)
+
+      if(!file || !filePath) {
+        throw new Error("File or file path is missing")
+      }
+
+      // Simulate AWS S3 upload with timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+
+      try {
+        // This would be replaced with actual AWS SDK call
+        const response = await fetch("/api/storage/s3/upload", {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+        })
+
+        clearTimeout(timeoutId)
+
+        if (!response.ok) {
+          throw new Error(`S3 upload failed: ${response.statusText}`)
+        }
+
+        const result = await response.json()
+
+        return {
+          url: `https://${this.config.bucketName}.s3.${this.config.region}.amazonaws.com/${filePath}`,
+          pathname: filePath,
+          size: file.size,
+        }
+      } catch (error: any) {
+        clearTimeout(timeoutId)
+        if (error.name === "AbortError") {
+          throw new Error("S3 upload timeout - please try again")
+        }
+        throw error
+      }
+    } catch (error: any) {
+      console.error("S3 upload error : ", error)
+      throw new Error(`S3 upload failed : ${error.message}`)
+    }
+  }
+
 }
+
+
 
 export const AWS_S3_REGIONS = [
   { name: "US East (N. Virginia)", code: "us-east-1" },
