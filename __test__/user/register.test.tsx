@@ -16,12 +16,17 @@ jest.mock("next/navigation", () => ({
   }),
 }))
 jest.mock("react-google-recaptcha", () => ({
-  __esModule: true,
-  default: ({ onChange }: { onChange: (token: string) => void }) => {
-    onChange("mocked-token")
-    return <div data-testid="recaptcha">Mocked reCAPTCHA</div>
-  },
-}))
+    __esModule: true,
+    default: ({ onChange }: { onChange: (token: string) => void }) => {
+        const React = require("react"); // required because we're mocking inside Jest
+
+        React.useEffect(() => {
+            onChange("mocked-token");
+        }, []);
+
+        return <div data-testid="recaptcha">Mocked reCAPTCHA</div>;
+    },
+}));
 
 const toastMock = jest.fn()
 jest.mock("../../hooks/use-toast", () => ({

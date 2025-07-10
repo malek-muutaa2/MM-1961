@@ -176,7 +176,7 @@ export function RegisterForm() {
           <div className="mt-4">
             <ReCAPTCHA
               sitekey="6LeB_U0rAAAAAI-paiIFf09I4zhBfg34g_jqJM8K"
-              onChange={(token) => setRecaptchaToken(token)}
+              onChange={setRecaptchaToken}
             />
           </div>
         </CardContent>
