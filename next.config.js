@@ -21,9 +21,6 @@ const cspHeader = `
 const nextConfig = {
   output: 'standalone',
   // missingSuspenseWithCSRBailout: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
