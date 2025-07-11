@@ -1,5 +1,4 @@
-name: Deploy to dev
-
+name: Deploy to aws dev
 on:
   push:
     branches: [develop-x]
@@ -36,7 +35,7 @@ jobs:
       - name: Build and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: sifa-app
+          REPOSITORY: optivian
           IMAGE_TAG: dev
         run: |
           docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG || true
