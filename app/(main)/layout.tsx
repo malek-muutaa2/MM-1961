@@ -9,20 +9,19 @@ import { getCurrentUser } from "@/lib/getCurrentUser"
 import { getServerAuthSession } from "@/lib/auth"
 import { CountUnreadNotifications, getNotificationByUserId, notificationTypesList } from "@/lib/notification"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({subsets: ["latin"]})
 
 export const metadata: Metadata = {
-  title: "MUUTAA.ML - Intelligent KPI Agent",
-  description: "AI-powered KPI monitoring and optimization platform",
-  generator: "v0.dev",
+    title: "MUUTAA.ML - Intelligent KPI Agent",
+    description: "AI-powered KPI monitoring and optimization platform",
+    generator: "v0.dev",
 }
 
 
-
-export default async function  RootLayout({
-  children,
-}: {
-  children: React.ReactNode
+export default async function RootLayout({
+                                             children,
+                                         }: {
+    children: React.ReactNode
 }) {
   let notificationData = null;
   let countUnread = 0;
@@ -41,7 +40,7 @@ console.log("Notification data:", notificationData);
               error={authSession?.error ?? ""}
  userinfo={userinfo}>{children}</LayoutProvider>
 
-    </div>    
-   
-  )
+        </div>
+
+    )
 }

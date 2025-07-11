@@ -40,7 +40,6 @@ import { useDebouncedCallback } from "use-debounce";
 import { useToast } from "@/components/ui/use-toast";
 import { useCreateQueryString } from "@/lib/queryString";
 import { LoadingSpinner } from "@/components/Spinner";
-import { UsersColumns } from "./columnsUser";
 
 interface Columnslogs {
   Date: string;

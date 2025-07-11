@@ -155,9 +155,7 @@ export const LoginForm2fa = () => {
   };
 
 
-  const { toast } = useToast();
-
-  const handleSubmitResend = async (e: any) => {
+  const handleSubmitResend = async () => {
     console.log("loginCredentials", loginCredentials);
 
     if (loginCredentials) {
