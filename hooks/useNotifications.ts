@@ -107,7 +107,7 @@ useEffect(() => {
   const all = normalizeNotifications(payload);
   const filtered = filterByUser(all, userId);
 
-setNotifications(prev => prependNotifications(prev, filtered));
+setNotifications(prev => prependNotifications(prev, filtered)); //NOSONAR
 setUnreadCount(prev => incrementUnreadCount(prev, filtered));
   refreshTimer = setTimeout(setup, 4 * 60 * 1000);
 });

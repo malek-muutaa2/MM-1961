@@ -65,30 +65,38 @@ function updateNotificationMeta(
   };
 }
 
-function getRelativeTime(date: Date | string | number): string {
-  const ms = typeof date === 'number' ? date : new Date(date).getTime();
-  const deltaSeconds = Math.floor((ms - Date.now()) / 1000);
-
-  const units = [
-    { unit: 'year', sec: 60 * 60 * 24 * 365 },
-    { unit: 'month', sec: 60 * 60 * 24 * 30 },
-    { unit: 'week', sec: 60 * 60 * 24 * 7 },
-    { unit: 'day', sec: 60 * 60 * 24 },
-    { unit: 'hour', sec: 60 * 60 },
-    { unit: 'minute', sec: 60 },
-    { unit: 'second', sec: 1 },
-  ] as const;
-
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-
-  for (const { unit, sec } of units) {
-    const delta = deltaSeconds / sec;
-    if (Math.abs(delta) >= 1) {
-      return rtf.format(Math.round(delta), unit);
-    }
-  }
-  return rtf.format(0, 'second');
+function createTypeNameMap(notificationTypes: { id: number; name: string }[]): Map<number, string> {
+  return new Map(notificationTypes.map(t => [t.id, t.name]));
 }
+
+function annotateNotification(
+  n: notificationTypes,
+  typeMap: Map<number, string>
+): AnnotatedNotification {
+  return {
+    ...n,
+    created_at: new Date(), // Use real value or parse as needed
+    created_at_str: n.created_at,
+    redirectUrl: n.redirect_url ?? null,
+    typeName: typeMap.get(n.type_id) ?? 'Unknown',
+  };
+}
+
+function createNotificationTypeMap(notificationTypes: { id: number; name: string }[]): Map<number, string> {
+  return new Map(notificationTypes.map(t => [t.id, t.name]));
+}
+function getNewAnnotatedNotifications(
+  incoming: NotificationType[],
+  existing: NotificationType[],
+  typeMap: Map<number, string>
+): AnnotatedNotification[] {
+  const existingIds = new Set(existing.map(n => n.id));
+  return incoming
+    .filter(n => !existingIds.has(n.id))
+    .map(n => annotateNotification(n, typeMap));
+}
+
+
 
 export function TopNav({
   countUnread,
@@ -288,33 +296,19 @@ useEffect(() => {
  
 
   setNotificationsData(prev => {
-    if (!prev) return notifications;
+  if (!prev) return notifications;
 
-    const typeMap = new Map(notificationtypes.map(t => [t.id, t.name]));
-const newAnnotated = notifications
-  .filter(n => !prev.some(p => p.id === n.id))
-  .map(n => {
-    const date = new Date(n.created_at);
-        return {
-      ...n,
-      // This will be a string like: 2025-06-19T09:19:30.505Z
-      created_at: new Date(), // convert to Date object
-            created_at_str: n.created_at, // optional for debugging
-      redirectUrl: n.redirect_url ?? null,
-      typeName: typeMap.get(n.type_id) ?? 'Unknown',
-    };
-  });
+  const typeMap = createNotificationTypeMap(notificationtypes);
+  const newAnnotated = getNewAnnotatedNotifications(notifications, prev, typeMap);
 
+  if (newAnnotated.length === 0) return prev;
 
-    
-    if (newAnnotated.length === 0) return prev;
+  const newIds = newAnnotated.map(n => n.id);
+  setNewNotificationMeta(prev => updateNotificationMeta(prev, newIds));
 
-    const newIds = newAnnotated.map(n => n.id);
+  return [...newAnnotated, ...prev];
+});
 
-    setNewNotificationMeta(prev => updateNotificationMeta(prev, newIds));
-
-    return [...newAnnotated, ...prev];
-  });
 }, [notifications, notificationtypes]);
 
 useEffect(() => {

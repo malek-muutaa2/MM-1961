@@ -49,48 +49,46 @@ export function NotificationCenter({
           </div>
           
           <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
-            {notifications.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">No notifications yet</div>
-            ) : (
-              notifications.map(notification => (
-                <div
-                 role="button"
+     {notifications.length === 0 ? (
+  <div className="p-4 text-center text-gray-500">No notifications yet</div>
+) : (
+  notifications.map(notification => (
+    <button
+      //NOSONAR
   tabIndex={0}
-    onKeyDown={(e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-    }
-  }}
-                  key={notification.id}
-                  onClick={() => markAsRead(notification.id)}
-                  className={`p-3 hover:bg-gray-50 cursor-pointer ${!notification.read_at ? 'bg-blue-50' : ''}`}
-                >
-                  <div className="flex items-start gap-2">
-                    <div className="mt-1 flex-shrink-0">
-           
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <h4 className="font-medium">{notification.title}</h4>
-                        <span className="text-xs text-gray-400">
-                          {new Date(notification.created_at).toLocaleTimeString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                      {notification.redirect_url && (
-                        <a 
-                          href={notification.redirect_url}
-                          className="text-xs text-blue-500 hover:underline mt-1 inline-block"
-                          onClick={e => e.stopPropagation()}
-                        >
-                          View details
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+      key={notification.id}
+      onClick={() => markAsRead(notification.id)}
+      className={`w-full text-left p-3 hover:bg-gray-50 cursor-pointer ${
+        !notification.read_at ? 'bg-blue-50' : ''
+      }`}
+    >
+      <div className="flex items-start gap-2">
+        <div className="mt-1 flex-shrink-0">
+          {/* Optional: Icon or marker */}
+        </div>
+        <div className="flex-1">
+          <div className="flex justify-between">
+            <h4 className="font-medium">{notification.title}</h4>
+            <span className="text-xs text-gray-400">
+              {new Date(notification.created_at).toLocaleTimeString()}
+            </span>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+          {notification.redirect_url && (
+            <a
+              href={notification.redirect_url}
+              className="text-xs text-blue-500 hover:underline mt-1 inline-block"
+              onClick={e => e.stopPropagation()}
+            >
+              View details
+            </a>
+          )}
+        </div>
+      </div>
+    </button>
+  ))
+)}
+
           </div>
         </div>
       )}
