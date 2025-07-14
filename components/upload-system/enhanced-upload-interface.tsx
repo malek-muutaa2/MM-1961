@@ -135,7 +135,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                         clearInterval(progressInterval)
                         return prev
                     }
-                    return parseFloat((prev + Math.random() * 10).toFixed(2))
+                    return parseFloat((prev + Math.random() * 10).toFixed(2)) // NOSONAR
                 })
             }, 200)
 

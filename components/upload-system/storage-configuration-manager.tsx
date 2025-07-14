@@ -69,6 +69,27 @@ export default function StorageConfigurationManager({
         setEditingConfig((prev) => ({...prev, [field]: value}))
     }
 
+    const getPlaceholderText = (storageType: string) => {
+        switch (storageType) {
+            // editingConfig.storage_type === "vercel_blob"
+            //                                                     ? "Auto-managed"
+            //                                                     : editingConfig.storage_type === "azure_blob"
+            //                                                         ? "uploads"
+            //                                                         : "my-upload-bucket"
+            case "s3":
+                return "e.g., my-bucket-name"
+            case "gcs":
+                return "e.g., my-gcs-bucket"
+            case "azure_blob":
+                return "e.g., my-container-name"
+            case "vercel_blob":
+                return "Optional for Vercel Blob"
+            case "local":
+                return "e.g., local-storage-path"
+            default:
+                return ""
+        }
+    }
 
 
     return (
@@ -102,7 +123,7 @@ export default function StorageConfigurationManager({
                                         <Label htmlFor="name">Configuration Name</Label>
                                         <Input
                                             id="name"
-                                            value={editingConfig.name || ""}
+                                            value={editingConfig.name ?? ""}
                                             onChange={(e) => handleConfigChange("name", e.target.value)}
                                             placeholder="e.g., Production S3 Storage"
                                         />
@@ -110,7 +131,7 @@ export default function StorageConfigurationManager({
                                     <div>
                                         <Label htmlFor="storage_type">Storage Type</Label>
                                         <Select
-                                            value={editingConfig.storage_type || ""}
+                                            value={editingConfig.storage_type ?? ""}
                                             onValueChange={(value) => handleConfigChange("storage_type", value)}
                                         >
                                             <SelectTrigger>
@@ -131,7 +152,7 @@ export default function StorageConfigurationManager({
                                     <Label htmlFor="description">Description</Label>
                                     <Textarea
                                         id="description"
-                                        value={editingConfig.description || ""}
+                                        value={editingConfig.description ?? ""}
                                         onChange={(e) => handleConfigChange("description", e.target.value)}
                                         placeholder="Describe this storage configuration..."
                                     />
@@ -145,7 +166,7 @@ export default function StorageConfigurationManager({
                                         </Label>
                                         <Input
                                             id="bucket_name"
-                                            value={editingConfig.bucket_name || editingConfig.container_name || ""}
+                                            value={editingConfig.bucket_name ?? editingConfig.container_name ?? ""}
                                             onChange={(e) => {
                                                 if (editingConfig.storage_type === "azure_blob") {
                                                     handleConfigChange("container_name", e.target.value)
@@ -153,13 +174,7 @@ export default function StorageConfigurationManager({
                                                     handleConfigChange("bucket_name", e.target.value)
                                                 }
                                             }}
-                                            placeholder={
-                                                editingConfig.storage_type === "vercel_blob"
-                                                    ? "Auto-managed"
-                                                    : editingConfig.storage_type === "azure_blob"
-                                                        ? "uploads"
-                                                        : "my-upload-bucket"
-                                            }
+                                            placeholder={getPlaceholderText(editingConfig.storage_type ?? "")}
                                             disabled={editingConfig.storage_type === "vercel_blob"}
                                         />
                                     </div>
@@ -168,7 +183,7 @@ export default function StorageConfigurationManager({
                                             Region {editingConfig.storage_type === "vercel_blob" ? "(Auto-managed)" : ""}
                                         </Label>
                                         <Select
-                                            value={editingConfig.region || "ca-central-1"}
+                                            value={editingConfig.region ?? "ca-central-1"}
                                             onValueChange={(value) => handleConfigChange("region", value)}
                                             disabled={editingConfig.storage_type === "vercel_blob"}
                                         >
@@ -185,7 +200,7 @@ export default function StorageConfigurationManager({
                                         </Select>
                                         {/*<Input*/}
                                         {/*    id="region"*/}
-                                        {/*    value={editingConfig.region || ""}*/}
+                                        {/*    value={editingConfig.region ?? ""}*/}
                                         {/*    onChange={(e) => handleConfigChange("region", e.target.value)}*/}
                                         {/*    placeholder={editingConfig.storage_type === "vercel_blob" ? "Global CDN" : "us-east-1"}*/}
                                         {/*    disabled={editingConfig.storage_type === "vercel_blob"}*/}
@@ -198,7 +213,7 @@ export default function StorageConfigurationManager({
                                         <Label htmlFor="base_path">Base Path</Label>
                                         <Input
                                             id="base_path"
-                                            value={editingConfig.base_path || ""}
+                                            value={editingConfig.base_path ?? ""}
                                             onChange={(e) => handleConfigChange("base_path", e.target.value)}
                                             placeholder="uploads/customer_data"
                                         />
@@ -241,7 +256,7 @@ export default function StorageConfigurationManager({
                                         </Label>
                                         <Input
                                             id="path_template"
-                                            value={editingConfig.path_template || ""}
+                                            value={editingConfig.path_template ?? ""}
                                             onChange={(e) => handleConfigChange("path_template", e.target.value)}
                                             placeholder="{base_path}/{year}-{month}/{uuid}.{ext}"
                                         />
@@ -258,7 +273,7 @@ export default function StorageConfigurationManager({
                                             <Input
                                                 id="aws_access_key_id"
                                                 type="password"
-                                                value={editingConfig.aws_access_key_id || ""}
+                                                value={editingConfig.aws_access_key_id ?? ""}
                                                 onChange={(e) => handleConfigChange("aws_access_key_id", e.target.value)}
                                                 placeholder="AKIA..."
                                             />
@@ -268,7 +283,7 @@ export default function StorageConfigurationManager({
                                             <Input
                                                 id="aws_secret_access_key"
                                                 type="password"
-                                                value={editingConfig.aws_secret_access_key || ""}
+                                                value={editingConfig.aws_secret_access_key ?? ""}
                                                 onChange={(e) => handleConfigChange("aws_secret_access_key", e.target.value)}
                                                 placeholder="Enter secret key"
                                             />
@@ -285,7 +300,7 @@ export default function StorageConfigurationManager({
                                             <Label htmlFor="gcs_project_id">Project ID</Label>
                                             <Input
                                                 id="gcs_project_id"
-                                                value={editingConfig.gcs_project_id || ""}
+                                                value={editingConfig.gcs_project_id ?? ""}
                                                 onChange={(e) => handleConfigChange("gcs_project_id", e.target.value)}
                                                 placeholder="my-project-id"
                                             />
@@ -294,7 +309,7 @@ export default function StorageConfigurationManager({
                                             <Label htmlFor="gcs_key_filename">Key Filename (Optional)</Label>
                                             <Input
                                                 id="gcs_key_filename"
-                                                value={editingConfig.gcs_key_filename || ""}
+                                                value={editingConfig.gcs_key_filename ?? ""}
                                                 onChange={(e) => handleConfigChange("gcs_key_filename", e.target.value)}
                                                 placeholder="path/to/service-account.json"
                                             />
@@ -311,7 +326,7 @@ export default function StorageConfigurationManager({
                                             <Label htmlFor="azure_account_name">Account Name</Label>
                                             <Input
                                                 id="azure_account_name"
-                                                value={editingConfig.azure_account_name || ""}
+                                                value={editingConfig.azure_account_name ?? ""}
                                                 onChange={(e) => handleConfigChange("azure_account_name", e.target.value)}
                                                 placeholder="mystorageaccount"
                                             />
@@ -321,7 +336,7 @@ export default function StorageConfigurationManager({
                                             <Input
                                                 id="azure_account_key"
                                                 type="password"
-                                                value={editingConfig.azure_account_key || ""}
+                                                value={editingConfig.azure_account_key ?? ""}
                                                 onChange={(e) => handleConfigChange("azure_account_key", e.target.value)}
                                                 placeholder="Enter account key"
                                             />
@@ -330,7 +345,7 @@ export default function StorageConfigurationManager({
                                             <Label htmlFor="container_name">Container Name</Label>
                                             <Input
                                                 id="container_name"
-                                                value={editingConfig.container_name || ""}
+                                                value={editingConfig.container_name ?? ""}
                                                 onChange={(e) => handleConfigChange("container_name", e.target.value)}
                                                 placeholder="uploads"
                                             />
@@ -340,7 +355,7 @@ export default function StorageConfigurationManager({
                                             <Input
                                                 id="azure_sas_token"
                                                 type="password"
-                                                value={editingConfig.azure_sas_token || ""}
+                                                value={editingConfig.azure_sas_token ?? ""}
                                                 onChange={(e) => handleConfigChange("azure_sas_token", e.target.value)}
                                                 placeholder="?sv=2020-08-04&ss=..."
                                             />
@@ -352,7 +367,7 @@ export default function StorageConfigurationManager({
                                     <div>
                                         <Label htmlFor="access_type">Access Type</Label>
                                         <Select
-                                            value={editingConfig.access_type || "public"}
+                                            value={editingConfig.access_type ?? "public"}
                                             onValueChange={(value) => handleConfigChange("access_type", value)}
                                         >
                                             <SelectTrigger>
@@ -409,7 +424,7 @@ export default function StorageConfigurationManager({
                                         {config.bucket_name ? `${config.bucket_name}/` : ""}
                                         {config.base_path}
                                     </TableCell>
-                                    <TableCell>{config.region || "N/A"}</TableCell>
+                                    <TableCell>{config.region ?? "N/A"}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button variant="ghost" size="sm" onClick={() => handleEdit(config)}>

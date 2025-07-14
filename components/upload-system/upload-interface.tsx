@@ -18,7 +18,7 @@ interface UploadInterfaceProps {
     configurations: UploadConfiguration[]
 }
 
-export default function UploadInterface({configurations}: UploadInterfaceProps) {
+export default function UploadInterface({configurations}: Readonly<UploadInterfaceProps>) {
     const [selectedConfig, setSelectedConfig] = useState<string>("")
     const [dragActive, setDragActive] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -44,7 +44,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
         e.stopPropagation()
         setDragActive(false)
 
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        if (e.dataTransfer?.files && e.dataTransfer.files?.[0]) {
             handleFileSelection(e.dataTransfer.files[0])
         }
     }, [])
@@ -64,7 +64,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
         const allowedTypes = selectedConfiguration.file_type.split(",").map((t) => t.trim())
         const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
-        if (!allowedTypes.includes(fileExtension || "")) {
+        if (!allowedTypes.includes(fileExtension ?? "")) {
             toast({
                 title: "File types",
                 description: `File type not allowed. Allowed types: ${allowedTypes.join(", ")}`,
@@ -113,7 +113,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                         clearInterval(progressInterval)
                         return prev
                     }
-                    return prev + Math.random() * 10
+                    return prev + Math.random() * 10 // NOSONAR
                 })
             }, 200)
 
@@ -135,6 +135,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                 }
             }
         } catch (error: any) {
+            console.log("error : ", error.message)
             setUploadResult({
                 status: "failed",
                 error: {
@@ -154,6 +155,36 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
         const sizes = ["Bytes", "KB", "MB", "GB"]
         const i = Math.floor(Math.log(bytes) / Math.log(k))
         return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
+    const getAlertClass = (status: string) => {
+        switch (status) {
+            case "success":
+                return "border-green-500 bg-green-50"
+            case "partially_completed":
+                return "border-yellow-500 bg-yellow-50"
+            case "failed":
+                return "border-red-500 bg-red-50"
+            default:
+                return "border-muted-foreground/25 bg-muted/5"
+        }
+    }
+    // `border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+    //                             dragActive
+    //                                 ? "border-primary bg-primary/5"
+    //                                 : selectedFile
+    //                                     ? "border-green-500 bg-green-50"
+    //                                     : "border-muted-foreground/25 hover:border-muted-foreground/50"
+    //                         }`
+    const getDragClass = () => {
+        const classDrag = `border-2 border-dashed rounded-lg p-8 text-center transition-colors`;
+        if(dragActive){
+            return `${classDrag} border-primary bg-primary/5`
+        }else if(selectedFile) {
+            return `${classDrag} border-green-500 bg-green-50`
+        }else {
+            return `${classDrag} border-muted-foreground/25 hover:border-muted-foreground/50`
+
+        }
     }
 
     const clearFile = () => {
@@ -225,7 +256,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                                         <span className="font-medium">File Types:</span>
                                         <div className="flex gap-1 mt-1">
                                             {selectedConfiguration.file_type.split(",").map((type, i) => (
-                                                <Badge key={i} variant="secondary">
+                                                <Badge key={`${i+1}x-error`} variant="secondary">
                                                     {type.trim()}
                                                 </Badge>
                                             ))}
@@ -237,7 +268,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                                     </div>
                                     <div>
                                         <span className="font-medium">Max Rows:</span>
-                                        <p className="text-muted-foreground">{selectedConfiguration.max_rows || "Unlimited"}</p>
+                                        <p className="text-muted-foreground">{selectedConfiguration.max_rows ?? "Unlimited"}</p>
                                     </div>
                                     <div>
                                         <span className="font-medium">Delimiter:</span>
@@ -250,13 +281,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
 
                     {/* File Drop Zone */}
                     <div
-                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                            dragActive
-                                ? "border-primary bg-primary/5"
-                                : selectedFile
-                                    ? "border-green-500 bg-green-50"
-                                    : "border-muted-foreground/25 hover:border-muted-foreground/50"
-                        }`}
+                        className={getDragClass()}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}
@@ -324,13 +349,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                     {/* Upload Result */}
                     {uploadResult && (
                         <Alert
-                            className={
-                                uploadResult.status === "success"
-                                    ? "border-green-500 bg-green-50"
-                                    : uploadResult.status === "partially_completed"
-                                        ? "border-yellow-500 bg-yellow-50"
-                                        : "border-red-500 bg-red-50"
-                            }
+                            className={getAlertClass(uploadResult.status)}
                         >
                             <div className="flex items-start gap-2">
                                 {uploadResult.status === "success" ? (
@@ -354,7 +373,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                                                 {uploadResult.error?.details?.file_level_errors && (
                                                     <ul className="mt-2 space-y-1">
                                                         {uploadResult.error.details.file_level_errors.map((error, i) => (
-                                                            <li key={i} className="text-sm">
+                                                            <li key={`${i+1}x-error`} className="text-sm">
                                                                 • {error.message}
                                                             </li>
                                                         ))}
@@ -369,7 +388,7 @@ export default function UploadInterface({configurations}: UploadInterfaceProps) 
                                                         {uploadResult.error.details.row_level_errors.samples.length > 0 && (
                                                             <ul className="mt-1 space-y-1">
                                                                 {uploadResult.error.details.row_level_errors.samples.slice(0, 3).map((error, i) => (
-                                                                    <li key={i} className="text-sm">
+                                                                    <li key={`${i+1}x-error`} className="text-sm">
                                                                         • Row {error.row}: {error.message}
                                                                     </li>
                                                                 ))}

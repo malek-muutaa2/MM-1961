@@ -84,7 +84,7 @@ export class StorageService {
     private async uploadToVercelBlob(file: File, filePath: string): Promise<UploadResult> {
         try {
             const blob = await put(filePath, file, {
-                access: this.config.access_type || "public",
+                access: this.config.access_type ?? "public",
                 addRandomSuffix: true,
                 contentType: file.type,
                 cacheControlMaxAge: 60 * 60 * 24 * 365, // 1 year cache
@@ -109,7 +109,7 @@ export class StorageService {
         const s3Service = new S3StorageService({
             accessKeyId: this.config.aws_access_key_id,
             secretAccessKey: this.config.aws_secret_access_key,
-            region: this.config.region || "us-east-1",
+            region: this.config.region ?? "us-east-1",
             bucketName: this.config.bucket_name!,
         })
 
@@ -158,7 +158,7 @@ export class StorageService {
         const azureService = new AzureBlobStorageService({
             accountName: this.config.azure_account_name,
             accountKey: this.config.azure_account_key,
-            containerName: this.config.container_name || this.config.bucket_name!,
+            containerName: this.config.container_name ?? this.config.bucket_name!,
             sasToken: this.config.azure_sas_token,
         })
 
@@ -179,16 +179,17 @@ export class StorageService {
                 case "vercel_blob":
                     await del(pathname)
                     break
-                case "s3":
+                case "s3": {
                     const s3Service = new S3StorageService({
                         accessKeyId: this.config.aws_access_key_id!,
                         secretAccessKey: this.config.aws_secret_access_key!,
-                        region: this.config.region || "us-east-1",
+                        region: this.config.region ?? "us-east-1",
                         bucketName: this.config.bucket_name!,
                     })
                     await s3Service.deleteFile(pathname)
                     break
-                case "gcs":
+                }
+                case "gcs": {
                     const gcsService = new GCSStorageService({
                         projectId: this.config.gcs_project_id!,
                         keyFilename: this.config.gcs_key_filename,
@@ -197,15 +198,17 @@ export class StorageService {
                     })
                     await gcsService.deleteFile(pathname)
                     break
-                case "azure_blob":
+                }
+                case "azure_blob": {
                     const azureService = new AzureBlobStorageService({
                         accountName: this.config.azure_account_name!,
                         accountKey: this.config.azure_account_key!,
-                        containerName: this.config.container_name || this.config.bucket_name!,
+                        containerName: this.config?.container_name ?? this.config.bucket_name!,
                         sasToken: this.config.azure_sas_token,
                     })
                     await azureService.deleteFile(pathname)
                     break
+                }
                 default:
                     throw this.createStorageError(
                         `Delete not implemented for storage type: ${this.config.storage_type}`,
@@ -224,22 +227,24 @@ export class StorageService {
     async listFiles(prefix?: string): Promise<any[]> {
         try {
             switch (this.config.storage_type) {
-                case "vercel_blob":
+                case "vercel_blob": {
                     const result = await list({prefix})
                     return result.blobs.map((blob) => ({
                         ...blob,
                         storage_type: "vercel_blob",
                     }))
-                case "s3":
+                }
+                case "s3": {
                     const s3Service = new S3StorageService({
                         accessKeyId: this.config.aws_access_key_id!,
                         secretAccessKey: this.config.aws_secret_access_key!,
-                        region: this.config.region || "us-east-1",
+                        region: this.config?.region ?? "us-east-1",
                         bucketName: this.config.bucket_name!,
                     })
                     const s3Files = await s3Service.listFiles(prefix)
                     return s3Files.map((file) => ({...file, storage_type: "s3"}))
-                case "gcs":
+                }
+                case "gcs": {
                     const gcsService = new GCSStorageService({
                         projectId: this.config.gcs_project_id!,
                         keyFilename: this.config.gcs_key_filename,
@@ -248,15 +253,17 @@ export class StorageService {
                     })
                     const gcsFiles = await gcsService.listFiles(prefix)
                     return gcsFiles.map((file) => ({...file, storage_type: "gcs"}))
-                case "azure_blob":
+                }
+                case "azure_blob": {
                     const azureService = new AzureBlobStorageService({
                         accountName: this.config.azure_account_name!,
                         accountKey: this.config.azure_account_key!,
-                        containerName: this.config.container_name || this.config.bucket_name!,
+                        containerName: this.config.container_name ?? this.config.bucket_name!,
                         sasToken: this.config.azure_sas_token,
                     })
                     const azureFiles = await azureService.listFiles(prefix)
                     return azureFiles.map((file) => ({...file, storage_type: "azure_blob"}))
+                }
                 default:
                     throw this.createStorageError(
                         `List not implemented for storage type: ${this.config.storage_type}`,
@@ -279,6 +286,7 @@ export class StorageService {
 
         let path = this.config.path_template || "{base_path}/{uuid}.{ext}"
 
+
         // Replace placeholders
         const replacements: Record<string, string> = {
             base_path: this.config.base_path,
@@ -290,7 +298,7 @@ export class StorageService {
             hour: now.getHours().toString().padStart(2, "0"),
             minute: now.getMinutes().toString().padStart(2, "0"),
             second: now.getSeconds().toString().padStart(2, "0"),
-            uuid: crypto?.randomUUID?.() || Math.random().toString(36).substring(2, 15) + "_" + metadata.user_id,
+            uuid: crypto?.randomUUID?.() || Math.random().toString(36).substring(2, 15) + "_" + metadata.user_id, // NOSONAR
             timestamp: now.getTime().toString(),
             file_name: fileNameWithoutExt,
             ext: fileExtension ?? "bin",
