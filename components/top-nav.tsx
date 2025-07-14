@@ -1,6 +1,11 @@
 "use client"
 
-import { Bell, Search, X, Check, Filter, Moon, Sun, Laptop } from "lucide-react"
+import { Bell, Search, X, Check, Filter, Moon, Sun, Laptop,
+  AlertCircle,
+  BellRing,
+  CheckCircle,
+  Lightbulb
+ } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -18,65 +23,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { signOut, useSession } from "next-auth/react"
-import { NotificationCenter } from "./NotificationCenter"
+import { signOut } from "next-auth/react"
 import { useNotifications } from "@/hooks/useNotifications"
-import { markAllNotificationsAsRead, markasread, NotificationType } from "@/lib/notification"
+import {  markasread, NotificationType } from "@/lib/notification"
 import { UserType } from "@/lib/getCurrentUser"
 import { useRouter } from "next/navigation"
 import { formatDistanceToNow } from 'date-fns';
 import Link from "next/link"
-import {
-  AlertCircle,
-  BellRing,
-  CheckCircle,
-  Lightbulb,
-} from 'lucide-react';
-// Sample notifications data
-const notifications2 = [
-  {
-    id: 1,
-    title: "Stock Level Alert",
-    description: "Inventory for Product X is below threshold",
-    time: "10 minutes ago",
-    type: "alert",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Action Plan Generated",
-    description: "New action plan for Inventory Optimization",
-    time: "1 hour ago",
-    type: "action",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "KPI Target Achieved",
-    description: "Supplier Diversity KPI reached target",
-    time: "Yesterday",
-    type: "success",
-    read: false,
-  },
-  {
-    id: 4,
-    title: "System Update",
-    description: "Platform updated to version 2.3.0",
-    time: "2 days ago",
-    type: "system",
-    read: true,
-  },
-  {
-    id: 5,
-    title: "New Insight Available",
-    description: "AI has identified a pattern in your inventory data",
-    time: "3 days ago",
-    type: "insight",
-    read: true,
-  },
-]
+
+
 type Notificationuser = {
       id: number;
     userId: number;
@@ -120,8 +76,11 @@ function getRelativeTime(date: Date | string | number): string {
   return rtf.format(0, 'second');
 }
 
-export function TopNav( { countUnread , userinfo , notificationtypes }: TopNavProps
-) {
+export function TopNav({
+  countUnread,
+  userinfo,
+  notificationtypes,
+}: Readonly<TopNavProps>) {
   const [countUnread2, setCountUnread] = useState(countUnread)
 const [newNotificationMeta, setNewNotificationMeta] = useState<{
   count: number;
@@ -129,7 +88,6 @@ const [newNotificationMeta, setNewNotificationMeta] = useState<{
 }>({ count: 0, ids: [] });
 const [isOpen, setIsOpen] = useState(false);
 const [hasDropdownOpened, setHasDropdownOpened] = useState(false);
-  const [notificationFilter, setNotificationFilter] = useState("all")
  const [notificationsData, setNotificationsData] = useState<Notificationuser[]>([]);
   const { setTheme, theme } = useTheme()
     const [isPending, startTransition] = useTransition()
@@ -137,18 +95,8 @@ const [hasDropdownOpened, setHasDropdownOpened] = useState(false);
 
 
 
-  const filteredNotifications =
-    notificationFilter === "all"
-      ? notificationsData
-      : notificationFilter === "unread"
-        ? notificationsData.filter((n) => !n.readAt)
-        : notificationsData.filter((n) => n.typeName === notificationFilter)
+ 
 
-  // const markAsRead2 = (id: number) => {
-  //   setNotificationsData((prev) =>
-  //     prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-  //   )
-  // }
   const router = useRouter()
   const markAllAsRead = async () => {
    startTransition(async () => {
@@ -208,7 +156,7 @@ const getNotificationIcon = (type: string, size = 20, className = '') => {
     }
   }, []);
 
-   const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(userinfo?.id || 0);
+   const { notifications} = useNotifications(userinfo?.id || 0);
  const [page, setPage] = useState(1);
 const [hasMore, setHasMore] = useState(true);
 const [loading, setLoading] = useState(false);
@@ -227,7 +175,6 @@ const loadMoreNotifications = useCallback(async (isInitialLoad = false) => {
     console.log("loadingMore",hasMore);
 
   if (!userinfo || loadingMore || !hasMore) return;
-    console.log("initaiamlwxwx",notificationFilter2);
 
   if (isInitialLoad) {
     setPage(1);
@@ -265,12 +212,12 @@ const loadMoreNotifications = useCallback(async (isInitialLoad = false) => {
 }, [userinfo, loadingMore, hasMore, page, notificationFilter2]);
 const uniqueNotifications = useMemo(() => {
   const seen = new Set<number>();
-  return filteredNotifications.filter((n) => {
+  return notificationsData.filter((n) => {
     if (seen.has(n.id)) return false;
     seen.add(n.id);
     return true;
   });
-}, [filteredNotifications]);
+}, [notificationsData]);
 
 useEffect(() => {
   if (isOpen && !hasDropdownOpened) {
@@ -291,9 +238,7 @@ useEffect(() => {
     console.warn("Scroll ref not attached to element");
     return;
   }
-  // el.style.border = "1px solid red"; // Temporary for debugging
 
-  // Add debug styling to ensure scroll area is visible
 
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = el;
@@ -392,13 +337,11 @@ useEffect(() => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button data-testid="theme-button" variant="outline" size="icon">
-                  {theme === "light" ? (
-                    <Sun className="h-4 w-4" />
-                  ) : theme === "dark" ? (
-                    <Moon className="h-4 w-4" />
-                  ) : (
-                    <Laptop className="h-4 w-4" />
-                  )}
+                    {(() => {
+                    if (theme === "light") return <Sun className="h-4 w-4" />;
+                    if (theme === "dark") return <Moon className="h-4 w-4" />;
+                    return <Laptop className="h-4 w-4" />;
+                    })()}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -464,7 +407,7 @@ useEffect(() => {
                     {countUnread2+newNotificationMeta.count > 0 && (
                       <Button variant="ghost" size="sm" onClick={markAllAsRead}>
                         <Check className="mr-1 h-3 w-3" />
-                        Mark all read
+                        {isPending ? " Mark all read.. ": " Mark all read "}
                       </Button>
                     )}
                   </div>
@@ -480,10 +423,17 @@ useEffect(() => {
   }}
 >
   {/* Loading state (skeleton) */}
-  {loading  && (
-    <div data-testid="loading-skeleton" role="status" aria-live="polite" aria-busy="true" className="space-y-3 p-4">
-      {[...Array(5)].map((_, i) => (
-        <div key={`skeleton-${i}`} className="flex items-start gap-3 p-3">
+{loading && (
+  <output
+    data-testid="loading-skeleton"
+    aria-live="polite"
+    aria-busy="true"
+    className="space-y-3 p-4 block"
+  >
+    {[...Array(5)].map(() => {
+      const key = crypto.randomUUID();
+      return (
+        <div key={key} className="flex items-start gap-3 p-3">
           <div className="h-5 w-5 rounded-full bg-muted animate-pulse mt-1.5" />
           <div className="flex-1 space-y-2">
             <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
@@ -491,9 +441,11 @@ useEffect(() => {
             <div className="h-3 w-1/2 rounded bg-muted animate-pulse" />
           </div>
         </div>
-      ))}
-    </div>
-  )}
+      );
+    })}
+  </output>
+)}
+
 
   {/* Loaded state */}
   {!loading && uniqueNotifications.length > 0 ? (
@@ -547,19 +499,28 @@ useEffect(() => {
       ))}
 
       {/* Loading more indicator */}
-      {loadingMore && (
-        <div data-testid="loading-skeleton" className="space-y-3 p-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={`more-loading-${i}`} className="flex items-start gap-3 p-3">
-              <div className="h-5 w-5 rounded-full bg-muted animate-pulse mt-1.5" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
-                <div className="h-3 w-full rounded bg-muted animate-pulse" />
-              </div>
-            </div>
-          ))}
+    {loadingMore && (
+  <output
+    data-testid="loading-skeleton"
+    aria-live="polite"
+    aria-busy="true"
+    className="space-y-3 p-4 block"
+  >
+    {[...Array(3)].map(() => {
+      const key = crypto.randomUUID();
+      return (
+        <div key={key} className="flex items-start gap-3 p-3">
+          <div className="h-5 w-5 rounded-full bg-muted animate-pulse mt-1.5" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
+            <div className="h-3 w-full rounded bg-muted animate-pulse" />
+          </div>
         </div>
-      )}
+      );
+    })}
+  </output>
+)}
+
 
       {/* End of list indicator */}
       {!hasMore && notificationsData.length > 0 && (

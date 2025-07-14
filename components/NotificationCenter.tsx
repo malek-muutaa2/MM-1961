@@ -4,8 +4,10 @@
 import { useNotifications } from '@/hooks/useNotifications';
 import { useEffect, useState } from 'react';
 
-export function NotificationCenter({ userId }: { userId: number }) {
-  const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(userId);
+export function NotificationCenter({
+  userId,
+}: Readonly<{ userId: number }>) {
+    const { notifications, unreadCount, markAsRead, isConnected } = useNotifications(userId);
   const [isOpen, setIsOpen] = useState(false);
 
   // Request notification permission
@@ -52,19 +54,20 @@ export function NotificationCenter({ userId }: { userId: number }) {
             ) : (
               notifications.map(notification => (
                 <div
+                 role="button"
+  tabIndex={0}
+    onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+    }
+  }}
                   key={notification.id}
                   onClick={() => markAsRead(notification.id)}
                   className={`p-3 hover:bg-gray-50 cursor-pointer ${!notification.read_at ? 'bg-blue-50' : ''}`}
                 >
                   <div className="flex items-start gap-2">
                     <div className="mt-1 flex-shrink-0">
-                      {/* {notification.icon && (
-                        <img 
-                          src={notification.icon} 
-                          alt="" 
-                          className="h-5 w-5 rounded-full"
-                        />
-                      )} */}
+           
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between">

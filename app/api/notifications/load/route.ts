@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getCurrentUser } from "@/lib/getCurrentUser"
-import { UserType } from "@/lib/db/schema"
-import { getusers } from "@/lib/user"
+
 import { getNotificationByUserId } from "@/lib/notification"
 
 export const dynamic = "force-dynamic"
@@ -13,7 +12,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
   const size = parseInt(searchParams.get("size") || "10");
-    const unread = searchParams.get("unread") ? true : false;
+    const unread = !!searchParams.get("unread");
  const typeId = parseInt(searchParams.get("typeId")) || null;
   if (!user) {
     return NextResponse.json(
@@ -21,7 +20,6 @@ export async function GET(request: NextRequest) {
       { status: 401 }
     )
   }
-console.log("unreadunread", unread);
 
   // strip out any sensitive fields if needed
   const notifications  = await getNotificationByUserId(user?.id,page, size,unread,typeId)

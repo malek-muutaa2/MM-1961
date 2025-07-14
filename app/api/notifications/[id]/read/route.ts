@@ -8,7 +8,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-    const {id} = await params;
+const { id } = params;
   const notificationId = Number(id);
   if (!notificationId || isNaN(notificationId)) {
     return NextResponse.json({ error: 'Invalid notification ID' }, { status: 400 });

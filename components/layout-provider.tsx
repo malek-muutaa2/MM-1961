@@ -11,22 +11,21 @@ import { Toaster } from "@/components/ui/toaster"
 import { UserType } from "@/lib/db/schema"
 import { AccessDeniedPage } from "./AccessDenied"
 import { signOut } from "next-auth/react"
-import { Notification, NotificationType } from "@/lib/notification"
+import {NotificationType } from "@/lib/notification"
 
 export function LayoutProvider({
   children,
   userinfo,
   error,
   countUnread,
-  notificationtypes
-}: {
-  children: React.ReactNode
-  userinfo: UserType | null,
-  countUnread: number,
-  error? : string,
-  notificationtypes : NotificationType[] 
-
-}) {
+  notificationtypes,
+}: Readonly<{
+  children: React.ReactNode;
+  userinfo: UserType | null;
+  countUnread: number;
+  error?: string;
+  notificationtypes: NotificationType[];
+}>) {
   const pathname = usePathname()
   useEffect(() => {
     if (error === "Disableduser") {
@@ -68,24 +67,26 @@ const isAdminPage =
       </>
     )
   }
+let content;
 
+if (isAdminPage) {
+  if (userinfo?.role === "Admin") {
+    content = <div className="container mx-auto max-w-12xl">{children}</div>;
+  } else {
+    content = <AccessDeniedPage />;
+  }
+} else {
+  content = <div className="container mx-auto max-w-12xl">{children}</div>;
+}
   return (
     <RoleProvider>
       <SidebarProvider>
         <div className="flex h-screen w-screen overflow-hidden">
           <AppSidebar userinfo={userinfo!} />
           <div className="flex flex-col flex-1 w-full overflow-hidden">
-            <TopNav notificationtypes={notificationtypes} userinfo={userinfo!} countUnread={countUnread}  />
+            <TopNav  notificationtypes={notificationtypes} userinfo={userinfo} countUnread={countUnread}  />
             <main className="flex-1 w-full overflow-auto bg-background">
-                  {isAdminPage ? (
-                  userinfo?.role === "Admin" ? (
-                    <div className="container mx-auto max-w-12xl">{children}</div>
-                  ) : (
-                    <AccessDeniedPage />
-                  )
-                  ) : (
-                  <div className="container mx-auto max-w-12xl">{children}</div>
-                  )}
+             {content}
             </main>
           </div>
         </div>

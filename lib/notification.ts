@@ -2,7 +2,6 @@
 import { and, count, desc, eq, inArray, isNotNull, isNull } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import {  notifications, notificationTypes, userNotificationSettings } from "./db/schema";
-import { use } from "react";
 import { revalidatePath } from "next/cache";
 
 
@@ -19,12 +18,11 @@ export type Notification = {
     created_at: Date;
     typeName: string | null;
     };
-export const getNotificationByUserId = async (userId: number, page: number = 1,
+export const getNotificationByUserId = async (userId: number, page: number,
 
-  size: number = 10,unread: boolean,typeId? : number) => {
+  size: number,unread: boolean,typeId? : number) => {
       const offset = (page - 1) * size;
  let res: Notification[] = [];
- console.log("undread", unread);
  
 if(typeId){
    res  =  await db.select({

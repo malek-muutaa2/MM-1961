@@ -2,12 +2,10 @@ export const dynamic = "force-dynamic"
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
 import { LayoutProvider } from "@/components/layout-provider"
-import { AuthProvider } from "@/components/auth/auth-provider"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { getServerAuthSession } from "@/lib/auth"
-import { CountUnreadNotifications, getNotificationByUserId, notificationTypesList } from "@/lib/notification"
+import { CountUnreadNotifications,  notificationTypesList } from "@/lib/notification"
 
 const inter = Inter({subsets: ["latin"]})
 
@@ -19,10 +17,10 @@ export const metadata: Metadata = {
 
 
 export default async function RootLayout({
-                                             children,
-                                         }: {
-    children: React.ReactNode
-}) {
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   let notificationData = null;
   let countUnread = 0;
   const userinfo = await getCurrentUser();

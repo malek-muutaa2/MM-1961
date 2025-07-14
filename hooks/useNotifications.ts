@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { notificationTypes, typenotifications } from '@/lib/db/schema';
+import { notificationTypes } from '@/lib/db/schema';
 import { useRouter } from 'next/navigation';
 type notificationTypes = {
   
@@ -10,12 +10,35 @@ type notificationTypes = {
     type_id: number;
     title: string;
     message: string;
-    id?: number | undefined;
     data?: unknown;
-    created_at?: string | undefined;
-    redirect_url?: string | null | undefined;
+    created_at?: string ;
+    redirect_url?: string | null;
     read_at?: Date | null;
 }
+function incrementUnreadCount(current: number, newItems: { read_at: Date | null | undefined }[]): number {
+  return current + countUnreadNotifications(newItems);
+}
+
+function normalizeNotifications(
+  data: notificationTypes | notificationTypes[]
+): notificationTypes[] {
+  return Array.isArray(data) ? data : [data];
+}
+
+function filterByUser<T extends { user_id: number }>(
+  items: T[],
+  userId: number
+): T[] {
+  return items.filter(item => item.user_id === userId);
+}
+
+function countUnread(items: notificationTypes[]): number {
+  return items.filter(item => !item.read_at).length;
+}
+function countUnreadNotifications(notifications: { read_at: Date | null | undefined }[]): number {
+  return notifications.filter(n => !n.read_at).length;
+}
+
 export function useNotifications(userId: number) {
   const [notifications, setNotifications] = useState<notificationTypes[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -65,21 +88,22 @@ useEffect(() => {
       eventSource.addEventListener('initial', (event) => {
         const data = JSON.parse(event.data) as notificationTypes[];
         setNotifications(data);
-        setUnreadCount(data.filter(n => !n.read_at).length);
+      setUnreadCount(countUnreadNotifications(data));
+
         setIsConnected(true);
 
         // reconnect after 4 mins to avoid 5min timeout
       refreshTimer = setTimeout(setup, 4 * 60 * 1000);      });
 
-      eventSource.addEventListener('update', (event) => {
-        const payload = JSON.parse(event.data) as notificationTypes | notificationTypes[];
-        const arr = Array.isArray(payload) ? payload : [payload];
-        const filtered = arr.filter(n => n.user_id === userId);
+     eventSource.addEventListener('update', (event) => {
+  const payload = JSON.parse(event.data) as notificationTypes | notificationTypes[];
+  const all = normalizeNotifications(payload);
+  const filtered = filterByUser(all, userId);
 
-        setNotifications(prev => [...filtered, ...prev]);
-        setUnreadCount(prev => prev + arr.filter(n => !n.read_at).length);
-              refreshTimer = setTimeout(setup, 4 * 60 * 1000);
-      });
+  setNotifications(prev => [...filtered, ...prev]);
+setUnreadCount(prev => incrementUnreadCount(prev, filtered));
+  refreshTimer = setTimeout(setup, 4 * 60 * 1000);
+});
 
      eventSource.onerror = () => {
       setIsConnected(false);

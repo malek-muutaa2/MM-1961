@@ -1,5 +1,5 @@
 import { drizzle as drizzleNode } from 'drizzle-orm/node-postgres'
-import { Client, Pool } from 'pg'
+import { Pool } from 'pg'
 
 import * as schema from './schema'
 
@@ -28,14 +28,3 @@ export const db = drizzleNode(
   }
 )
 
-// const pgClient = new Client({
-//   connectionString: process.env.DATABASE_URL.replace('-pooler',''),
-// });
-// await pgClient.connect();
-// await pgClient.query(`LISTEN notifications`);
-
-// pgClient.on('notification', async msg => {
-//   const payload = JSON.parse(msg.payload!);
-//   console.log('New notification received:', payload);
-//   // Process as needed—or forward via SSE/WebSocket
-// });

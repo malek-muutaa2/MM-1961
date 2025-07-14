@@ -9,9 +9,10 @@ import userEvent from '@testing-library/user-event';
 import { NextRequest } from 'next/server';
 import { POST } from '../../app/api/sendnotification/route';
 import { db } from '../../lib/db/dbpostgres';
-import { notifications, users } from '../../lib/db/schema';
-import { Resend } from 'resend';
+import { notifications} from '../../lib/db/schema';
 // Mock dependencies
+import { v4 as uuidv4 } from 'uuid';
+
 jest.mock('../../components/theme-provider');
 jest.mock('next/navigation');
 jest.mock('next-auth/react');
@@ -89,6 +90,9 @@ describe('notification Component', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+beforeAll(() => {
+  global.crypto.randomUUID = jest.fn(() => 'mock-uuid');
+});
 
   it('renders without crashing', () => {
     render(
@@ -123,7 +127,7 @@ describe('notification Component', () => {
   });
 
 it('opens and closes notification dropdown', async () => {
-  const { container } = render(
+   render(
     <SidebarProvider>
       <TopNav 
         countUnread={3} 
@@ -145,50 +149,12 @@ it('opens and closes notification dropdown', async () => {
   expect(markasread).toBeInTheDocument();
 
 
-  // Close dropdown
-//   await userEvent.click(button);
-//   await waitFor(() => {
-//     expect(screen.queryByText('Notifications')).not.toBeInTheDocument();
-//   });
+
 });
 
-// it('loads notifications when dropdown is first opened', async () => {
-//   // Mock the API call to simulate loading
-//   global.fetch = jest.fn(() =>
-//     Promise.resolve({
-//       json: () => Promise.resolve({ notifications: [] }),
-//     })
-//   ) as jest.Mock;
-
-//   const { container } = render(
-//     <SidebarProvider>
-//       <TopNav 
-//         countUnread={3} 
-//         userinfo={{ id: 1 }} // Need userinfo for notifications to load
-//         notificationtypes={mockNotificationTypes} 
-//       />
-//     </SidebarProvider>
-//   );
-//  console.log("container", container);
- 
-//    const button = screen.getByTestId('notifications-button');
-//   await userEvent.click(button);
-
-//   // Debug: Print the entire DOM
-
-//   // Look for any evidence the dropdown opened
-//   const dropdownTitle = await screen.findByText('Notifications', {}, { timeout: 3000 });
-//   expect(dropdownTitle).toBeInTheDocument();
-    
-//   // Check for loading state - use either of these approaches:
-
-//   // Option 1: Look for loading skeletons (if that's what you use)
-//   const skeletons = await screen.findAllByTestId('loading-skeleton');
-//   expect(skeletons).toBeInTheDocument();
 
 
 
-// });
 
   it('allows switching between notification filters', async () => {
   const { container } = render(
@@ -233,7 +199,6 @@ it('opens and closes notification dropdown', async () => {
   });
 });
   it('marks all notifications as read', async () => {
-    const mockMarkAllAsRead = jest.fn();
     
     render(
    <SidebarProvider>

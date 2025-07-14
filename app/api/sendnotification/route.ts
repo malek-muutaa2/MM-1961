@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/dbpostgres';
 import { notifications, users } from '@/lib/db/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { inArray } from 'drizzle-orm';
 import { Resend } from 'resend';
-import { fetchUsernotificationSettings, fetchUsersnotificationSettings, UserNotificationSettings } from '@/lib/notification';
-import { getCurrentUser } from '@/lib/getCurrentUser';
+import { fetchUsersnotificationSettings, UserNotificationSettings } from '@/lib/notification';
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   const { userIds, typeId, title, message, redirectUrl, data } = await req.json();

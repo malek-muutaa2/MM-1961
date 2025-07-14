@@ -12,14 +12,16 @@ import { Separator } from "@/components/ui/separator"
 import { EnableUserNotifcationEmail, UserNotificationSettings } from "@/lib/notification"
 import { UserType } from "@/lib/getCurrentUser"
 import { useToast } from "../ui/use-toast"
-import { channel } from "diagnostics_channel"
 interface NotificationPreferencesProps {
   notificationSettings: UserNotificationSettings | null
     UserInfo: UserType
   
 }
-export function NotificationPreferences({ notificationSettings , UserInfo }: NotificationPreferencesProps) {
-  const [isLoading, setIsLoading] = useState(false)
+export function NotificationPreferences({
+  notificationSettings,
+  UserInfo,
+}: Readonly<NotificationPreferencesProps>) {
+    const [isLoading, setIsLoading] = useState(false)
 
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
@@ -29,6 +31,7 @@ export function NotificationPreferences({ notificationSettings , UserInfo }: Not
 
   }
   const handleSubmit = async () => {
+    setIsLoading(true)
     startTransition(async () => {
       await EnableUserNotifcationEmail(UserInfo.id, Channel === true ? "email" : "dashboard").then((data) => {
         toast({
@@ -37,6 +40,7 @@ export function NotificationPreferences({ notificationSettings , UserInfo }: Not
         })
       })
     })
+    setIsLoading(false)
   }
   console.log("Notification Preferences UserInfo", UserInfo);
   
@@ -73,7 +77,7 @@ export function NotificationPreferences({ notificationSettings , UserInfo }: Not
           </CardContent>
           <CardFooter>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? (
+              {isLoading && isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving...

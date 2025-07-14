@@ -17,8 +17,12 @@ interface  ProfileSettingsProps {
   notificationSettings :  UserNotificationSettings | null
 
 }
-export function ProfileSettings({ UserInfo , twoFactorEnabled , notificationSettings }: ProfileSettingsProps) {
-  const [activeTab, setActiveTab] = useState("personal")
+export function ProfileSettings({
+  UserInfo,
+  twoFactorEnabled,
+  notificationSettings,
+}: Readonly<ProfileSettingsProps>) {
+    const [activeTab, setActiveTab] = useState("personal")
   
   return (
     <div className="col-span-3">
