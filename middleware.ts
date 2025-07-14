@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getToken } from "next-auth/jwt"
-// import { startNotificationListener } from "./lib/listenAndEmail";
-// startNotificationListener();
+
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
   
-  const isAuthenticated = !!token
     const { pathname } = request.nextUrl
       if (pathname.startsWith("/images/")) {
     return NextResponse.next()

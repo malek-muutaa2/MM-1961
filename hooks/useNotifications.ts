@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { notificationTypes } from '@/lib/db/schema';
 import { useRouter } from 'next/navigation';
 type notificationTypes = {
-  
+  id: number;
     user_id: number;
     type_id: number;
     title: string;
@@ -18,6 +18,13 @@ type notificationTypes = {
 function incrementUnreadCount(current: number, newItems: { read_at: Date | null | undefined }[]): number {
   return current + countUnreadNotifications(newItems);
 }
+function prependNotifications(
+  existing: notificationTypes[],
+  incoming: notificationTypes[]
+): notificationTypes[] {
+  return [...incoming, ...existing];
+}
+
 
 function normalizeNotifications(
   data: notificationTypes | notificationTypes[]
@@ -100,7 +107,7 @@ useEffect(() => {
   const all = normalizeNotifications(payload);
   const filtered = filterByUser(all, userId);
 
-  setNotifications(prev => [...filtered, ...prev]);
+setNotifications(prev => prependNotifications(prev, filtered));
 setUnreadCount(prev => incrementUnreadCount(prev, filtered));
   refreshTimer = setTimeout(setup, 4 * 60 * 1000);
 });

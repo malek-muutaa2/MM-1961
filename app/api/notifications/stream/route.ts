@@ -16,15 +16,23 @@ export async function GET(request: NextRequest) {
 
       let closed = false;
 
-      const handler = (msg) => {
-        if (closed) return;
-        try {
-          controller.enqueue(`event: update\ndata: ${msg.payload}\n\n`);
-        } catch (err) {
-          closed = true;
-          cleanup(); // Ensure immediate cleanup on overflow
-        }
-      };
+const handler = (msg) => {
+  if (closed) return;
+
+  try {
+    controller.enqueue(`event: update\ndata: ${msg.payload}\n\n`);
+  } catch (err) {
+    closed = true;
+    cleanup(); // Ensure immediate cleanup on overflow
+
+    // ✅ Properly handle/log the error
+    console.error('Failed to enqueue SSE message:', err);
+
+    // Optional: rethrow if upstream should know
+    // throw err;
+  }
+};
+
 
       client.on('notification', handler);
 

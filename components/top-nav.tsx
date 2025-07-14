@@ -51,6 +51,20 @@ interface TopNavProps {
   userinfo: UserType | null;
   notificationtypes : NotificationType[]
 }
+function updateNotificationMeta(
+  prev: { count: number; ids: number[] },
+  newIds: number[]
+): { count: number; ids: number[] } {
+  const allIds = [...prev.ids, ...newIds];
+  const uniqueIds = [...new Set(allIds)];
+  const uniqueNewCount = newIds.filter(id => !prev.ids.includes(id)).length;
+
+  return {
+    count: prev.count + uniqueNewCount,
+    ids: uniqueIds,
+  };
+}
+
 function getRelativeTime(date: Date | string | number): string {
   const ms = typeof date === 'number' ? date : new Date(date).getTime();
   const deltaSeconds = Math.floor((ms - Date.now()) / 1000);
@@ -81,7 +95,7 @@ export function TopNav({
   userinfo,
   notificationtypes,
 }: Readonly<TopNavProps>) {
-  const [countUnread2, setCountUnread] = useState(countUnread)
+  const [countUnread2, setCountUnread2] = useState(countUnread)
 const [newNotificationMeta, setNewNotificationMeta] = useState<{
   count: number;
   ids: number[];
@@ -108,7 +122,7 @@ const [hasDropdownOpened, setHasDropdownOpened] = useState(false);
 
     })
         router.refresh()
-setCountUnread(0)
+setCountUnread2(0)
   setNotificationsData(prev =>
     prev.map(n =>
       !n.readAt ? { ...n, readAt: new Date() } : n
@@ -146,7 +160,7 @@ const getNotificationIcon = (type: string, size = 20, className = '') => {
             n.id === notificationId ? { ...n, readAt: new Date() } : n
           )
         );
-        setCountUnread(prev => prev - 1);
+        setCountUnread2(prev => prev - 1);
       }
     
               router.refresh()
@@ -296,15 +310,8 @@ const newAnnotated = notifications
     if (newAnnotated.length === 0) return prev;
 
     const newIds = newAnnotated.map(n => n.id);
-    const unreadCount = newAnnotated.filter(n => !n.read_at).length;
 
-    setNewNotificationMeta(({ count, ids }) => {
-      const allIds = [...ids, ...newIds];
-      return {
-        count: count + newIds.filter(id => !ids.includes(id)).length,
-        ids: [...new Set(allIds)],
-      };
-    });
+    setNewNotificationMeta(prev => updateNotificationMeta(prev, newIds));
 
     return [...newAnnotated, ...prev];
   });
