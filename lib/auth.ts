@@ -1,7 +1,7 @@
 //src/server/auth.ts
 
-import bcrypt from "bcrypt";
-import {getServerSession, type NextAuthOptions} from "next-auth";
+import bcrypt from "bcryptjs";
+import { getServerSession, type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { audit } from "./audit";
 import { findUniqueUser, findUserById } from "./user";
@@ -41,13 +41,18 @@ export const authOptions: NextAuthOptions = {
         event: "user.signin",
         event_description: "User signed in",
         targets: [{ label: "email", value: String(message.user.email) }],
+        email :  message.user.email ? message.user.email : "",
       });
+
+
     },
     async signOut(message) {
       await audit({
         event: "user.signout",
         event_description: "User signed out",
         targets: [{ label: "email", value: String(message.token.email) }],
+        email :  message.token.email ? message.token.email : "",
+
       });
     },
   },
@@ -67,7 +72,7 @@ export const authOptions: NextAuthOptions = {
           email: string;
           password: string;
         };
-        const user2 = await findUniqueUser(email);
+        const user2: any = await findUniqueUser(email);
 
         if (!user2[0]) {
           //(1)

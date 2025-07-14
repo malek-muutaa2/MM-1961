@@ -1,10 +1,33 @@
 "use server"
-import { asc, desc, eq, type InferModel, sql } from "drizzle-orm"
-import { db } from "./db/dbpostgres"
-import { twoFactorAuth, users } from "./db/schema"
-import bcrypt from "bcryptjs"
-import crypto from "crypto"
-
+import { and, asc, desc, eq, InferModel, InferSelectModel, isNull, sql } from "drizzle-orm";
+import { db } from "./db/dbpostgres";
+import { twoFactorAuth, users } from "./db/schema";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { revalidatePath } from "next/cache";
+import { generatePasswordResetToken } from "./reset";
+import { sendInvationResetEmail } from "./mail";
+export const TotalUsers = async (search?: string | null) => {
+  try {
+    const searchWord = `%${search}%`;
+    return await db
+      .select({ count: sql<number>`count(*)` })
+      .from(users)
+      .where(
+        search
+          ? sql`
+            lower(${users.email}::text) LIKE lower(${searchWord})
+            OR lower(${users.name}::text) LIKE lower(${searchWord})
+            OR lower(${users.organization}) LIKE lower(${searchWord})
+          `
+          : undefined,
+      );
+  }
+  catch (e: any) {
+    console.log("TotalUsers error", e?.message);
+    return [];
+  }
+}
 export const getusers = async (
     offsetItems?: number,
     search?: string | null,
@@ -24,49 +47,28 @@ export const getusers = async (
                         order === "asc" ? [asc(users[column])] : order === "desc" ? [desc(users[column])] : [desc(users.createdAt)],
                 }),
 
-            ...(search
-                ? {
-                    where: sql`
-                        lower
-                        (${users.email} ::
-                            text)
-                        LIKE lower(
-                        ${searchWord}
-                        )
-                        or
-                        lower
-                        (
-                        ${users.name}
-                        ::
-                        text
-                        )
-                        LIKE
-                        lower
-                        (
-                        ${searchWord}
-                        )
-
-                        or
-                        lower
-                        (
-                        ${users.organization}
-                        )
-                        LIKE
-                        lower
-                        (
-                        ${searchWord}
-                        )
-
-                    `,
-                }
-                : { where: null }),
-        })
-    } catch (e: any) {
-        console.log("getDictGtin error", e?.message)
-        return []
-    }
-}
-
+      ...(search
+        ? {
+           where: and(
+    isNull(users.deleted_at), // only rows where deleted IS NULL
+    search
+      ? sql`
+          (
+            lower(${users.email}::text) LIKE lower(${searchWord})
+            OR lower(${users.name}::text) LIKE lower(${searchWord})
+            OR lower(${users.organization}::text) LIKE lower(${searchWord})
+          )
+        `
+      : undefined
+  ),
+          }
+        : { where: isNull(users.deleted_at) }),
+    });
+  } catch (e: any) {
+    console.log("getDictGtin error", e?.message);
+    return [];
+  }
+};
 export const UpdateUser2F = async (secretbase32: string, id: number) => {
     try {
         return await db
@@ -142,8 +144,33 @@ export const Enable2fa = async (isActivate: boolean, userId: number) => {
         console.log("Enable2fa error", e?.message)
         return []
     }
-}
-
+  };
+    export const  ActivateUser = async (isActivate : boolean,userId : number) => {
+    try {
+        await db
+        .update(users)
+        .set({ isDisabled: isActivate })
+        .where(eq(users.id, userId));
+        revalidatePath("/rafed-admin/users");
+      return  {success: "ActivateUser successfully."};
+    } catch (e: any) {
+      console.log("Enable2fa error", e?.message);
+      return [];
+    }
+  };
+      export const  deleteUser = async (userId : number) => {
+    try {
+        await db
+        .update(users)
+        .set({ deleted_at: new Date() })
+        .where(eq(users.id, userId));
+        revalidatePath("/rafed-admin/users");
+      return  {success: "ActivateUser successfully."};
+    } catch (e: any) {
+      console.log("Enable2fa error", e?.message);
+      return [];
+    }
+  };
 export const findUniqueUser = async (email: string | null) => {
     try {
         if (email) {
@@ -256,12 +283,163 @@ export const UpdateUserPassword = async (hashedpassword: string, id: number) => 
 }
 
 export const updateLock = async (newStatus: boolean, userId: number) => {
-    try {
-        return await db.update(users).set({ isDisabled: newStatus }).where(eq(users.id, userId))
-    } catch (e: any) {
-        console.log("updateLock error", e?.message)
-        return []
+  try {
+    return await db
+      .update(users)
+      .set({ isDisabled: newStatus })
+      .where(eq(users.id, userId));
+  } catch (e: any) {
+    console.log("updateLock error", e?.message);
+    return [];
+  }
+};
+export const updateUser = async (
+  id: number,
+  username: string,
+  role: "Admin" | "User",
+  organization: string | null,
+) => {
+  try {
+    const today = new Date();
+    const updated = new Date(today.setDate(today.getDate()));
+     await db
+      .update(users)
+      .set({
+        name: username,
+        organization: organization ? organization : "",
+        role,
+        updatedAt: updated,
+      })
+      .where(eq(users.id, id));
+    revalidatePath("/rafed-admin/users");
+      return { message: "User updated successfully." };
+  } catch (e: any) {
+    console.log("updateUser error", e?.message);
+    return { error: `Error updating user: ${e}` };
+  }
+}
+export  type UserAdd = {
+    username: string;
+    password: string;
+    email: string;
+    role: "Admin" | "User";
+  };
+export async function AddUserAction(
+  Value: UserAdd,
+) {
+  //   const schema = z.object({
+  //     id: z.string().min(1),
+  //   })
+  //   const data = schema.parse({
+  //     id: formData.get('id'),
+
+  //   })
+  // const  idOutput = parseInt(data.id)
+  const DictionaryAdd =  {
+        title: "Add a user",
+        emailLabel: "Email",
+        usernameLabel: "Username",
+        rolesLabel: "Role",
+        establishmentsLabel: "Establishments",
+        saveButton: "Save",
+        allEstablishmentsLabel: "All establishments",
+        message: {
+          duplicateEmailError: "The entered email address already exists. Please use another one!",
+          emailNotExistMessage: "Email does not exist!",
+          userAddedSuccess: "User added successfully."
+        }
+      }
+  try {
+ 
+
+    const { username, password, email, role } = Value;
+    const today = new Date();
+     
+    const created = new Date(today.setDate(today.getDate()));
+    // Hash the password
+    const saltRounds = 10;
+    const checkDuplicateUser = await findUniqueUser(email);
+    console.log("checkDuplicateUser", checkDuplicateUser);
+
+    if (checkDuplicateUser[0]) {
+      return {
+        error: `${DictionaryAdd.message.duplicateEmailError}`,
+      };
     }
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const data = {
+        username,
+        password: hashedPassword,
+        email,
+        role,
+        created_at: created,
+        passwordupdatedat: created,
+      };
+      console.log("useradd", hashedPassword);
+
+  const user = await db
+    .insert(users)
+    .values({
+      name: username,
+      email,
+      password: hashedPassword,
+      role,
+      createdAt: created,
+      updatedAt: created,
+      passwordupdatedat: created,
+      isDisabled: false,
+      workDomain: "",
+      organization: "",
+      bio: "",
+      department: "",
+      last_login: null,
+      jobTitle: "",
+      resetpasswordtoken: null,
+      passwordresettokenexpiry: null,
+    })
+    .returning({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      role: users.role,
+    });
+      
+if(!user[0]?.id) {
+        return { error: "Failed to create user" };
+      }
+     await db.insert(twoFactorAuth).values({
+      userId: user[0].id,
+      isTwoFactorEnabled: false,
+      totpSecret: null,
+    })
+    }
+    const existingUser = await findUniqueUser(email);
+    if (!existingUser[0]) {
+      return { message: "Email n'existe pas ! " };
+    }
+ 
+    const passwordResetToken = await generatePasswordResetToken(
+      existingUser[0].email,
+    );
+    if (passwordResetToken[0].resetpasswordtoken) {
+      const res = await sendInvationResetEmail(
+        existingUser[0].email,
+        passwordResetToken[0].resetpasswordtoken,
+        "en",
+      );
+      console.log("res", res);
+    }
+
+ 
+
+    revalidatePath("/rafed-admin/users");
+    return {
+      message: `${DictionaryAdd.message.userAddedSuccess}`,
+    };
+  } catch (e) {
+    return { error: `Error adding user: ${e}` };
+  }
 }
 
 export const updateUserProfile = async (
@@ -274,7 +452,7 @@ export const updateUserProfile = async (
         workDomain?: string
         organization?: string
         bio?: string
-        image?: string
+        image?: string | null // Accepter null explicitement
     },
 ) => {
     try {
@@ -287,7 +465,7 @@ export const updateUserProfile = async (
         if (profileData.workDomain !== undefined) updateData.workDomain = profileData.workDomain
         if (profileData.organization !== undefined) updateData.organization = profileData.organization
         if (profileData.bio !== undefined) updateData.bio = profileData.bio
-        if (profileData.image !== undefined) updateData.image = profileData.image
+        if (profileData.image !== undefined) updateData.image = profileData.image // Préserver null
 
         // Ajouter la date de mise à jour
         updateData.updatedAt = new Date()

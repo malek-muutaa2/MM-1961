@@ -4,7 +4,7 @@ import { z } from "zod";
 
 
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/dbpostgres";
 import { twoFactorAuth } from "@/lib/db/schema";

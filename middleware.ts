@@ -23,10 +23,16 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith("/api")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if(!request?.url) {
+      return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
+    }
     return NextResponse.rewrite(new URL(`/login`, request.url));
   }
   // If token exists and user is trying to access auth pages, redirect to dashboard
   if (token && request.nextUrl.pathname.startsWith(`/login`)) {
+    if(!request?.url) {
+      return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

@@ -15,7 +15,7 @@ const updateProfileSchema = z.object({
     workDomain: z.string().optional().nullable(),
     organization: z.string().optional().nullable(),
     bio: z.string().optional().nullable(),
-    image: z.string().optional().nullable(),
+    image: z.string().optional().nullable(), // Accepter null explicitement
 })
 
 export async function PUT(request: NextRequest) {
@@ -37,7 +37,7 @@ export async function PUT(request: NextRequest) {
             workDomain: body.workDomain || undefined,
             organization: body.organization || undefined,
             bio: body.bio || undefined,
-            image: body.image || undefined,
+            image: body.image === null ? null : body.image || undefined, // Préserver null explicite
             updatedAt: new Date().toISOString(), // Ajouter la date de mise à jour
         }
 

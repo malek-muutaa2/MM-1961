@@ -10,16 +10,26 @@ import { RoleSwitcher } from "@/components/role-switcher"
 import { Toaster } from "@/components/ui/toaster"
 import { UserType } from "@/lib/db/schema"
 import { AccessDeniedPage } from "./AccessDenied"
+import { signOut } from "next-auth/react"
 
 export function LayoutProvider({
   children,
   userinfo,
+  error,
 }: {
   children: React.ReactNode
-  userinfo: UserType | null
+  userinfo: UserType | null,
+
+  error? : string,
 }) {
   const pathname = usePathname()
-
+  useEffect(() => {
+    if (error === "Disableduser") {
+      signOut({
+        callbackUrl: "/login",
+      });
+    }}
+, [error,userinfo]) 
   // ←— NEW: block render for up to 2s, but bail early if userinfo arrives
   const [ready, setReady] = useState(false)
   useEffect(() => {
@@ -44,6 +54,7 @@ export function LayoutProvider({
     pathname.includes("/login/new-password") 
 const isAdminPage =
     pathname.includes("/rafed-admin") 
+  
   if (isAuthPage) {
     return (
       <>

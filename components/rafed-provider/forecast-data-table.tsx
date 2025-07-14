@@ -57,7 +57,11 @@ interface PaginationInfo {
   hasPrev: boolean
 }
 
-export function ForecastDataTable() {
+interface ForecastDataTableProps {
+  forecastExecutionId?: number
+}
+
+export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProps = {}) {
   const [classifications, setClassifications] = useState<Classification[]>([])
   const [forecastTypes, setForecastTypes] = useState<ForecastType[]>([])
   const [forecastData, setForecastData] = useState<ForecastData[]>([])
@@ -158,6 +162,11 @@ export function ForecastDataTable() {
         category: selectedCategory,
       })
 
+      // Ajouter forecastExecutionId si fourni
+      if (forecastExecutionId) {
+        params.append("forecastExecutionId", forecastExecutionId.toString())
+      }
+
       const response = await fetch(`/api/forecast-data-complete?${params}`)
       if (!response.ok) throw new Error("Failed to fetch forecast data")
 
@@ -174,7 +183,7 @@ export function ForecastDataTable() {
       console.error("Error fetching paginated data:", error)
       toast({
         title: "Erreur",
-        description: "Impossible de charger les données de prévision",
+        description: "Failed to load forecast data",
         variant: "destructive",
       })
     } finally {
@@ -187,7 +196,7 @@ export function ForecastDataTable() {
     if (forecastTypes.length > 0) {
       fetchPaginatedData(1) // Reset to page 1 when filters change
     }
-  }, [forecastTypes, debouncedSearchTerm, selectedCategory])
+  }, [forecastTypes, debouncedSearchTerm, selectedCategory, forecastExecutionId])
 
   const processCompleteForecastData = (data: any[]) => {
     const processedData: ForecastData[] = []
@@ -276,14 +285,14 @@ export function ForecastDataTable() {
         fetchPaginatedData(pagination.page)
 
         toast({
-          title: "Prévision mise à jour",
-          description: `${forecastType.name} pour ${editingItem.productName} (${editingItem.date}) mis à jour à ${newQuantity}`,
+          title: "Forecast Updated",
+          description: `${forecastType.name} for ${editingItem.productName} (${editingItem.date}) updated to ${newQuantity}`,
         })
       } catch (error) {
         console.error("Error updating forecast:", error)
         toast({
-          title: "Échec de la mise à jour",
-          description: "Impossible de mettre à jour les données de prévision. Veuillez réessayer.",
+          title: "Update Failed",
+          description: "Failed to update forecast data. Please try again.",
           variant: "destructive",
         })
       } finally {
@@ -310,21 +319,16 @@ export function ForecastDataTable() {
           <div className="flex flex-1 items-center space-x-2">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                  placeholder="Rechercher des produits..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="pl-8"
-              />
+              <Input placeholder="Search products..." value={searchTerm} onChange={handleSearchChange} className="pl-8" />
             </div>
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="w-[195px]">
-                  <SelectValue placeholder="Toutes les catégories" />
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
+                  <SelectItem value="all">All categories</SelectItem>
                   {classifications.map((classification) => (
                       <SelectItem key={classification.id} value={classification.name}>
                         {classification.name}
@@ -342,15 +346,15 @@ export function ForecastDataTable() {
             <TableHeader>
               <TableRow>
                 <TableHead>SKU</TableHead>
-                <TableHead>Nom du produit</TableHead>
-                <TableHead>Catégorie</TableHead>
+                <TableHead>Product Name</TableHead>
+                <TableHead>Category</TableHead>
                 <TableHead>Date</TableHead>
                 {forecastTypes.map((type) => (
                     <TableHead key={type.id} className="text-right">
                       {type.name}
                     </TableHead>
                 ))}
-                <TableHead>Unité</TableHead>
+                <TableHead>Unit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -359,7 +363,7 @@ export function ForecastDataTable() {
                     <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
                       <div className="flex items-center justify-center">
                         <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                        <span className="ml-2">Chargement...</span>
+                        <span className="ml-2">Loading...</span>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -388,13 +392,13 @@ export function ForecastDataTable() {
                               </TableCell>
                           )
                         })}
-                        <TableCell>Unités</TableCell>
+                        <TableCell>Units</TableCell>
                       </TableRow>
                   ))
               ) : (
                   <TableRow>
                     <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
-                      Aucune donnée de prévision disponible.
+                      No forecast data available.
                     </TableCell>
                   </TableRow>
               )}
@@ -405,8 +409,8 @@ export function ForecastDataTable() {
         {/* Pagination */}
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            Affichage de {(pagination.page - 1) * pagination.limit + 1} à{" "}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} sur {pagination.total} résultats
+            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+            {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} results
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -416,7 +420,7 @@ export function ForecastDataTable() {
                 disabled={!pagination.hasPrev || loading}
             >
               <ChevronLeft className="h-4 w-4" />
-              Précédent
+              Previous
             </Button>
             <div className="flex items-center space-x-1">
               {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
@@ -443,7 +447,7 @@ export function ForecastDataTable() {
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={!pagination.hasNext || loading}
             >
-              Suivant
+              Next
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -453,9 +457,9 @@ export function ForecastDataTable() {
         <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Modifier la quantité de prévision</DialogTitle>
+              <DialogTitle>Edit Forecast Quantity</DialogTitle>
               <DialogDescription>
-                Mettre à jour la quantité de prévision pour {editingItem?.productName} ({editingItem?.date})
+                Update forecast quantity for {editingItem?.productName} ({editingItem?.date})
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -475,9 +479,8 @@ export function ForecastDataTable() {
               {editingForecastType && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
-                      Nouveau{" "}
-                      {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Prévision"}
-                      :
+                      New{" "}
+                      {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Forecast"}:
                     </label>
                     <div className="col-span-2">
                       <Input
@@ -494,10 +497,10 @@ export function ForecastDataTable() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-                Annuler
+                Cancel
               </Button>
               <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
-                Sauvegarder
+                Save
               </Button>
             </DialogFooter>
           </DialogContent>

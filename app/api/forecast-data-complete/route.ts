@@ -1,20 +1,29 @@
-import { NextResponse } from "next/server"
-import { db } from "@/lib/db/dbpostgres"
-import { forecastData, products, classifications } from "@/lib/db/schema"
-import { eq, asc, ilike, or, and } from "drizzle-orm"
+import {NextResponse} from "next/server"
+import {db} from "@/lib/db/dbpostgres"
+import {forecastData, products, classifications} from "@/lib/db/schema"
+import {eq, asc, ilike, or, and} from "drizzle-orm"
 
 export async function GET(request: Request) {
     try {
-        const { searchParams } = new URL(request.url)
+        if (!request?.url) {
+            return NextResponse.json({error: "Invalid request URL"}, {status: 400})
+        }
+        const {searchParams} = new URL(request.url)
         const page = Number.parseInt(searchParams.get("page") || "1")
         const limit = Number.parseInt(searchParams.get("limit") || "10")
         const searchTerm = searchParams.get("search") || ""
         const category = searchParams.get("category") || ""
+        const forecastExecutionId = searchParams.get("forecastExecutionId") // NOUVEAU PARAMÈTRE
 
         const offset = (page - 1) * limit
 
         // Construire les conditions de filtrage
         const conditions = [eq(forecastData.type, "forecast")] // Only forecast data, not historical
+
+        // NOUVEAU : Filtrer par forecast_execution_id si fourni
+        if (forecastExecutionId) {
+            conditions.push(eq(forecastData.forecastExecutionId, Number.parseInt(forecastExecutionId)))
+        }
 
         if (searchTerm) {
             conditions.push(or(ilike(products.name, `%${searchTerm}%`), ilike(products.description, `%${searchTerm}%`)))
@@ -70,9 +79,14 @@ export async function GET(request: Request) {
         }
 
         // Créer les conditions pour récupérer les données complètes
-        const combinationConditions = uniqueCombinations.map((combo) =>
-            and(eq(forecastData.productId, combo.productId), eq(forecastData.date, combo.date)),
-        )
+        const combinationConditions = uniqueCombinations
+            .map((combo) =>
+            combo?.productId ?
+            and(
+                eq(forecastData.productId, combo.productId),
+                eq(forecastData.date, combo.date)
+            ): "",
+        ).filter((condition) => condition !== "")
 
         const fullDataQuery = db
             .select({
@@ -82,6 +96,7 @@ export async function GET(request: Request) {
                 classificationId: products.classificationId,
                 classificationName: classifications.name,
                 forecastTypeId: forecastData.forecastTypeId,
+                forecastExecutionId: forecastData.forecastExecutionId, // NOUVEAU CHAMP
                 date: forecastData.date,
                 value: forecastData.value,
                 type: forecastData.type,
@@ -107,6 +122,6 @@ export async function GET(request: Request) {
         })
     } catch (error) {
         console.error("Error fetching paginated forecast data:", error)
-        return NextResponse.json({ error: "Failed to fetch forecast data" }, { status: 500 })
+        return NextResponse.json({error: "Failed to fetch forecast data"}, {status: 500})
     }
 }
