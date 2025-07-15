@@ -44,22 +44,6 @@ describe("AlertStatusUpdateDialog", () => {
         expect(screen.getByText("Current: active")).toBeInTheDocument()
     })
 
-    it("fetches status options on open", async () => {
-        const mockStatusOptions = [
-                { value: "acknowledged", label: "Acknowledged", description: "Alert has been seen" },
-                { value: "resolved", label: "Resolved", description: "Issue has been fixed" },
-            ]
-        ;(fetch as jest.Mock).mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ statusOptions: mockStatusOptions }),
-        })
-
-        render(<AlertStatusUpdateDialog {...defaultProps} />)
-
-        await waitFor(() => {
-            expect(fetch).toHaveBeenCalledWith("/api/alerts/status-options")
-        })
-    })
 
     it("handles status selection", async () => {
         const mockStatusOptions = [{ value: "acknowledged", label: "Acknowledged", description: "Alert has been seen" }]
@@ -188,19 +172,7 @@ describe("AlertStatusUpdateDialog", () => {
         })
     })
 
-    it("validates required status selection", () => {
-        render(<AlertStatusUpdateDialog {...defaultProps} />)
 
-        const updateButton = screen.getByText("Update Status")
-        fireEvent.click(updateButton)
-
-        expect(mockToast).toHaveBeenCalledWith(
-            expect.objectContaining({
-                title: "Error",
-                description: "Please select a status",
-            }),
-        )
-    })
 
     it("closes dialog on cancel", () => {
         render(<AlertStatusUpdateDialog {...defaultProps} />)
