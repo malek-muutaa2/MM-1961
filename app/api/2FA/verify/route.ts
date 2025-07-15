@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     }
     const { token, secretbase32 } = req;
 
-    // `userSecret` should be retrieved from your database where it was stored during setup
 
     const verified = speakeasy.totp.verify({
       secret: secretbase32,

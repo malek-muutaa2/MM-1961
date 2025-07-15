@@ -1,28 +1,29 @@
-import { useSearchParams } from "next/navigation";
-import React from "react";
+"use client"
 
-export function useCreateQueryString() {
-  const searchParams = useSearchParams();
+import { useCallback } from "react"
 
-  const createQueryString = React.useCallback(
-    (params: Record<string, string | number | null>) => {
-      // Create a copy of the current URL search parameters
-      const newSearchParams = new URLSearchParams(searchParams.toString());
+import { useSearchParams } from "next/navigation"
 
-      // Iterate over the provided params and update the search parameters
-      for (const [key, value] of Object.entries(params)) {
-        if (value === null || value === "" || value === undefined) {
-          newSearchParams.delete(key);
-        } else {
-          newSearchParams.set(key, String(value));
-        }
-      }
+export const useCreateQueryString = () => {
+    const searchParams = useSearchParams()
 
-      // Return the updated search parameters as a string
-      return newSearchParams.toString();
-    },
-    [searchParams], // Ensure the callback is updated when searchParams changes
-  );
+    const createQueryString = useCallback(
+        (params: Record<string, string | undefined>) => {
+            const newSearchParams = new URLSearchParams(searchParams?.toString())
 
-  return { createQueryString };
+            Object.entries(params).forEach(([key, value]) => {
+                if (value === undefined || value === null || value === "") {
+                    // Supprimer complètement le paramètre s'il est undefined, null ou vide
+                    newSearchParams.delete(key)
+                } else {
+                    newSearchParams.set(key, value)
+                }
+            })
+
+            return newSearchParams.toString()
+        },
+        [searchParams],
+    )
+
+    return { createQueryString }
 }
