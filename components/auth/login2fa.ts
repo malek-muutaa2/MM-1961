@@ -21,7 +21,7 @@ type credentials = {
 export const Login2fa2 = async (
   values: z.infer<typeof LoginSchema>,
   
-) => {
+) => { 
   const validatedFields = LoginSchema.safeParse(values);
 
 if (!validatedFields.success) {
@@ -29,8 +29,8 @@ if (!validatedFields.success) {
 }
 const { email, password, code } = validatedFields.data;
 const existingUser = await findUniqueUser(email);
-if (!existingUser[0] || !existingUser[0].email || !existingUser[0].password) {
-    return { error: "User not found." };
+if (!existingUser[0]?.email || !existingUser[0]?.password) {
+  return { error: "User not found." };
 }
 if (existingUser[0].isDisabled === true) {
     return { error: "Account is disabled." };
