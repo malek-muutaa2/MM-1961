@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {JSX, useState} from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -23,10 +23,30 @@ interface AlertCommentDialogProps {
     onSuccess: () => void
 }
 
-export function AlertCommentDialog({ alert, open, onOpenChange, onSuccess }: AlertCommentDialogProps) {
+export function AlertCommentDialog({ alert, open, onOpenChange, onSuccess }: Readonly<AlertCommentDialogProps>) {
     const [comment, setComment] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
+
+    // Déduire le variant
+    const severityVariantMap: Record<string, "destructive" | "default" | "outline"> = {
+        critical: "destructive",
+        warning: "default",
+        info: "outline", // optionnel si tu veux être explicite
+    }
+
+    const severityVariant = severityVariantMap[alert.severity] ?? "outline"
+
+
+// Déduire l'icône
+    const severityIconsMap: Record<string, JSX.Element> = {
+        critical: <AlertCircle className="mr-1 h-2 w-2" />,
+        warning: <AlertTriangle className="mr-1 h-2 w-2" />,
+        info: <Info className="mr-1 h-2 w-2" />,
+    }
+
+    const severityIcon = severityIconsMap[alert.severity] ?? <Info className="mr-1 h-2 w-2" />
+
 
     const handleAddComment = async () => {
         if (!comment.trim()) {
@@ -108,23 +128,8 @@ export function AlertCommentDialog({ alert, open, onOpenChange, onSuccess }: Ale
                                 <div className="text-xs text-muted-foreground mt-1">{alert.description}</div>
                                 <div className="flex items-center justify-between mt-2">
                                     <div className="flex items-center space-x-2">
-                                        <Badge
-                                            variant={
-                                                alert.severity === "critical"
-                                                    ? "destructive"
-                                                    : alert.severity === "warning"
-                                                        ? "default"
-                                                        : "outline"
-                                            }
-                                            className="text-xs"
-                                        >
-                                            {alert.severity === "critical" ? (
-                                                <AlertCircle className="mr-1 h-2 w-2" />
-                                            ) : alert.severity === "warning" ? (
-                                                <AlertTriangle className="mr-1 h-2 w-2" />
-                                            ) : (
-                                                <Info className="mr-1 h-2 w-2" />
-                                            )}
+                                        <Badge variant={severityVariant} className="text-xs">
+                                            {severityIcon}
                                             {alert.severity}
                                         </Badge>
                                         <span className="text-xs text-muted-foreground">{alert.kpi}</span>
@@ -139,14 +144,18 @@ export function AlertCommentDialog({ alert, open, onOpenChange, onSuccess }: Ale
 
                     {/* Comment Input */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Comment</label>
+                        <label htmlFor="alert-comment-textarea" className="text-sm font-medium">
+                            Comment
+                        </label>
                         <Textarea
+                            id="alert-comment-textarea"
                             placeholder="Enter your comment here..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows={4}
                         />
                     </div>
+
                 </div>
 
                 <DialogFooter>

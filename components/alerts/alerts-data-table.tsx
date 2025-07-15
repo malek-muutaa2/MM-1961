@@ -62,7 +62,7 @@ export function AlertsDataTable<TData, TValue>({
                                                    pathname,
                                                    order,
                                                    column,
-                                               }: AlertsDataTableProps<TData, TValue>) {
+                                               }: Readonly<AlertsDataTableProps<TData, TValue>>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})

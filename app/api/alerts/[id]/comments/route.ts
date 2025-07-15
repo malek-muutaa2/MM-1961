@@ -45,12 +45,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
             return {
                 id: comment.id || 0,
-                comment: comment.comment || "",
+                comment: comment.comment ?? "",
                 createdAt: comment.createdAt ? comment.createdAt.toISOString() : new Date().toISOString(),
-                createdBy: comment.createdBy || 0,
-                updatedStatus: comment.updatedStatus || null,
-                userName: comment.userName || "Unknown User",
-                userEmail: comment.userEmail || "",
+                createdBy: comment.createdBy ?? 0,
+                updatedStatus: comment.updatedStatus ?? null,
+                userName: comment.userName ?? "Unknown User",
+                userEmail: comment.userEmail ?? "",
             }
         })
 
@@ -103,7 +103,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             .insert(alertComments)
             .values({
                 alertId,
-                updatedStatus: currentStatus as any,
+                updatedStatus: currentStatus,
                 comment: commentText,
                 createdAt: new Date(),
                 createdBy: currentUser.id, // Use actual user ID from session
