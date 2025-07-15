@@ -11,7 +11,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { registerUser, type RegisterFormData } from "@/app/actions/auth"
+import {RegisterFormData, registerUser} from "@/app/(main)/actions/auth";
 
 export function RegisterFormWithAction() {
   const [isLoading, setIsLoading] = useState(false)
@@ -33,16 +33,16 @@ export function RegisterFormWithAction() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
     if (id === "fullName") {
-      setFormData((prev) => ({ ...prev, name: value }))
+      setFormData((prev: any) => ({ ...prev, name: value }))
     } else if (id === "confirmPassword") {
       setConfirmPassword(value)
     } else {
-      setFormData((prev) => ({ ...prev, [id]: value }))
+      setFormData((prev: any) => ({ ...prev, [id]: value }))
     }
   }
 
   const handleSelectChange = (id: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [id]: value }))
+    setFormData((prev: any) => ({ ...prev, [id]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -50,6 +50,41 @@
       "when": 1750105985475,
       "tag": "0006_fearless_molecule_man",
       "breakpoints": true
+    },
+    {
+      "idx": 666,
+      "version": "7",
+      "when": 1749132336211,
+      "tag": "0006_large_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749484164505,
+      "tag": "0007_vengeful_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1750255064782,
+      "tag": "0008_jazzy_epoch",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1750256312025,
+      "tag": "0009_heavy_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1750327521974,
+      "tag": "0010_sturdy_talisman",
+      "breakpoints": true
     }
   ]
 }

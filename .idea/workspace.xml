@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: build fix">
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: fix sonar check">
+      <change afterPath="$PROJECT_DIR$/drizzle/meta/0666_snapshot.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/drizzle/0006_large_sugar_man.sql" beforeDir="false" afterPath="$PROJECT_DIR$/drizzle/0006_large_sugar_man.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +54,9 @@
   <component name="NamedScopeManager">
     <scope name="Optivi" pattern="" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -63,40 +67,48 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.Dockerfile deps.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.Dockerfile deps.executor": "Run",
+    "Jest.ConfigurationSelector.executor": "Run",
+    "Jest.Enhanced Upload API.executor": "Run",
+    "Jest.Enhanced Upload API.should handle successful upload with no validation errors.executor": "Run",
+    "Jest.EnhancedUploadInterface.executor": "Run",
+    "Jest.ForecastDataTable.executor": "Run",
+    "Jest.StorageService.executor": "Run",
+    "Jest.ValidationService.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "MM-842-Upload-file-for-validation",
+    "go.import.settings.migrated": "true",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "last_opened_file_path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/drizzle/meta",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/jest",
+    "nodejs_package_manager_path": "yarn",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.scopes",
+    "show.migrate.to.gradle.popup": "false",
+    "ts.external.directory.path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -108,13 +120,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/drizzle/meta" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/(main)" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.Dockerfile deps">
+  <component name="RunManager" selected="Jest.Enhanced Upload API.should handle successful upload with no validation errors">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="optivian" />
       <working_directory value="$PROJECT_DIR$" />
@@ -134,18 +147,68 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
-    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+    <configuration name="Enhanced Upload API" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-names>
+        <test-name value="Enhanced Upload API" />
+      </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="Dockerfile deps" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="imageTag" value="base_deps" />
-          <option name="buildCliOptions" value="--target deps" />
-          <option name="buildOnly" value="true" />
-          <option name="sourceFilePath" value="Dockerfile" />
-        </settings>
-      </deployment>
+    <configuration name="Enhanced Upload API.should handle successful upload with no validation errors" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-names>
+        <test-name value="Enhanced Upload API" />
+        <test-name value="should handle successful upload with no validation errors" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="EnhancedUploadInterface" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/enhanced-upload-interface.test.tsx" />
+      <test-names>
+        <test-name value="EnhancedUploadInterface" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="StorageService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/storage-service.test.ts" />
+      <test-names>
+        <test-name value="StorageService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="ValidationService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/upload-system/validation-service.test.ts" />
+      <test-names>
+        <test-name value="ValidationService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
@@ -166,7 +229,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Docker.Dockerfile deps" />
+        <item itemvalue="Jest.Enhanced Upload API.should handle successful upload with no validation errors" />
+        <item itemvalue="Jest.Enhanced Upload API" />
+        <item itemvalue="Jest.ValidationService" />
+        <item itemvalue="Jest.StorageService" />
+        <item itemvalue="Jest.EnhancedUploadInterface" />
       </list>
     </recent_temporary>
   </component>
@@ -196,6 +263,7 @@
       <workItem from="1751965170145" duration="12113000" />
       <workItem from="1751997741961" duration="999000" />
       <workItem from="1752071227938" duration="1348000" />
+      <workItem from="1752575239406" duration="6882000" />
     </task>
     <task id="LOCAL-00001" summary="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules">
       <option name="closed" value="true" />
@@ -269,7 +337,31 @@
       <option name="project" value="LOCAL" />
       <updated>1751984820603</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="MM-1414: merge">
+      <option name="closed" value="true" />
+      <created>1752515291659</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1752515291659</updated>
+    </task>
+    <task id="LOCAL-00011" summary="MM-1414: fix sonar check">
+      <option name="closed" value="true" />
+      <created>1752605448106</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1752605448106</updated>
+    </task>
+    <task id="LOCAL-00012" summary="MM-1414: fix sonar check">
+      <option name="closed" value="true" />
+      <created>1752605496858</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1752605496858</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -290,7 +382,9 @@
     <MESSAGE value="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules" />
     <MESSAGE value="MM-1414: build test" />
     <MESSAGE value="MM-1414: build fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: build fix" />
+    <MESSAGE value="MM-1414: merge" />
+    <MESSAGE value="MM-1414: fix sonar check" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: fix sonar check" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -302,6 +396,12 @@
           <url>file://$PROJECT_DIR$/../../optivian/app/api/storage/s3/upload/route.ts</url>
           <line>3</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/__test__/components/forecast-data-table.test.tsx</url>
+          <line>83</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -9,7 +9,9 @@ import { KPISettings } from "@/components/kpis/kpi-settings"
 import { getKPIById } from "@/types/kpi-types"
 
 export const generateMetadata = ({ params }: { params: { id: string } }): Metadata => {
-  const kpi = getKPIById(params.id)
+  const { id } = params; // No need to await here in API routes
+
+  const kpi = getKPIById(id)
   return {
     title: kpi ? `${kpi.name} | MUUTAA.ML` : "KPI Details | MUUTAA.ML",
     description: kpi ? kpi.description : "Detailed analysis and management of a specific KPI",

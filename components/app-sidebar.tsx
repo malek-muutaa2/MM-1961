@@ -1,7 +1,5 @@
 "use client"
 
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
-
 import {
   Database,
   Settings,
@@ -43,17 +41,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
-  DropdownMenuContent,
+  DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
-import {getCurrentUser} from "@/lib/getCurrentUser";
 import {UserType} from "@/lib/db/schema";
 
-export function  AppSidebar({userinfo}: UserType) {
+export function  AppSidebar({userinfo}: any) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
   const pathname = usePathname()
@@ -307,6 +304,23 @@ export function  AppSidebar({userinfo}: UserType) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+        )}
+        {(role === "rafed-admin" || role === "obtivian" || role === "Admin") && (
+            <SidebarGroup>
+              <SidebarGroupLabel>File Upload System</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Upload Forecast">
+                      <Link href="/upload-system/upload">
+                        <FileUp />
+                        <span>Upload Data</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
         )}
 
         {/* Rafed Admin Module - Show for Rafed Admin only */}
