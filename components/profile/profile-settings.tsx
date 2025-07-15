@@ -9,10 +9,12 @@ import { IntegrationSettings } from "@/components/profile/integration-settings"
 import { ActivityLog } from "@/components/profile/activity-log"
 import { UserType } from "@/lib/db/schema"
 import { twofactor } from "@/app/profile/page"
+import { UserNotificationSettings } from "@/lib/notification"
 
 interface  ProfileSettingsProps {
   UserInfo: UserType
   twoFactorEnabled :  twofactor[]
+  notificationSettings :  UserNotificationSettings | null
 
 }
 export function ProfileSettings({
@@ -41,7 +43,7 @@ export function ProfileSettings({
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
-          <NotificationPreferences />
+          <NotificationPreferences  UserInfo={UserInfo} notificationSettings={notificationSettings} />
         </TabsContent>
 
         <TabsContent value="integrations" className="space-y-4">

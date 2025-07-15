@@ -27,3 +27,4 @@ export const db = drizzleNode(
     logger: process.env.DB_HOST === 'localhost' && logSql ? new QueryLogger() : false,
   }
 )
+
