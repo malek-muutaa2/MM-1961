@@ -118,49 +118,7 @@
 //         })
 //     })
 
-//     it("opens severity filter dropdown", () => {
-//         render(<AlertsDataTable {...defaultProps} />)
 
-//         const severityButton = screen.getByRole("button", { name: /severity/i })
-//         fireEvent.click(severityButton)
-
-//         expect(screen.getByText("Critical")).toBeInTheDocument()
-//         expect(screen.getByText("Warning")).toBeInTheDocument()
-//         expect(screen.getByText("Info")).toBeInTheDocument()
-//     })
-
-//     it("applies severity filter", async () => {
-//         render(<AlertsDataTable {...defaultProps} />)
-
-//         const severityButton = screen.getByRole("button", { name: /severity/i })
-//         fireEvent.click(severityButton)
-
-//         const criticalOption = screen.getByText("Critical")
-//         fireEvent.click(criticalOption)
-
-//         await waitFor(() => {
-//             expect(mockRouter.push).toHaveBeenCalled()
-//         })
-//     })
-
-//     it("clears severity filters", async () => {
-//         mockSearchParams.get.mockImplementation((param) => {
-//             if (param === "severity") return "critical,warning"
-//             return null
-//         })
-
-//         render(<AlertsDataTable {...defaultProps} />)
-
-//         const severityButton = screen.getByRole("button", { name: /severity/i })
-//         fireEvent.click(severityButton)
-
-//         const clearButton = screen.getByText("Clear filters")
-//         fireEvent.click(clearButton)
-
-//         await waitFor(() => {
-//             expect(mockRouter.push).toHaveBeenCalled()
-//         })
-//     })
 
 //     it("displays pagination correctly", () => {
 //         render(<AlertsDataTable {...defaultProps} />)
@@ -171,8 +129,11 @@
 //     it("handles pagination navigation", () => {
 //         render(<AlertsDataTable {...defaultProps} />)
 
-//         const nextButton = screen.getByRole("link", { name: /next/i })
-//         expect(nextButton).toBeInTheDocument()
+
+
+        const nextButton = screen.getAllByRole("link", { name: /next/i })
+        fireEvent.click(nextButton[0]) // ou [1], selon le bouton que tu veux
+
 
 //         const prevButton = screen.getByRole("link", { name: /previous/i })
 //         expect(prevButton).toBeInTheDocument()
