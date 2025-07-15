@@ -48,6 +48,16 @@ interface HistoricalDataType {
   lineType: string
 }
 
+// Type spécial pour les données historiques (pas dans la DB)
+interface HistoricalDataType {
+  id: string
+  name: string
+  description: string
+  isEditable: boolean
+  color: string
+  lineType: string
+}
+
 interface TimelineDataPoint {
   month: string
   date: string
@@ -83,6 +93,17 @@ export function ForecastProductTimeline({
   }
 
   // Fetch forecast types from the database (sans Historical Data)
+  // Configuration hardcodée pour les données historiques
+  const historicalDataConfig: HistoricalDataType = {
+    id: "historical",
+    name: "Historical Data",
+    description: "Données historiques réelles",
+    isEditable: false,
+    color: "#ff7300",
+    lineType: "",
+  }
+
+  // Fetch forecast types from the database (sans Historical Data)
   useEffect(() => {
     const fetchForecastTypes = async () => {
       try {
@@ -92,9 +113,11 @@ export function ForecastProductTimeline({
         }
         const data = await response.json()
         // Les données ne contiennent plus "Historical Data"
+        // Les données ne contiennent plus "Historical Data"
         setForecastTypes(data)
       } catch (error) {
         console.error("Error fetching forecast types:", error)
+        // Fallback sans Historical Data
         // Fallback sans Historical Data
         setForecastTypes([
           {
@@ -133,6 +156,7 @@ export function ForecastProductTimeline({
         const data = await response.json()
         const sortedProducts = data.sort((a: Product, b: Product) =>
             a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
+            a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
         )
 
         setProducts(sortedProducts)
@@ -166,6 +190,7 @@ export function ForecastProductTimeline({
       const fetchForecastData = async () => {
         try {
           const response = await fetch(
+              `/api/forecast-data?productId=${selectedProduct}&forecastExecutionId=${forecastExecutionId}`,
               `/api/forecast-data?productId=${selectedProduct}&forecastExecutionId=${forecastExecutionId}`,
           )
           if (!response.ok) {
@@ -212,12 +237,28 @@ export function ForecastProductTimeline({
           const typeName = forecastType.name.replace(/\s+/g, "")
           acc[monthYear][typeName] = Number(item.value)
         }
+      // Traitement spécial pour les données historiques (type = "actual")
+      if (item.type === "actual") {
+        const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
+        acc[monthYear][historicalTypeName] = Number(item.value)
+      } else {
+        // Traitement normal pour les prévisions avec forecastTypeId
+        const forecastType = forecastTypes.find((ft) => ft.id === item.forecastTypeId)
+        if (forecastType) {
+          const typeName = forecastType.name.replace(/\s+/g, "")
+          acc[monthYear][typeName] = Number(item.value)
+        }
       }
 
       return acc
     }, {})
 
     return Object.values(groupedByDate)
+        .sort((a: any, b: any) => a.sortDate.getTime() - b.sortDate.getTime())
+        .map((item: any) => {
+          const date = item.sortDate
+          const monthName = date.toLocaleString("default", { month: "short" })
+          const year = date.getFullYear()
         .sort((a: any, b: any) => a.sortDate.getTime() - b.sortDate.getTime())
         .map((item: any) => {
           const date = item.sortDate
@@ -230,8 +271,15 @@ export function ForecastProductTimeline({
             date: `${monthName} ${year}`,
           }
         })
+          return {
+            ...item,
+            month: `${monthName} ${year}`,
+            date: `${monthName} ${year}`,
+          }
+        })
   }
 
+  // Generate mock timeline data with historical data included
   // Generate mock timeline data with historical data included
   const generateMockTimelineData = () => {
     const mockTimelineData: TimelineDataPoint[] = []
@@ -262,7 +310,19 @@ export function ForecastProductTimeline({
       if (i >= 12) {
         forecastTypes.forEach((type) => {
           const typeName = type.name.replace(/\s+/g, "")
+      // Ajouter les données historiques pour les 12 premiers mois
+      if (i < 12) {
+        const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
+        dataPoint[historicalTypeName] = Math.floor(Math.random() * 1000) + 500
+      }
+
+      // Ajouter les prévisions pour les mois actuels et futurs (à partir du mois 12)
+      if (i >= 12) {
+        forecastTypes.forEach((type) => {
+          const typeName = type.name.replace(/\s+/g, "")
           dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
+        })
+      }
         })
       }
 
@@ -360,6 +420,7 @@ export function ForecastProductTimeline({
   }
 
   const getForecastTypeColor = (type: ForecastType | HistoricalDataType, fallbackIndex: number) => {
+  const getForecastTypeColor = (type: ForecastType | HistoricalDataType, fallbackIndex: number) => {
     if (type.color && type.color.trim() !== "") {
       return type.color
     }
@@ -369,18 +430,25 @@ export function ForecastProductTimeline({
   }
 
   const getForecastTypeLineType = (type: ForecastType | HistoricalDataType) => {
+  const getForecastTypeLineType = (type: ForecastType | HistoricalDataType) => {
     if (type.lineType !== undefined) {
       return type.lineType
     }
+    return "5 5"
     return "5 5"
   }
 
   // Combiner les types de prévision avec les données historiques pour l'affichage
   const allDisplayTypes = [historicalDataConfig, ...forecastTypes]
+  // Combiner les types de prévision avec les données historiques pour l'affichage
+  const allDisplayTypes = [historicalDataConfig, ...forecastTypes]
 
   // Pour la table, on garde seulement les types de prévision (pas l'historique)
   const forecastOnlyTypes = forecastTypes
+  // Pour la table, on garde seulement les types de prévision (pas l'historique)
+  const forecastOnlyTypes = forecastTypes
 
+  const renderLineSample = (type: ForecastType | HistoricalDataType, index: number) => {
   const renderLineSample = (type: ForecastType | HistoricalDataType, index: number) => {
     const color = getForecastTypeColor(type, index)
     const lineType = getForecastTypeLineType(type)
@@ -405,10 +473,32 @@ export function ForecastProductTimeline({
               marginRight: "6px",
             }}
         />
+        <div
+            className="w-6 h-0 inline-block align-middle"
+            style={{
+              borderBottom: `${borderWidth} ${borderStyle} ${color}`,
+              marginRight: "6px",
+            }}
+        />
     )
   }
 
   return (
+      <div className="space-y-6">
+        <div className="w-full max-w-xs">
+          <Select value={selectedProduct} onValueChange={handleProductChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a product" />
+            </SelectTrigger>
+            <SelectContent>
+              {products.map((product) => (
+                  <SelectItem key={product.id} value={product.id.toString()}>
+                    {product.name}
+                  </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       <div className="space-y-6">
         <div className="w-full max-w-xs">
           <Select value={selectedProduct} onValueChange={handleProductChange}>
@@ -441,9 +531,41 @@ export function ForecastProductTimeline({
                 {allDisplayTypes.map((type, index) => {
                   const typeName = type.name.replace(/\s+/g, "")
                   const hasData = timelineData.some((item) => item[typeName] !== undefined)
+        {loading ? (
+            <div className="flex h-[300px] items-center justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+            </div>
+        ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={timelineData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {/* Afficher toutes les lignes : historique + prévisions */}
+                {allDisplayTypes.map((type, index) => {
+                  const typeName = type.name.replace(/\s+/g, "")
+                  const hasData = timelineData.some((item) => item[typeName] !== undefined)
 
                   if (!hasData) return null
+                  if (!hasData) return null
 
+                  return (
+                      <Line
+                          key={type.id}
+                          type="monotone"
+                          dataKey={typeName}
+                          name={type.name}
+                          stroke={getForecastTypeColor(type, index)}
+                          strokeDasharray={getForecastTypeLineType(type)}
+                          connectNulls
+                      />
+                  )
+                })}
+              </LineChart>
+            </ResponsiveContainer>
+        )}
                   return (
                       <Line
                           key={type.id}
@@ -466,7 +588,14 @@ export function ForecastProductTimeline({
             product over time.
           </p>
         </div>
+        <div className="rounded-md bg-muted/50 p-3 text-sm">
+          <p>
+            <span className="font-medium">Note:</span> This chart shows historical data and forecasts for the selected
+            product over time.
+          </p>
+        </div>
 
+        <Separator className="my-6" />
         <Separator className="my-6" />
 
         <div>
@@ -502,7 +631,92 @@ export function ForecastProductTimeline({
                             const typeName = type.name.replace(/\s+/g, "")
                             return item[typeName] !== undefined && item[typeName] > 0
                           })
+        <div>
+          <h3 className="text-lg font-medium mb-3">Forecast Data for {selectedProductDetails.name}</h3>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>SKU</TableHead>
+                  <TableHead>Product Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Date</TableHead>
+                  {/* Table affiche seulement les types de prévision (pas l'historique) */}
+                  {forecastOnlyTypes.map((type, index) => (
+                      <TableHead key={type.id} className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div
+                              className="w-3 h-3 rounded-full border border-gray-300"
+                              style={{ backgroundColor: getForecastTypeColor(type, index + 1) }}
+                          />
+                          {type.name}
+                        </div>
+                      </TableHead>
+                  ))}
+                  <TableHead>Unit</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {timelineData.length > 0 ? (
+                    timelineData
+                        .filter((item) => {
+                          const hasForecastData = forecastOnlyTypes.some((type) => {
+                            const typeName = type.name.replace(/\s+/g, "")
+                            return item[typeName] !== undefined && item[typeName] > 0
+                          })
 
+                          return hasForecastData
+                        })
+                        .map((item, index) => {
+                          return (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">
+                                  {selectedProductDetails.name?.substring(0, 4).toUpperCase() +
+                                      "-" +
+                                      selectedProduct.padStart(4, "0")}
+                                </TableCell>
+                                <TableCell>{selectedProductDetails.name}</TableCell>
+                                <TableCell>
+                                  {selectedProductDetails.classificationId === 1
+                                      ? "Pharmaceuticals"
+                                      : selectedProductDetails.classificationId === 2
+                                          ? "Medical Devices"
+                                          : "Other"}
+                                </TableCell>
+                                <TableCell>{item.date}</TableCell>
+                                {forecastOnlyTypes.map((type, typeIndex) => {
+                                  const typeName = type.name.replace(/\s+/g, "")
+                                  return (
+                                      <TableCell key={type.id} className="text-right">
+                                        {type.isEditable ? (
+                                            <button
+                                                onClick={() => handleEditClick(item, typeName)}
+                                                className="inline-flex items-center text-primary hover:underline focus:outline-none"
+                                            >
+                                              {item[typeName]?.toLocaleString() || 0}
+                                              <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
+                                            </button>
+                                        ) : (
+                                            item[typeName]?.toLocaleString() || 0
+                                        )}
+                                      </TableCell>
+                                  )
+                                })}
+                                <TableCell>Units</TableCell>
+                              </TableRow>
+                          )
+                        })
+                ) : (
+                    <TableRow>
+                      <TableCell colSpan={6 + forecastOnlyTypes.length} className="h-24 text-center">
+                        No forecast data available.
+                      </TableCell>
+                    </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
                           return hasForecastData
                         })
                         .map((item, index) => {
@@ -598,7 +812,79 @@ export function ForecastProductTimeline({
                 }
                 return null
               })}
+        <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Forecast Quantity</DialogTitle>
+              <DialogDescription>
+                Update the forecast quantity for {selectedProductDetails.name} ({editingItem?.month})
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {/* Afficher l'historique en lecture seule si disponible */}
+              {editingItem && editingItem[historicalDataConfig.name.replace(/\s+/g, "")] && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label className="text-right text-sm font-medium col-span-2">
+                      <div className="flex items-center justify-end gap-2">
+                        {renderLineSample(historicalDataConfig, 0)}
+                        {historicalDataConfig.name}:
+                      </div>
+                    </label>
+                    <div className="col-span-2 font-medium">
+                      {editingItem[historicalDataConfig.name.replace(/\s+/g, "")]?.toLocaleString() || 0} Units
+                    </div>
+                  </div>
+              )}
 
+              {/* Afficher les autres prévisions */}
+              {forecastTypes.map((type, index) => {
+                const typeName = type.name.replace(/\s+/g, "")
+                if (editingItem && editingItem[typeName] !== undefined && typeName !== editingForecastType) {
+                  return (
+                      <div key={type.id} className="grid grid-cols-4 items-center gap-4">
+                        <label className="text-right text-sm font-medium col-span-2">
+                          <div className="flex items-center justify-end gap-2">
+                            {renderLineSample(type, index + 1)}
+                            {type.name}:
+                          </div>
+                        </label>
+                        <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() || 0} Units</div>
+                      </div>
+                  )
+                }
+                return null
+              })}
+
+              {editingForecastType && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
+                      New{" "}
+                      {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Forecast"}:
+                    </label>
+                    <div className="col-span-2">
+                      <Input
+                          id="new-forecast"
+                          type="number"
+                          value={newQuantity}
+                          onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+                          min={0}
+                          className="w-full"
+                      />
+                    </div>
+                  </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
               {editingForecastType && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
