@@ -99,7 +99,7 @@ const handleConfirm = () => {
                   console.log("User activated successfully");
                   toast({
                     title: "Success",
-                    description: "User activated successfully.",
+                    description: isActivate === true ? "User dactivated successfully" : "User activated successfully.",
                     variant: "default",
                   });
                 })

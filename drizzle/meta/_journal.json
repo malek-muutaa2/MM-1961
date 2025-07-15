@@ -43,6 +43,13 @@
       "when": 1747606538665,
       "tag": "0005_motionless_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1750105985475,
+      "tag": "0006_fearless_molecule_man",
+      "breakpoints": true
     }
   ]
 }

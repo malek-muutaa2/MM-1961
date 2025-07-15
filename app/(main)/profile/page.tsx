@@ -4,6 +4,7 @@ import { getServerAuthSession } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import { UserType } from "@/lib/db/schema";
 import { isTwoFactorEnabled } from "@/lib/user";
+import { fetchUsernotificationSettings, UserNotificationSettings } from "@/lib/notification";
 
 export const metadata: Metadata = {
   title: "Profile | MUUTAA.ML",
@@ -28,6 +29,7 @@ export default async function  ProfilePage() {
       </div>
   )
   }
+  const notificationSettings : UserNotificationSettings | null  = await fetchUsernotificationSettings(UserInfo.id);
 const twoFactorEnabled : twofactor[] = await isTwoFactorEnabled(UserInfo.id);
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -35,7 +37,7 @@ const twoFactorEnabled : twofactor[] = await isTwoFactorEnabled(UserInfo.id);
         <h2 className="text-3xl font-bold tracking-tight">Profile Settings</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
-        <ProfileSettings twoFactorEnabled={twoFactorEnabled} UserInfo={UserInfo} />
+        <ProfileSettings notificationSettings={notificationSettings}  twoFactorEnabled={twoFactorEnabled} UserInfo={UserInfo} />
       </div>
     </div>
   )

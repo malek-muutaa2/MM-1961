@@ -4,9 +4,7 @@ import { getToken } from "next-auth/jwt"
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request })
-  console.log("token", token);
   
-  const isAuthenticated = !!token
     const { pathname } = request.nextUrl
       if (pathname.startsWith("/images/")) {
     return NextResponse.next()
