@@ -13,9 +13,8 @@ type ErrorResponse = {
 export async function POST(request: Request) {
   try {
     const req = await request.json();
-    // console.log(req.email);
 
-    if (!req || !req.email) {
+    if (!req?.email) {
       return NextResponse.json(
         { error: "Adresse email est requise" },
         { status: 401 },
@@ -25,9 +24,7 @@ export async function POST(request: Request) {
     const { email } = req;
 
     const secret = speakeasy.generateSecret({ name: `optivian:${email}` });
-    // console.log("secret", secret);
-
-    // Check if otpauth_url is undefined
+ 
     if (!secret?.otpauth_url) {
       return NextResponse.json(
         { error: "failed to generate secret" },

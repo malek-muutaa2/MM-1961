@@ -29,14 +29,25 @@ users : UserType[],
   pathname: string;
   order: string;
 }
-export function UserManagement({ users ,column,numberOfPages,order,pageNumber,pathname,search }: UserManagementProps) {
-  const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
+
+
+export function UserManagement({
+  users,
+  column,
+  numberOfPages,
+  order,
+  pageNumber,
+  pathname,
+  search,
+}: Readonly<UserManagementProps>) {
+    const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
    let [isPending, startTransition] = React.useTransition();
     const { toast } = useToast();
 
-  
+   console.log("setSearchQuery", setSearchQuery);
+   
     React.useEffect(() => {
       if (isPending) return;
   

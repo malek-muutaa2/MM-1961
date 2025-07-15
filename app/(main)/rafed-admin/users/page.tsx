@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 
 export default async function DemoHome({
   searchParams,
-}: SearchParamsProps) {
-  const {page, column ,order, search} = await searchParams
+}: Readonly<SearchParamsProps>) {
+
+const { page, column, order, search } = searchParams;
   const pageNumber = Number(page ?? 1);
   const sizelimit = 10;
   const columnparam = String(column ?? "id");

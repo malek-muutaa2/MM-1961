@@ -42,15 +42,7 @@ export const reset = async (
     return { success: "Password reset email sent successfully." };
   }
   }
-  //  const passwordResetToken =  await generatePasswordResetToken(email);
-  //  if(passwordResetToken[0].resetpasswordtoken){
-  //   await sendPasswordResetEmail(
-  //     email,
-  //     passwordResetToken[0].resetpasswordtoken,
-  //   );
-  //  }
-
-  //   return { success: "Email de réinitialisation envoyé !" };
+ 
 
 export const generatePasswordResetToken = async (email: string) => {
   const token = uuidv4();

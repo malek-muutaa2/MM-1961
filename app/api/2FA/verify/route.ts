@@ -12,9 +12,8 @@ type ErrorResponse = {
 export async function POST(request: Request) {
   try {
     const req = await request.json();
-    // console.log(req.token);
 
-    if (!req || !req.token) {
+    if (!req?.token) {
       return NextResponse.json({ error: "token is required" }, { status: 401 });
     }
     const { token, secretbase32 } = req;

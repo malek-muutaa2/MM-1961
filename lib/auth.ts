@@ -16,7 +16,6 @@ export const authOptions: NextAuthOptions = {
       if (account && account.type === "credentials") {
         //(2)
         token.userId = account.providerAccountId;
-        const user2 = await findUserById(parseInt(token.userId));
 
         // this is I'd that coming from authorize() callback
       }

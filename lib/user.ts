@@ -4,6 +4,8 @@ import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+
 import { revalidatePath } from "next/cache";
 import { generatePasswordResetToken } from "./reset";
 import { sendInvationResetEmail } from "./mail";
@@ -109,9 +111,9 @@ export const UpdateUserToken = async (resetpasswordtoken: string, email: string)
     }
 }
 
-export type UserRow = InferModel<typeof users, "select">
+export type UserRow = InferSelectModel<typeof users, "select">
 
-export const findUserById = async (userId: number): Promise<InferModel<typeof users>[]> => {
+export const findUserById = async (userId: number): Promise<InferSelectModel<typeof users>[]> => {
     try {
         return await db.select().from(users).where(eq(users.id, userId))
     } catch (e: any) {
@@ -227,14 +229,18 @@ export const generateTwoFactorToken = async (id: number, email: string) => {
         })
         .where(eq(twoFactorAuth.userId, id))
         .returning()
-    const isMatch = await bcrypt.compare(token, twoFactorToken[0]?.twoFactorToken)
-    if (isMatch) {
-        // If the passwords do not match, return null to indicate unsuccessful authentication
-        return {
-            twoFactorToken,
-            token, // the original unhashed token
-        }
-    }
+        if (!twoFactorToken[0]?.twoFactorToken) {
+  return null; // Or handle missing token case
+}
+
+   const isMatch = await bcrypt.compare(token, twoFactorToken[0]?.twoFactorToken);
+if (isMatch) {
+  return {
+    twoFactorToken,
+    token,
+  };
+}
+
 }
 
 export const findUerbyToken = async (token: string) => {

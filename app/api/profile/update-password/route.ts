@@ -16,7 +16,7 @@ const updatePasswordSchema = z
             .min(8, "Le nouveau mot de passe doit contenir au moins 8 caractères")
             .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule")
             .regex(/[a-z]/, "Le mot de passe doit contenir au moins une minuscule")
-            .regex(/[0-9]/, "Le mot de passe doit contenir au moins un chiffre")
+            .regex(/\d/, "Le mot de passe doit contenir au moins un chiffre")
             .regex(/[^A-Za-z0-9]/, "Le mot de passe doit contenir au moins un caractère spécial"),
         confirmPassword: z.string().min(1, "La confirmation du mot de passe est requise"),
     })

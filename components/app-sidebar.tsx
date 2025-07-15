@@ -1,6 +1,5 @@
 "use client"
 
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
 import {
   Database,
@@ -46,17 +45,15 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger,DropdownMenuItem
 } from "@/components/ui/dropdown-menu"
 import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
-import {getCurrentUser} from "@/lib/getCurrentUser";
 import {UserType} from "@/lib/db/schema";
 
-export function  AppSidebar({userinfo}: UserType) {
+export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-  const pathname = usePathname()
   const { role } = useRole()
   if(!userinfo) {
     return null
