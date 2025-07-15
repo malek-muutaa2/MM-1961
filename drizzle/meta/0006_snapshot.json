@@ -1,5 +1,5 @@
 {
-  "id": "1a52d291-5811-4194-9a27-0b7ca486dc9c",
+  "id": "da45cc04-b3c3-4408-8467-d5fca591cd69",
   "prevId": "a8ad7a10-2db4-48dc-8a14-0731d0a28b44",
   "version": "7",
   "dialect": "postgresql",
@@ -235,6 +235,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "forecast_execution_id": {
+          "name": "forecast_execution_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "date": {
           "name": "date",
           "type": "date",
@@ -346,6 +352,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "idx_forecast_data_execution_id": {
+          "name": "idx_forecast_data_execution_id",
+          "columns": [
+            {
+              "expression": "forecast_execution_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -387,8 +408,54 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "forecast_data_forecast_execution_id_forecast_executions_id_fk": {
+          "name": "forecast_data_forecast_execution_id_forecast_executions_id_fk",
+          "tableFrom": "forecast_data",
+          "tableTo": "forecast_executions",
+          "columnsFrom": [
+            "forecast_execution_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.forecast_executions": {
+      "name": "forecast_executions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "execution_date": {
+          "name": "execution_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -479,27 +546,33 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.organization_types": {
-      "name": "organization_types",
+    "public.notification_types": {
+      "name": "notification_types",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(100)",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "source_types": {
-          "name": "source_types",
-          "type": "jsonb",
+        "description": {
+          "name": "description",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -511,6 +584,101 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notifications": {
+      "name": "notifications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type_id": {
+          "name": "type_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "redirect_url": {
+          "name": "redirect_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "read_at": {
+          "name": "read_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notifications_user_id_users_id_fk": {
+          "name": "notifications_user_id_users_id_fk",
+          "tableFrom": "notifications",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "notifications_type_id_notification_types_id_fk": {
+          "name": "notifications_type_id_notification_types_id_fk",
+          "tableFrom": "notifications",
+          "tableTo": "notification_types",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -688,8 +856,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.upload_configuration_columns": {
-      "name": "upload_configuration_columns",
+    "public.user_notification_settings": {
+      "name": "user_notification_settings",
       "schema": "",
       "columns": {
         "id": {
@@ -697,396 +865,25 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
-        },
-        "config_id": {
-          "name": "config_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "display_name": {
-          "name": "display_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "data_type": {
-          "name": "data_type",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "required": {
-          "name": "required",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "pattern": {
-          "name": "pattern",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "min_length": {
-          "name": "min_length",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "max_length": {
-          "name": "max_length",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "min_value": {
-          "name": "min_value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "max_value": {
-          "name": "max_value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "custom_validator": {
-          "name": "custom_validator",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "position": {
-          "name": "position",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "upload_configuration_columns_config_id_upload_configurations_id_fk": {
-          "name": "upload_configuration_columns_config_id_upload_configurations_id_fk",
-          "tableFrom": "upload_configuration_columns",
-          "tableTo": "upload_configurations",
-          "columnsFrom": [
-            "config_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.upload_configurations": {
-      "name": "upload_configurations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "organization_type": {
-          "name": "organization_type",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "organization_id": {
-          "name": "organization_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "source_type": {
-          "name": "source_type",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "file_type": {
-          "name": "file_type",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "delimiter": {
-          "name": "delimiter",
-          "type": "varchar(10)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "max_file_size": {
-          "name": "max_file_size",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "max_rows": {
-          "name": "max_rows",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "storage_config_id": {
-          "name": "storage_config_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "active": {
-          "name": "active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "upload_configurations_organization_id_organization_types_id_fk": {
-          "name": "upload_configurations_organization_id_organization_types_id_fk",
-          "tableFrom": "upload_configurations",
-          "tableTo": "organization_types",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "upload_configurations_storage_config_id_upload_storage_configurations_id_fk": {
-          "name": "upload_configurations_storage_config_id_upload_storage_configurations_id_fk",
-          "tableFrom": "upload_configurations",
-          "tableTo": "upload_storage_configurations",
-          "columnsFrom": [
-            "storage_config_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.upload_operation_errors": {
-      "name": "upload_operation_errors",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "operation_id": {
-          "name": "operation_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "row_number": {
-          "name": "row_number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "column_name": {
-          "name": "column_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "error_code": {
-          "name": "error_code",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "error_message": {
-          "name": "error_message",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "raw_value": {
-          "name": "raw_value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "upload_operation_errors_operation_id_upload_operations_id_fk": {
-          "name": "upload_operation_errors_operation_id_upload_operations_id_fk",
-          "tableFrom": "upload_operation_errors",
-          "tableTo": "upload_operations",
-          "columnsFrom": [
-            "operation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.upload_operations": {
-      "name": "upload_operations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "config_id": {
-          "name": "config_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         },
         "user_id": {
           "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "file_name": {
-          "name": "file_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "file_path": {
-          "name": "file_path",
-          "type": "varchar(1000)",
+        "channel_preference": {
+          "name": "channel_preference",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "file_size": {
-          "name": "file_size",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "row_count": {
-          "name": "row_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "error_count": {
-          "name": "error_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "validation_errors": {
-          "name": "validation_errors",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "started_at": {
-          "name": "started_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "completed_at": {
-          "name": "completed_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "upload_operations_config_id_upload_configurations_id_fk": {
-          "name": "upload_operations_config_id_upload_configurations_id_fk",
-          "tableFrom": "upload_operations",
-          "tableTo": "upload_configurations",
-          "columnsFrom": [
-            "config_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "upload_operations_user_id_users_id_fk": {
-          "name": "upload_operations_user_id_users_id_fk",
-          "tableFrom": "upload_operations",
+        "user_notification_settings_user_id_users_id_fk": {
+          "name": "user_notification_settings_user_id_users_id_fk",
+          "tableFrom": "user_notification_settings",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -1098,99 +895,6 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.upload_storage_configurations": {
-      "name": "upload_storage_configurations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "storage_type": {
-          "name": "storage_type",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "bucket_name": {
-          "name": "bucket_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "base_path": {
-          "name": "base_path",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "path_template": {
-          "name": "path_template",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "region": {
-          "name": "region",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aws_access_key_id": {
-          "name": "aws_access_key_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aws_secret_access_key": {
-          "name": "aws_secret_access_key",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_type": {
-          "name": "access_type",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -1310,6 +1014,12 @@
         "isDisabled": {
           "name": "isDisabled",
           "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_login": {
+          "name": "last_login",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }

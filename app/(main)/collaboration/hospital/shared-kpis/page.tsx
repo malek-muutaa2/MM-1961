@@ -315,7 +315,7 @@ function KPICard({
   targetValue,
   unit,
   accessLevel,
-}: KPICardProps) {
+}: Readonly<KPICardProps>) {
   const getStatusBadge = () => {
     switch (status) {
       case "critical":

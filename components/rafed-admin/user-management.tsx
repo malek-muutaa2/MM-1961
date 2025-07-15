@@ -1,15 +1,14 @@
 "use client"
 
 import React, { useState } from "react"
-import { MoreHorizontal, Plus, Search, UserCog, UserPlus } from "lucide-react"
+import { MoreHorizontal, Plus,  UserCog } from "lucide-react"
 import {
   ColumnDef,
 
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { UsersList } from "./users-list"
+
 import { InvitationsList } from "./invitations-list"
 import { InviteUserDialog } from "./invite-user-dialog"
 import { AddUserDialog } from "./add-user-dialog"
@@ -18,8 +17,7 @@ import { DataTable } from "../user/datatableUser"
 import { UsersColumns } from "../user/columnsUser"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast";
-import { ActivateUser, AddUserAction, deleteUser } from "@/lib/user";
-import { useRouter } from "next/navigation";
+import { ActivateUser, deleteUser } from "@/lib/user";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { EditUserDialog } from "./edit-user-dialog";
 interface UserManagementProps {
@@ -27,7 +25,6 @@ users : UserType[],
  pageNumber: number;
   numberOfPages: number;
   search: string | null;
-  size: string;
   column: string;
   pathname: string;
   order: string;
@@ -99,7 +96,7 @@ const handleConfirm = () => {
                   console.log("User activated successfully");
                   toast({
                     title: "Success",
-                    description: "User activated successfully.",
+                    description: isActivate === true ? "User dactivated successfully" : "User activated successfully.",
                     variant: "default",
                   });
                 })

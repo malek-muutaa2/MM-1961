@@ -35,9 +35,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { useToast } from "@/components/ui/use-toast";
 import { useCreateQueryString } from "@/lib/queryString";
 import { LoadingSpinner } from "@/components/Spinner";
 
@@ -81,8 +80,8 @@ export function DataTable<TData, TValue>({
   numberOfPages,
   pathname,
   order,
-  column
-}: DataTableProps<TData, TValue>) {
+  column,
+}: Readonly<DataTableProps<TData, TValue>>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -118,7 +117,6 @@ export function DataTable<TData, TValue>({
   const { replace } = useRouter();
   const handleSearch = useDebouncedCallback((term) => {
     const pageNumber = 1;
-    // const size = Number(params.get("size") ?? 10);
     const column = String(params.get("column") ?? "id");
     const order = String(params.get("order") ?? "undefined");
     startTransition(() => {
@@ -138,7 +136,6 @@ export function DataTable<TData, TValue>({
   }, 750);
 
 
-  const { toast } = useToast();
 
 
 
@@ -157,7 +154,6 @@ export function DataTable<TData, TValue>({
   }, [sorting,searchParams]);
 
   const handleNavigation = () => {
-    const params = new URLSearchParams(searchParams);
     startTransition(() => {
       // Construct the new query for the router
       const nextPage =
@@ -173,8 +169,6 @@ export function DataTable<TData, TValue>({
     });
   };
 
-  const startPage = Math.max(1, pageNumber - 2);
-  const endPage = Math.min(startPage + 4, numberOfPages);
 
   return (
     <div className="w-full min-h-screen  overflow-x-hidden justify-center items-center">

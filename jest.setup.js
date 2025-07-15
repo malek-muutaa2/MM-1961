@@ -1,5 +1,4 @@
 require("@testing-library/jest-dom");
-// const { TextEncoder, TextDecoder } = require('util');
 //
 require("jest-fetch-mock").enableMocks();
 require("dotenv").config();
@@ -30,3 +29,17 @@ global.DOMRect = {
     height: 0,
   }),
 };
+// jest.setup.js
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});

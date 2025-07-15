@@ -17,8 +17,10 @@ interface ProfileInfoSettings {
   UserInfo: UserType
 }
 
-export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
-  const [isLoading, setIsLoading] = useState(false)
+export function ProfileInformation({
+  UserInfo,
+}: Readonly<ProfileInfoSettings>) {
+    const [isLoading, setIsLoading] = useState(false)
   const [avatarSrc, setAvatarSrc] = useState(UserInfo.image || "/abstract-geometric-shapes.png")
   const { toast } = useToast()
   const [avatarRemoved, setAvatarRemoved] = useState(false)
@@ -47,10 +49,19 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
 
     try {
       // Prepare data to send
+      // Determine image value to send
+      let imageToSend: string | null | undefined;
+      if (avatarRemoved) {
+        imageToSend = null;
+      } else if (avatarSrc !== "/abstract-geometric-shapes.png") {
+        imageToSend = avatarSrc;
+      } else {
+        imageToSend = undefined;
+      }
+
       const dataToSend = {
         ...formData,
-        // Handle image: send null if removed, undefined if default image, or the new image
-        image: avatarRemoved ? null : avatarSrc !== "/abstract-geometric-shapes.png" ? avatarSrc : undefined,
+        image: imageToSend,
       }
 
       console.log("Data sent:", dataToSend)
@@ -76,6 +87,16 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
         setAvatarRemoved(false)
 
         // Update UserInfo reference for comparison
+        // Determine new image value before updating UserInfo
+        let newImage: string | null;
+        if (avatarRemoved) {
+          newImage = null;
+        } else if (avatarSrc !== "/abstract-geometric-shapes.png") {
+          newImage = avatarSrc;
+        } else {
+          newImage = null;
+        }
+
         Object.assign(UserInfo, {
           name: formData.name,
           jobTitle: formData.jobTitle || null,
@@ -83,7 +104,7 @@ export function ProfileInformation({ UserInfo }: ProfileInfoSettings) {
           workDomain: formData.workDomain || null,
           organization: formData.organization || null,
           bio: formData.bio || null,
-          image: avatarRemoved ? null : avatarSrc !== "/abstract-geometric-shapes.png" ? avatarSrc : null,
+          image: newImage,
         })
 
         toast({

@@ -12,7 +12,18 @@ const config = {
   moduleNameMapper: {
   // ...
   '^@/components/(.*)$': '<rootDir>/components/$1',
+    '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@/hooks/(.*)$': '<rootDir>/hooks/$1',
+
 },
+  coveragePathIgnorePatterns: [
+   
+    "<rootDir>/node_modules",
+
+
+    // "<rootDir>/utlis/client-api.ts",
+    // Update this path according to your project structure
+  ],
   // Add more setup options before each test is run
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   transform: {
