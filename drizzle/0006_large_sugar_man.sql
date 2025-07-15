@@ -5,7 +5,7 @@
 -- 	"created_at" timestamp DEFAULT now() NOT NULL,
 -- 	"updated_at" timestamp DEFAULT now() NOT NULL
 -- );
---> statement-breakpoint
+-- > statement-breakpoint
 -- CREATE TABLE "classifications" (
 -- 	"id" serial PRIMARY KEY NOT NULL,
 -- 	"name" varchar NOT NULL,
@@ -47,14 +47,14 @@
 -- 	"line_type" varchar(20),
 -- 	CONSTRAINT "forecast_types_name_unique" UNIQUE("name")
 -- );
---> statement-breakpoint
+-- > statement-breakpoint
 CREATE TABLE "organization_types" (
     "id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"source_types" jsonb NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
---> statement-breakpoint
+-- > statement-breakpoint
 -- CREATE TABLE "products" (
 -- 	"id" serial PRIMARY KEY NOT NULL,
 -- 	"name" varchar NOT NULL,
