@@ -92,3 +92,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .small-switch {
+    --switch-width: 1rem;  /* Default is 2.75rem */
+    --switch-height: 0.5rem; /* Default is 1.5rem */
+    --switch-thumb-size: 0.25rem; /* Default is 1rem */
+  }
+}

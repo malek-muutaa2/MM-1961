@@ -27,7 +27,7 @@ type AddEventModalProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function AddEventModal({ open, onOpenChange }: AddEventModalProps) {
+export function AddEventModal({ open, onOpenChange }: Readonly<AddEventModalProps>) {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [eventType, setEventType] = useState("internal")

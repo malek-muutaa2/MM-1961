@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         email :  message.user.email ? message.user.email : "",
       });
 
-   
+
     },
     async signOut(message) {
       await audit({
@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
         }
-        const user = {
+        const user: any = {
           id: user2[0].id,
           name: user2[0].name,
           email: user2[0].email,

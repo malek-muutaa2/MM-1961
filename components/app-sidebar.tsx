@@ -42,7 +42,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
-  DropdownMenuContent,
+  DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,DropdownMenuItem
@@ -304,6 +304,23 @@ export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+        )}
+        {(role === "rafed-admin" || role === "obtivian" || role === "Admin") && (
+            <SidebarGroup>
+              <SidebarGroupLabel>File Upload System</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Upload Forecast">
+                      <Link href="/upload-system/upload">
+                        <FileUp />
+                        <span>Upload Data</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
         )}
 
         {/* Rafed Admin Module - Show for Rafed Admin only */}
