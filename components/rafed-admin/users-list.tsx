@@ -86,8 +86,11 @@ interface UsersListProps {
   users : UserType[]
 }
 
-export function UsersList({ searchQuery , users }: UsersListProps) {
-  const [editingUser, setEditingUser] = useState<User | null>(null)
+export function UsersList({
+  searchQuery,
+  users,
+}: Readonly<UsersListProps>) {
+    const [editingUser, setEditingUser] = useState<User | null>(null)
 
   // Filter users based on search query
   const filteredUsers = users.filter(
@@ -101,7 +104,8 @@ export function UsersList({ searchQuery , users }: UsersListProps) {
       case "Admin":
         return "default"
       case "User":
-    
+        return "secondary"
+      
       default:
         return "default"
     }

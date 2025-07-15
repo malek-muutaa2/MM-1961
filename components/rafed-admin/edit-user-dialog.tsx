@@ -1,8 +1,6 @@
 "use client"
 
-import React from "react"
 
-import { useState } from "react"
 import { Save } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,10 +15,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { User, UserRole, UserStatus } from "@/types/rafed-types"
+import type {  UserRole, UserStatus } from "@/types/rafed-types"
 import { UserType } from "@/lib/db/schema"
 import { useToast } from "@/hooks/use-toast"
 import { updateUser } from "@/lib/user"
+import { useState } from "react"
 
 interface EditUserDialogProps {
   user: UserType
@@ -28,8 +27,12 @@ interface EditUserDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps) {
-  const [name, setName] = useState(user.name)
+export function EditUserDialog({
+  user,
+  open,
+  onOpenChange,
+}: Readonly<EditUserDialogProps>) {
+    const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   const [role, setRole] = useState<UserRole>(user.role)
   const [status, setStatus] = useState<UserStatus>(user.status)

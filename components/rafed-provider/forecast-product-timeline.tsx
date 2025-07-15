@@ -55,7 +55,9 @@ interface TimelineDataPoint {
   [key: string]: any
 }
 
-export function ForecastProductTimeline({ forecastExecutionId }: ForecastProductTimelineProps) {
+export function ForecastProductTimeline({
+  forecastExecutionId,
+}: Readonly<ForecastProductTimelineProps>) {
   const [selectedProduct, setSelectedProduct] = useState<string>("")
   const [products, setProducts] = useState<Product[]>([])
   const [forecastTypes, setForecastTypes] = useState<ForecastType[]>([])
@@ -352,7 +354,7 @@ export function ForecastProductTimeline({ forecastExecutionId }: ForecastProduct
   if ((loadingProducts || loadingForecastTypes) && !products.length) {
     return (
         <div className="flex h-[400px] items-center justify-center">
-          <div role="status"  className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
         </div>
     )
   }

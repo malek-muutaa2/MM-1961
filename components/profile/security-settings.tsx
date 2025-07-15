@@ -20,8 +20,11 @@ interface SecuritySettings {
   istwoFactorEnabled: twofactor[]
 }
 
-export function SecuritySettings({ UserInfo, istwoFactorEnabled }: SecuritySettings) {
-  const [isChangingPassword, setIsChangingPassword] = useState(false)
+export function SecuritySettings({
+  UserInfo,
+  istwoFactorEnabled,
+}: Readonly<SecuritySettings>) {
+    const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isSaving2FA, setIsSaving2FA] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(
       istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false,

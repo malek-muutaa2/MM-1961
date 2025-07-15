@@ -91,7 +91,9 @@ describe('notification Component', () => {
     jest.clearAllMocks();
   });
 beforeAll(() => {
-  global.crypto.randomUUID = jest.fn(() => 'mock-uuid');
+ let counter = 0;
+global.crypto.randomUUID = jest.fn(() => `mock-uuid-${++counter}`);
+
 });
 
   it('renders without crashing', () => {

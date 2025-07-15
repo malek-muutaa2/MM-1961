@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 
-import { LoginSchema, LoginSchemaEn, TwoFASchema } from "@/lib/zodschema";
+import { LoginSchema, LoginSchemaEn } from "@/lib/zodschema";
 import { DisabledUserAction } from "@/lib/login";
 import { FormError } from "@/components/Form-error";
 import { FormSuccess } from "@/components/Form-success";
@@ -19,12 +19,10 @@ import { FormSuccess } from "@/components/Form-success";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 
-import { useToast } from "@/components/ui/use-toast";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
 import { Login2fa2 } from "./login2fa";
-import { log } from "util";
 
 interface QrcodeType {
   qrCodeUrl: string;
@@ -44,7 +42,6 @@ interface FailedAttemptsState {
 
 export const LoginForm2fa = () => {
   const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
@@ -62,7 +59,6 @@ export const LoginForm2fa = () => {
     email: string;
     password: string;
   } | null>(null);
-  const path = usePathname();
   const lang = "en";
   const loginschemaform = lang === "en" ? LoginSchemaEn : LoginSchema;
   const form = useForm<z.infer<typeof loginschemaform>>({
@@ -154,7 +150,8 @@ export const LoginForm2fa = () => {
     });
   };
 
-
+ console.log("hidelogin", hidelogin);
+ 
   const handleSubmitResend = async () => {
     console.log("loginCredentials", loginCredentials);
 

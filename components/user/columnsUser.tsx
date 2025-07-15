@@ -3,20 +3,19 @@
 
 import { Badge } from "@/components/ui/badge";
 import { UserType } from "@/lib/db/schema";
-import { UserStatus } from "@/types/rafed-types";
+import { UserRole, UserStatus } from "@/types/rafed-types";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
-import { InferSelectModel } from "drizzle-orm";
 
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
   const getRoleBadgeVariant = (role: UserRole) => {
     switch (role) {
       case "Admin":
-        return "default"
+        return "default";
       case "User":
-    
+        return "secondary";
       default:
-        return "default"
+        return "outline";
     }
   }
 
@@ -43,25 +42,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Full name
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => <div className="font-bold">{row.getValue("name")}</div>,
@@ -76,25 +84,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Email
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => <div className="">{row.getValue("email")}</div>,
@@ -109,25 +126,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Role
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => <div>
@@ -146,25 +172,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Status
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => <div> <Badge variant={getStatusBadgeVariant(row.getValue("isDisabled") === true ? "inactive" : "active") as any}>
@@ -181,25 +216,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Created
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => <div> 
@@ -216,25 +260,34 @@ export const UsersColumns: ColumnDef<UserType>[] = [
           >
             Last login
           </button>
-          {column.getIsSorted() === "desc" ? (
-            <ArrowDownIcon
-              onClick={() => {
-                // Toggle sorting
-                column.clearSorting();
-              }}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : column.getIsSorted() === "asc" ? (
-            <ArrowUpIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className=" ml-2 h-4 w-4 cursor-pointer"
-            />
-          ) : (
-            <CaretSortIcon
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="ml-2 h-4 w-4 cursor-pointer"
-            />
-          )}
+          {(() => {
+            const sorted = column.getIsSorted();
+            if (sorted === "desc") {
+              return (
+                <ArrowDownIcon
+                  onClick={() => {
+                    // Toggle sorting
+                    column.clearSorting();
+                  }}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else if (sorted === "asc") {
+              return (
+                <ArrowUpIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className=" ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            } else {
+              return (
+                <CaretSortIcon
+                  onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                  className="ml-2 h-4 w-4 cursor-pointer"
+                />
+              );
+            }
+          })()}
         </div>
       ),
       cell: ({ row }) => {

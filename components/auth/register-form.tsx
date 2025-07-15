@@ -131,11 +131,11 @@ export function RegisterForm() {
           {["fullName", "email", "password", "confirmPassword", "organization"].map((field) => (
             <div className="space-y-2" key={field}>
               <Label htmlFor={field}>
-                {field === "confirmPassword"
-                  ? "Confirm Password"
-                  : field === "fullName"
-                  ? "Full Name"
-                  : field.charAt(0).toUpperCase() + field.slice(1)}
+                {(() => {
+                  if (field === "confirmPassword") return "Confirm Password"
+                  if (field === "fullName") return "Full Name"
+                  return field.charAt(0).toUpperCase() + field.slice(1)
+                })()}
               </Label>
               <Input
                 id={field}
@@ -157,16 +157,21 @@ export function RegisterForm() {
                   <SelectValue placeholder={`Select your ${field}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  {(field === "jobTitle"
-                    ? ["Manager", "Director", "Analyst", "Specialist", "Coordinator", "Consultant", "Other"]
-                    : field === "department"
-                    ? ["Operations", "Supply Chain", "Procurement", "Logistics", "Finance", "IT", "Other"]
-                    : ["Healthcare", "Pharmaceuticals", "Manufacturing", "Retail", "Logistics", "Government", "Education", "Other"]
-                  ).map((option) => (
-                    <SelectItem key={option} value={option.toLowerCase().replace(" ", "_")}>
+                    {(() => {
+                    let options: string[] = [];
+                    if (field === "jobTitle") {
+                      options = ["Manager", "Director", "Analyst", "Specialist", "Coordinator", "Consultant", "Other"];
+                    } else if (field === "department") {
+                      options = ["Operations", "Supply Chain", "Procurement", "Logistics", "Finance", "IT", "Other"];
+                    } else {
+                      options = ["Healthcare", "Pharmaceuticals", "Manufacturing", "Retail", "Logistics", "Government", "Education", "Other"];
+                    }
+                    return options.map((option) => (
+                      <SelectItem key={option} value={option.toLowerCase().replace(" ", "_")}>
                       {option}
-                    </SelectItem>
-                  ))}
+                      </SelectItem>
+                    ));
+                    })()}
                 </SelectContent>
               </Select>
             </div>

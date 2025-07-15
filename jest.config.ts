@@ -12,6 +12,9 @@ const config = {
   moduleNameMapper: {
   // ...
   '^@/components/(.*)$': '<rootDir>/components/$1',
+    '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@/hooks/(.*)$': '<rootDir>/hooks/$1',
+
 },
   coveragePathIgnorePatterns: [
    

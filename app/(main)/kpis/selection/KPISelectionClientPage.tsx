@@ -178,6 +178,7 @@ export default function KPISelectionClientPage() {
         return 100
     }
   }
+console.log("activeTab", activeTab);
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -202,11 +203,21 @@ export default function KPISelectionClientPage() {
           </div>
           <div className="h-0.5 flex-1 bg-muted self-center mx-2"></div>
           <div className="flex items-center gap-2">
-            <div
-              className={`h-8 w-8 rounded-full flex items-center justify-center ${currentStep === "review" ? "bg-primary text-primary-foreground" : currentStep === "thresholds" || currentStep === "complete" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}
-            >
-              2
-            </div>
+            {(() => {
+              let step2Class = "bg-muted text-muted-foreground"
+              if (currentStep === "review") {
+              step2Class = "bg-primary text-primary-foreground"
+              } else if (currentStep === "thresholds" || currentStep === "complete") {
+              step2Class = "bg-primary/20 text-primary"
+              }
+              return (
+              <div
+                className={`h-8 w-8 rounded-full flex items-center justify-center ${step2Class}`}
+              >
+                2
+              </div>
+              )
+            })()}
             <span
               className={`text-sm font-medium ${currentStep === "review" ? "text-primary" : "text-muted-foreground"}`}
             >
@@ -215,11 +226,21 @@ export default function KPISelectionClientPage() {
           </div>
           <div className="h-0.5 flex-1 bg-muted self-center mx-2"></div>
           <div className="flex items-center gap-2">
-            <div
-              className={`h-8 w-8 rounded-full flex items-center justify-center ${currentStep === "thresholds" ? "bg-primary text-primary-foreground" : currentStep === "complete" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}
-            >
-              3
-            </div>
+            {(() => {
+              let step3Class = "bg-muted text-muted-foreground"
+              if (currentStep === "thresholds") {
+              step3Class = "bg-primary text-primary-foreground"
+              } else if (currentStep === "complete") {
+              step3Class = "bg-primary/20 text-primary"
+              }
+              return (
+              <div
+                className={`h-8 w-8 rounded-full flex items-center justify-center ${step3Class}`}
+              >
+                3
+              </div>
+              )
+            })()}
             <span
               className={`text-sm font-medium ${currentStep === "thresholds" ? "text-primary" : "text-muted-foreground"}`}
             >
@@ -529,7 +550,11 @@ export default function KPISelectionClientPage() {
                               <Label>Warning Threshold</Label>
                               <span className="text-sm font-medium">
                                 {thresholds.warningThreshold}
-                                {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                                {(() => {
+                                  if (kpi.unit === "percentage") return "%"
+                                  if (kpi.unit === "days") return " days"
+                                  return ""
+                                })()}
                               </span>
                             </div>
                             <Slider
@@ -546,7 +571,11 @@ export default function KPISelectionClientPage() {
                               <Label>Critical Threshold</Label>
                               <span className="text-sm font-medium">
                                 {thresholds.criticalThreshold}
-                                {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                                {(() => {
+                                  if (kpi.unit === "percentage") return "%"
+                                  if (kpi.unit === "days") return " days"
+                                  return ""
+                                })()}
                               </span>
                             </div>
                             <Slider
