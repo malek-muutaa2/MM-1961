@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.87% </span>
+                <span class="strong">88.17% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>174/198</span>
+                <span class='fraction'>179/203</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">88.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/34</span>
+                <span class='fraction'>31/35</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.87% </span>
+                <span class="strong">88.17% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>174/198</span>
+                <span class='fraction'>179/203</span>
             </div>
         
             
@@ -261,7 +261,12 @@
 <a name='L196'></a><a href='#L196'>196</a>
 <a name='L197'></a><a href='#L197'>197</a>
 <a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -395,9 +400,9 @@
 <span class="cline-any cline-yes">120x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">96x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">120x</span>
+<span class="cline-any cline-yes">120x</span>
+<span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
@@ -421,15 +426,20 @@
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">48x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">24x</span>
@@ -592,11 +602,11 @@ export function RegisterForm() {
           {["fullName", "email", "password", "confirmPassword", "organization"].map((field) =&gt; (
             &lt;div className="space-y-2" key={field}&gt;
               &lt;Label htmlFor={field}&gt;
-                {field === "confirmPassword"
-                  ? "Confirm Password"
-                  : field === "fullName"
-                  ? "Full Name"
-                  : field.charAt(0).toUpperCase() + field.slice(1)}
+                {(() =&gt; {
+                  if (field === "confirmPassword") return "Confirm Password"
+                  if (field === "fullName") return "Full Name"
+                  return field.charAt(0).toUpperCase() + field.slice(1)
+                })()}
               &lt;/Label&gt;
               &lt;Input
                 id={field}
@@ -618,16 +628,21 @@ export function RegisterForm() {
                   &lt;SelectValue placeholder={`Select your ${field}`} /&gt;
                 &lt;/SelectTrigger&gt;
                 &lt;SelectContent&gt;
-                  {(field === "jobTitle"
-                    ? ["Manager", "Director", "Analyst", "Specialist", "Coordinator", "Consultant", "Other"]
-                    : field === "department"
-                    ? ["Operations", "Supply Chain", "Procurement", "Logistics", "Finance", "IT", "Other"]
-                    : ["Healthcare", "Pharmaceuticals", "Manufacturing", "Retail", "Logistics", "Government", "Education", "Other"]
-                  ).map((option) =&gt; (
-                    &lt;SelectItem key={option} value={option.toLowerCase().replace(" ", "_")}&gt;
+                    {(() =&gt; {
+                    let options: string[] = [];
+                    if (field === "jobTitle") {
+                      options = ["Manager", "Director", "Analyst", "Specialist", "Coordinator", "Consultant", "Other"];
+                    } else if (field === "department") {
+                      options = ["Operations", "Supply Chain", "Procurement", "Logistics", "Finance", "IT", "Other"];
+                    } else {
+                      options = ["Healthcare", "Pharmaceuticals", "Manufacturing", "Retail", "Logistics", "Government", "Education", "Other"];
+                    }
+                    return options.map((option) =&gt; (
+                      &lt;SelectItem key={option} value={option.toLowerCase().replace(" ", "_")}&gt;
                       {option}
-                    &lt;/SelectItem&gt;
-                  ))}
+                      &lt;/SelectItem&gt;
+                    ));
+                    })()}
                 &lt;/SelectContent&gt;
               &lt;/Select&gt;
             &lt;/div&gt;
@@ -664,7 +679,7 @@ export function RegisterForm() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-15T18:49:59.317Z
+                at 2025-07-15T19:06:24.864Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

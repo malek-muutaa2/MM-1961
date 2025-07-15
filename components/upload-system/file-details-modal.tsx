@@ -21,7 +21,6 @@ interface FileDetailsModalProps {
 
 export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<FileDetailsModalProps>) {
   const [fileInfo, setFileInfo] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (isOpen && file) {
@@ -29,25 +28,40 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
     }
   }, [isOpen, file])
 
+  const getFileContentType = (fileName: string): string => {
+    const extension = fileName.split('.').pop()?.toLowerCase()
+    switch (extension) {
+      case "csv":
+        return "text/csv"
+      case "xlsx":
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      case "pdf":
+        return "application/pdf"
+      case "txt":
+        return "text/plain"
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg"
+      case "png":
+        return "image/png"
+      case "gif":
+        return "image/gif"
+      default:
+        return "application/octet-stream"
+    }
+  }
   const fetchFileDetails = async () => {
     if (!file) return
 
-    setLoading(true)
     try {
       // You could add an API endpoint to get detailed file info
       // For now, we'll use the basic file information
       setFileInfo({
-        contentType: file.name.endsWith(".csv")
-          ? "text/csv"
-          : file.name.endsWith(".xlsx")
-            ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            : "application/octet-stream",
+        contentType: getFileContentType(file.name),
         cacheControl: "public, max-age=31536000",
       })
     } catch (error) {
       console.error("Failed to fetch file details:", error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -90,26 +104,26 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
           {/* Basic Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">File Name</label>
+              <label htmlFor={"File Name"} className="text-sm font-medium text-muted-foreground">File Name</label>
               <p className="text-sm font-mono bg-muted p-2 rounded">{file.name}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Size</label>
+              <label htmlFor={"Size"} className="text-sm font-medium text-muted-foreground">Size</label>
               <p className="text-sm">{formatFileSize(file.size)}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Status</label>
+              <label htmlFor={"Status"} className="text-sm font-medium text-muted-foreground">Status</label>
               <Badge variant="default">{file.status}</Badge>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Uploaded</label>
+              <label htmlFor={"Uploaded"} className="text-sm font-medium text-muted-foreground">Uploaded</label>
               <p className="text-sm">{formatDate(file.uploadedAt)}</p>
             </div>
           </div>
 
           {/* File URL */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground">File URL</label>
+            <label htmlFor="File URL" className="text-sm font-medium text-muted-foreground">File URL</label>
             <div className="flex items-center gap-2 mt-1">
               <p className="text-sm font-mono bg-muted p-2 rounded flex-1 truncate">{file.url}</p>
               <Button variant="outline" size="sm" onClick={() => copyToClipboard(file.url)}>
@@ -124,11 +138,11 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
               <h4 className="text-sm font-medium mb-3">Technical Details</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <label className="font-medium text-muted-foreground">Content Type</label>
+                  <label htmlFor="Content Type" className="font-medium text-muted-foreground">Content Type</label>
                   <p className="font-mono">{fileInfo.contentType}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-muted-foreground">Cache Control</label>
+                  <label htmlFor={"cache control"} className="font-medium text-muted-foreground">Cache Control</label>
                   <p className="font-mono">{fileInfo.cacheControl}</p>
                 </div>
               </div>

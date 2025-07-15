@@ -5,7 +5,7 @@ import {uploadConfigurationColumns, uploadConfigurations} from "@/lib/db/schema"
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    const { id } = await params; // No need to await here in API routes
+    const { id } = params; // No need to await here in API routes
 
     const [config] = await db.select().from(uploadConfigurations).where(eq(uploadConfigurations.id, id))
 
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
   try {
     const body = await request.json()
-    const { id } = await params; // No need to await here in API routes
+    const { id } = params; // No need to await here in API routes
     if(!id ){
         return NextResponse.json({ error: "Configuration ID is required" }, { status: 400 })
     }
@@ -141,7 +141,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: n
   try {
     // Delete columns first (cascade should handle this, but being explicit)
     // await db.delete(uploadConfigurationColumns).where(eq(uploadConfigurationColumns.configId, id))
-    const { id } = await params; // No need to await here in API routes
+    const { id } = params; // No need to await here in API routes
     // Delete the configuration
     // await db.delete(uploadConfigurations).where(eq(uploadConfigurations.id, id))
     // update deleted_At to mark as deleted
