@@ -48,7 +48,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
-import {UserType} from "@/lib/db/schema";
 
 export function  AppSidebar({userinfo}: any) {
   const { state } = useSidebar()

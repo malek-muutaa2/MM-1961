@@ -4,63 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: after merge">
-      <change afterPath="$PROJECT_DIR$/__test__/upload-system/enhanced-upload-interface.test.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/collaboration/hospital/connections/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/collaboration/hospital/connections/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/alerts/[id]/status/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/alerts/[id]/status/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/configurations/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/configurations/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/configurations/[id]/template/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/configurations/[id]/template/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/files/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/files/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/files/enhanced/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/files/enhanced/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/storage-configurations/[id]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/storage-configurations/[id]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/upload-system/file-properties-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/file-properties-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/upload-system/upload-interface.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/upload-interface.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/clover.xml" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/clover.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/coverage-final.json" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/coverage-final.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/register-form.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/register-form.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-data-table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-data-table.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-product-timeline.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-product-timeline.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/button.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/button.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/card.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/card.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dialog.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/form.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/form.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input-otp.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input-otp.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/label.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/label.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/scroll-area.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/scroll-area.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/select.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/select.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/separator.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/separator.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/table.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/tooltip.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/tooltip.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/use-toast.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/use-toast.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/configuration-selector.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/configuration-selector.tsx.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/hooks/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/hooks/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-toast.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-toast.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/reset.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/reset.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/aws-s3.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/aws-s3.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/azure-blob.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/azure-blob.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/gcs.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/gcs.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coverage/lcov.info" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/validation-service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/validation-service.ts" afterDir="false" />
-    </list>
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: sonar fix" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -315,7 +259,7 @@
       <workItem from="1751965170145" duration="12113000" />
       <workItem from="1751997741961" duration="999000" />
       <workItem from="1752071227938" duration="1348000" />
-      <workItem from="1752575239406" duration="9293000" />
+      <workItem from="1752575239406" duration="10174000" />
     </task>
     <task id="LOCAL-00001" summary="MM-1414: Set Up Development Pipeline with Code Quality and Deployment Rules">
       <option name="closed" value="true" />
@@ -421,7 +365,23 @@
       <option name="project" value="LOCAL" />
       <updated>1752606366336</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="MM-1414: sonar fix">
+      <option name="closed" value="true" />
+      <created>1752611538272</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1752611538272</updated>
+    </task>
+    <task id="LOCAL-00015" summary="MM-1414: sonar fix">
+      <option name="closed" value="true" />
+      <created>1752611748682</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1752611748682</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -445,7 +405,8 @@
     <MESSAGE value="MM-1414: merge" />
     <MESSAGE value="MM-1414: fix sonar check" />
     <MESSAGE value="MM-1414: after merge" />
-    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: after merge" />
+    <MESSAGE value="MM-1414: sonar fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: sonar fix" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
