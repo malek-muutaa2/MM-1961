@@ -45,8 +45,10 @@ interface TimelineDataPoint {
   [key: string]: any
 }
 
-export function ForecastProductTimeline({ forecastExecutionId }: ForecastProductTimelineProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string>("")
+export function ForecastProductTimeline({
+  forecastExecutionId,
+}: Readonly<ForecastProductTimelineProps>) {
+    const [selectedProduct, setSelectedProduct] = useState<string>("")
   const [products, setProducts] = useState<Product[]>([])
   const [forecastTypes, setForecastTypes] = useState<ForecastType[]>([])
   const [timelineData, setTimelineData] = useState<TimelineDataPoint[]>([])
@@ -230,17 +232,18 @@ export function ForecastProductTimeline({ forecastExecutionId }: ForecastProduct
         sortDate: new Date(currentDate),
       }
 
-      forecastTypes.forEach((type) => {
-        const typeName = type.name.replace(/\s+/g, "")
+ forecastTypes.forEach((type) => {
+  const typeName = type.name.replace(/\s+/g, "");
+  const shouldAdd =
+    (i < 12 && type.name === "Historical Data") ||
+    i === 12 ||
+    (i > 12 && type.name !== "Historical Data");
 
-        if (i < 12 && type.name === "Historical Data") {
-          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
-        } else if (i === 12) {
-          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
-        } else if (i > 12 && type.name !== "Historical Data") {
-          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
-        }
-      })
+  if (shouldAdd) {
+    dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500;
+  }
+});
+
 
       mockTimelineData.push(dataPoint)
     }
@@ -353,7 +356,6 @@ export function ForecastProductTimeline({ forecastExecutionId }: ForecastProduct
   }
 
   const historicalType = forecastTypes.find((type) => type.name === "Historical Data")
-  const historicalTypeName = historicalType?.name.replace(/\s+/g, "")
 
   const forecastOnlyTypes = forecastTypes.filter((type) => type.name !== "Historical Data")
   const allTableTypes = [...forecastOnlyTypes]

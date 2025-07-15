@@ -171,12 +171,13 @@ export default function ProductDemandsPage() {
   const [selectedHospital, setSelectedHospital] = useState<string>("all")
 
   // Filter products based on selected hospital
-  const filteredProducts =
-    viewMode === "aggregated"
-      ? productDemandData
-      : selectedHospital === "all"
+  let filteredProducts = productDemandData
+  if (viewMode === "byHospital") {
+    filteredProducts =
+      selectedHospital === "all"
         ? productDemandData
         : productDemandData.filter((product) => product.hospital === selectedHospital)
+  }
 
   // Get unique hospitals
   const hospitals = Array.from(new Set(productDemandData.map((product) => product.hospital)))
@@ -254,7 +255,7 @@ export default function ProductDemandsPage() {
           <CardContent>
             <div className="space-y-4">
               {topDemandedProducts.map((product, index) => (
-                <div key={index} className="flex items-center justify-between">
+                <div key={product.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Package className="h-5 w-5 text-muted-foreground" />
                     <span>{product.name}</span>
@@ -280,7 +281,7 @@ export default function ProductDemandsPage() {
           <CardContent>
             <div className="space-y-4">
               {demandByCategory.map((category, index) => (
-                <div key={index} className="flex items-center justify-between">
+                <div key={category.category} className="flex items-center justify-between">
                   <span>{category.category}</span>
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{category.demand.toLocaleString()}</span>
@@ -323,7 +324,7 @@ export default function ProductDemandsPage() {
                     <SelectContent>
                       <SelectItem value="all">All Hospitals</SelectItem>
                       {hospitals.map((hospital, index) => (
-                        <SelectItem key={index} value={hospital}>
+                        <SelectItem key={hospital} value={hospital}>
                           {hospital}
                         </SelectItem>
                       ))}

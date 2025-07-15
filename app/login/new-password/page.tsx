@@ -2,9 +2,7 @@ import { Suspense } from "react";
 import { NewPasswordForm } from "./new-password-form";
 
 
-export default async function NewPasswordpage({
-  
-}) {
+export default async function NewPasswordpage() {
   // const Translation : Translation[] = await getDictTranslation()
   const dict = {
     "title": "Enter a new password",
@@ -12,8 +10,8 @@ export default async function NewPasswordpage({
     "renew": " Your password expired have been expired and need to be changed ",
     "form": {
       "passwordLabel": "Password",
-      "passwordPlaceholder": "******",
-      "resetButton": "Reset Password"
+      "passwordPlaceholder": "******", //NOSONAR
+      "resetButton": "Reset Password", //NOSONAR
     },
     "formMessages": {
       "error": "Error during reset",

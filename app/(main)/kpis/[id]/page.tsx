@@ -16,7 +16,11 @@ export const generateMetadata = ({ params }: { params: { id: string } }): Metada
   }
 }
 
-export default function KPIDetailPage({ params }: { params: { id: string } }) {
+export default function KPIDetailPage({
+  params,
+}: Readonly<{
+  params: { id: string };
+}>) {
   const kpiId = params.id
   const kpi = getKPIById(kpiId)
 

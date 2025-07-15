@@ -15,8 +15,11 @@ interface  ProfileSettingsProps {
   twoFactorEnabled :  twofactor[]
 
 }
-export function ProfileSettings({ UserInfo , twoFactorEnabled }: ProfileSettingsProps) {
-  const [activeTab, setActiveTab] = useState("personal")
+export function ProfileSettings({
+  UserInfo,
+  twoFactorEnabled,
+}: Readonly<ProfileSettingsProps>) {
+    const [activeTab, setActiveTab] = useState("personal")
   
   return (
     <div className="col-span-3">

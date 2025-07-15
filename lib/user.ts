@@ -1,5 +1,5 @@
 "use server"
-import { and, asc, desc, eq, InferModel, InferSelectModel, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, InferModel, isNull, sql } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
@@ -90,7 +90,6 @@ export const UpdateUserToken = async (resetpasswordtoken: string, email: string)
 
         const expiryDate = new Date(today.setDate(today.getDate() + 1)) // 24 hours from now
 
-        // console.log("result", result);
 
         return await db
             .update(users)
@@ -204,12 +203,10 @@ export const findUniqueUser = async (email: string | null) => {
 
 export const generateTwoFactorToken = async (id: number, email: string) => {
     const token = crypto.randomInt(100_000, 1000_000).toString()
-    const expires = new Date(new Date().getTime() + 3600 * 1000)
     const expiredate = new Date()
     const hashedtoken = await bcrypt.hash(token, 10)
 
     // Display the current date and time
-    console.log("expiredate", expiredate)
 
     // Add one hour to the current date
     expiredate.setHours(expiredate.getHours() + 1)
@@ -306,7 +303,7 @@ export const updateUser = async (
       .update(users)
       .set({
         name: username,
-        organization: organization ? organization : "",
+        organization: organization || "",
         role,
         updatedAt: updated,
       })
@@ -368,15 +365,7 @@ export async function AddUserAction(
     }
     if (password) {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const data = {
-        username,
-        password: hashedPassword,
-        email,
-        role,
-        created_at: created,
-        passwordupdatedat: created,
-      };
-      console.log("useradd", hashedPassword);
+      
 
   const user = await db
     .insert(users)

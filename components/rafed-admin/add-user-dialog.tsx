@@ -1,8 +1,7 @@
 "use client"
 
-import React from "react"
 
-import { useState } from "react"
+import React, { useState }  from "react"
 import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -26,8 +25,11 @@ interface AddUserDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function AddUserDialog({ open, onOpenChange }: AddUserDialogProps) {
-  const [name, setName] = useState("")
+export function AddUserDialog({
+  open,
+  onOpenChange,
+}: Readonly<AddUserDialogProps>) {
+    const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [role, setRole] = useState<UserRole>("User")
   const [organization, setOrganization] = useState("")
