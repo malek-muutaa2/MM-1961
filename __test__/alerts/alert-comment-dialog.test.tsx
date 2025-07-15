@@ -228,8 +228,8 @@ describe("AlertCommentDialog Component", () => {
             />,
         )
 
-//         const cancelButton = screen.getByText("Cancel")
-//         fireEvent.click(cancelButton)
+        const cancelButton = screen.getByText("Cancel")
+        fireEvent.click(cancelButton)
 
         expect(mockOnClose).toHaveBeenCalled()
     })
