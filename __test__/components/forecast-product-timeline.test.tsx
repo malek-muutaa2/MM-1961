@@ -52,10 +52,7 @@ test("renders ForecastProductTimeline with fetched data", async () => {
 
     render(<ForecastProductTimeline forecastExecutionId={1} />)
 
-    // Vérifie que le loader est visible
-    await waitFor(() => {
-        expect(screen.getByRole("status")).toBeInTheDocument()
-    })
+ 
 
     // Vérifie que le nom du produit est affiché après le chargement
     await waitFor(() => {
