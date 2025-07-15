@@ -1,6 +1,4 @@
 import { Suspense } from "react"
-import { AlertsDataTable } from "@/components/alerts/alerts-data-table"
-import { alertsColumns } from "@/components/alerts/alerts-columns"
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
 import { AlertsInsights } from "@/components/alerts/alerts-insights"
 import {AlertsClientTable} from "@/components/alerts/alerts-client-table";
@@ -16,7 +14,7 @@ interface AlertsPageProps {
   }>
 }
 
-export default async function AlertsPage({ searchParams }: AlertsPageProps) {
+export default async function AlertsPage({ searchParams }: Readonly<AlertsPageProps>) {
   // Await searchParams first
 
 

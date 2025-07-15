@@ -89,11 +89,11 @@ export function AlertsClientTable() {
             data={data.alerts}
             pageNumber={data.pagination.currentPage}
             numberOfPages={data.pagination.totalPages}
-            search={searchParams.get("search") || ""}
-            size={searchParams.get("size") || "10"}
-            column={searchParams.get("column") || "triggeredAt"}
+            search={searchParams.get("search") ?? ""}
+            size={searchParams.get("size") ?? "10"}
+            column={searchParams.get("column") ?? "triggeredAt"}
             pathname={pathname}
-            order={searchParams.get("order") || "desc"}
+            order={searchParams.get("order") ?? "desc"}
         />
     )
 }
