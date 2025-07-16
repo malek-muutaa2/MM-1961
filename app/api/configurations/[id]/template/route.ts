@@ -5,7 +5,7 @@ import { db } from "@/lib/db/dbpostgres"
 
 export async function GET(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-    const { id } = await params; // No need to await here in API routes
+    const { id } = params; // No need to await here in API routes
 
     if(!id){
         return NextResponse.json({ error: "Configuration ID is required" }, { status: 400 })

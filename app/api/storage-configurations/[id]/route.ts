@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm"
 
 export async function PUT(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-      const { id } = await params; // No need to await here in API routes
+      const { id } = params; // No need to await here in API routes
 
       const body = await request.json()
 
@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: numb
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: number } }) {
   try {
-      const { id } = await params; // No need to await here in API routes
+      const { id } = params; // No need to await here in API routes
 
     // await db.delete(uploadStorageConfigurations).where(eq(uploadStorageConfigurations.id, params.id))
       await db.update(
