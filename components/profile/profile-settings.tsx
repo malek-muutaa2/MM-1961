@@ -19,7 +19,7 @@ interface  ProfileSettingsProps {
 }
 export function ProfileSettings({
   UserInfo,
-  twoFactorEnabled,
+  twoFactorEnabled,notificationSettings
 }: Readonly<ProfileSettingsProps>) {
     const [activeTab, setActiveTab] = useState("personal")
   

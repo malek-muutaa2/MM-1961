@@ -1,8 +1,6 @@
 import FormRecovery from "./FormRecovery";
 
-export default async function RecoveryPage({
-
-}) {
+export default async function RecoveryPage() {
   // const Translation : Translation[] = await getDictTranslation()
   const dict = {
     "title": "Account Recovery",

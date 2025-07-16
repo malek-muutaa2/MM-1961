@@ -4,7 +4,6 @@ import { LoginFormNextAuth } from "@/components/auth/login-form-nextauth"
 import { RegisterForm } from "@/components/auth/register-form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Suspense } from "react"
-import {NextImage} from "@/components/next-image";
 
 export default function LoginPage() {
 
