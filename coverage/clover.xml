@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1752611688884" clover="3.2.0">
-  <project timestamp="1752611688884" name="All files">
+<coverage generated="1752612805767" clover="3.2.0">
+  <project timestamp="1752612805767" name="All files">
     <metrics statements="9283" coveredstatements="6877" conditionals="585" coveredconditionals="427" methods="182" coveredmethods="90" elements="10050" coveredelements="7394" complexity="0" loc="9283" ncloc="9283" packages="11" files="50" classes="50"/>
     <package name="app.api.sendnotification">
       <metrics statements="116" coveredstatements="113" conditionals="12" coveredconditionals="10" methods="1" coveredmethods="1"/>
