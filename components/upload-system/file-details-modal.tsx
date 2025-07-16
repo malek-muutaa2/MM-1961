@@ -77,7 +77,8 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
   }
 
   if (!file) return null
-
+ console.log("loading", loading);
+ 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
@@ -90,26 +91,28 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
           {/* Basic Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">File Name</label>
+              <label htmlFor="fileName" className="text-sm font-medium text-muted-foreground">
+                File Name
+              </label>
               <p className="text-sm font-mono bg-muted p-2 rounded">{file.name}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Size</label>
+              <label htmlFor="fileSize" className="text-sm font-medium text-muted-foreground">Size</label>
               <p className="text-sm">{formatFileSize(file.size)}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Status</label>
+              <label htmlFor="fileStatus" className="text-sm font-medium text-muted-foreground">Status</label>
               <Badge variant="default">{file.status}</Badge>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Uploaded</label>
+              <label htmlFor="fileUploadedAt" className="text-sm font-medium text-muted-foreground">Uploaded</label>
               <p className="text-sm">{formatDate(file.uploadedAt)}</p>
             </div>
           </div>
 
           {/* File URL */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground">File URL</label>
+            <label htmlFor="fileUrl" className="text-sm font-medium text-muted-foreground">File URL</label>
             <div className="flex items-center gap-2 mt-1">
               <p className="text-sm font-mono bg-muted p-2 rounded flex-1 truncate">{file.url}</p>
               <Button variant="outline" size="sm" onClick={() => copyToClipboard(file.url)}>
@@ -124,11 +127,11 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
               <h4 className="text-sm font-medium mb-3">Technical Details</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <label className="font-medium text-muted-foreground">Content Type</label>
+                  <label htmlFor="fileName" className="font-medium text-muted-foreground">Content Type</label>
                   <p className="font-mono">{fileInfo.contentType}</p>
                 </div>
                 <div>
-                  <label className="font-medium text-muted-foreground">Cache Control</label>
+                  <label htmlFor="fileName" className="font-medium text-muted-foreground">Cache Control</label>
                   <p className="font-mono">{fileInfo.cacheControl}</p>
                 </div>
               </div>
