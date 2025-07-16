@@ -1,5 +1,4 @@
 import { db } from "@/lib/db/dbpostgres";
-import { getServerSession } from "next-auth";
 import { headers } from "next/headers";
 import { audit_log, users } from "./db/schema";
 import { eq } from "drizzle-orm";

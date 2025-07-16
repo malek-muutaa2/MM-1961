@@ -1,10 +1,10 @@
 "use server"
-import { and, asc, desc, eq, InferModel, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq,  isNull, sql } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 
 import { revalidatePath } from "next/cache";
 import { generatePasswordResetToken } from "./reset";
