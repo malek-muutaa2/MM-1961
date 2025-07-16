@@ -70,7 +70,7 @@ export type ForecastDataPoint = {
 }
 
 // User management types
-export type UserRole = "Admin" | "User" 
+export type UserRole = "Admin" | "User" | "Provider" | "Supplier" | "Viewer"
 
 export type UserStatus = "active" | "pending" | "inactive"
 

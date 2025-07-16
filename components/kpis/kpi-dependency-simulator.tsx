@@ -306,7 +306,7 @@ export function KPIDependencySimulator() {
       date: formattedDate,
       sourceKPI: currentKPI.name,
       sourceKPIValue: sliderValue[0],
-      impactedKPIs: impactSummary.map((impact) => ({
+      impactedKPIs: impactSummary.map((impact: any) => ({
         id: impact.id,
         name: impact.name,
         originalValue: impact.originalValue,
@@ -528,7 +528,7 @@ Based on this simulation, the following actions are recommended:
               <h3 className="text-lg font-medium mb-2">Impact Summary</h3>
               {impactSummary.length > 0 ? (
                 <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-                  {impactSummary.map((impact) => (
+                  {impactSummary.map((impact: any) => (
                     <Card key={impact.id} className="overflow-hidden">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">

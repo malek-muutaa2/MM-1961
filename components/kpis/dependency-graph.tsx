@@ -65,7 +65,7 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
         "link",
         d3
           .forceLink(links)
-          .id((d) => d.id)
+          .id((d: any) => d.id)
           .distance(120),
       )
       .force("charge", d3.forceManyBody().strength(-400))
@@ -121,10 +121,10 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
       .selectAll("path")
       .data(links)
       .join("path")
-      .attr("stroke", (d) => (d.type === "positive" ? "#10B981" : d.type === "negative" ? "#EF4444" : "#6B7280"))
-      .attr("stroke-width", (d) => 1 + d.strength * 2)
+      .attr("stroke", (d: any) => (d.type === "positive" ? "#10B981" : d.type === "negative" ? "#EF4444" : "#6B7280"))
+      .attr("stroke-width", (d: any) => 1 + d.strength * 2)
       .attr("stroke-opacity", 0.6)
-      .attr("marker-end", (d) => `url(#arrow-${d.type})`)
+      .attr("marker-end", (d: any) => `url(#arrow-${d.type})`)
       .attr("fill", "none")
 
     // Create a group for each node
@@ -134,22 +134,22 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
       .data(nodes)
       .join("g")
       .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended))
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (event: any, d: any) {
         // Highlight this node and its connections
         d3.select(this).select("circle").attr("stroke-width", 3)
 
         // Highlight connected links
         link
-          .attr("stroke-opacity", (l) => (l.source.id === d.id || l.target.id === d.id ? 1 : 0.1))
-          .attr("stroke-width", (l) => (l.source.id === d.id || l.target.id === d.id ? 2 + l.strength * 2 : 1))
+          .attr("stroke-opacity", (l: any) => (l.source.id === d.id || l.target.id === d.id ? 1 : 0.1))
+          .attr("stroke-width", (l: any) => (l.source.id === d.id || l.target.id === d.id ? 2 + l.strength * 2 : 1))
 
         // Highlight connected nodes
         node
           .select("circle")
-          .attr("stroke-opacity", (n) =>
+          .attr("stroke-opacity", (n:any) =>
             n.id === d.id ||
             links.some(
-              (l) => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id),
+              (l: any) => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id),
             )
               ? 1
               : 0.3,
@@ -176,7 +176,7 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
       .on("mouseout", function () {
         // Reset highlights
         d3.select(this).select("circle").attr("stroke-width", 2)
-        link.attr("stroke-opacity", 0.6).attr("stroke-width", (d) => 1 + d.strength * 2)
+        link.attr("stroke-opacity", 0.6).attr("stroke-width", (d :any) => 1 + d.strength * 2)
         node.select("circle").attr("stroke-opacity", 1)
 
         // Hide tooltip
@@ -186,14 +186,14 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
     // Add circles to nodes
     node
       .append("circle")
-      .attr("r", (d) => (d.hasChanged ? 14 : 10))
-      .attr("fill", (d) => {
+      .attr("r", (d :any) => (d.hasChanged ? 14 : 10))
+      .attr("fill", (d:any) => {
         if (d.hasChanged) {
           return d.changePercent > 0 ? "#10B981" : "#EF4444"
         }
         return d.group === 1 ? "#3B82F6" : "#F59E0B"
       })
-      .attr("stroke", (d) => {
+      .attr("stroke", (d :any) => {
         if (d.status === "warning") return "#F59E0B"
         if (d.status === "critical") return "#EF4444"
         return "#10B981"
@@ -205,20 +205,20 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
       .append("text")
       .attr("x", 15)
       .attr("y", 5)
-      .text((d) => (d.name.length > 20 ? d.name.substring(0, 20) + "..." : d.name))
+      .text((d :any) => (d.name.length > 20 ? d.name.substring(0, 20) + "..." : d.name))
       .attr("font-size", "10px")
       .attr("fill", "currentColor")
 
     // Update positions on simulation tick
     simulation.on("tick", () => {
-      link.attr("d", (d) => {
+      link.attr("d", (d :any) => {
         const dx = d.target.x - d.source.x
         const dy = d.target.y - d.source.y
         const dr = Math.sqrt(dx * dx + dy * dy) * 1.5
         return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
       })
 
-      node.attr("transform", (d) => {
+      node.attr("transform", (d :any) => {
         // Keep nodes within bounds
         d.x = Math.max(50, Math.min(width - 50, d.x))
         d.y = Math.max(50, Math.min(height - 50, d.y))
@@ -227,18 +227,18 @@ export function DependencyGraph({ simulatedKPIs = kpiData, originalKPIs = kpiDat
     })
 
     // Drag functions
-    function dragstarted(event, d) {
+    function dragstarted(event :any, d :any) {
       if (!event.active) simulation.alphaTarget(0.3).restart()
       d.fx = d.x
       d.fy = d.y
     }
 
-    function dragged(event, d) {
+    function dragged(event :any, d :any) {
       d.fx = event.x
       d.fy = event.y
     }
 
-    function dragended(event, d) {
+    function dragended(event :any, d :any) {
       if (!event.active) simulation.alphaTarget(0)
       d.fx = null
       d.fy = null

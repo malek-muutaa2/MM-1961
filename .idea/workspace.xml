@@ -5,9 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: fix sonar check">
-      <change afterPath="$PROJECT_DIR$/drizzle/meta/0666_snapshot.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/drizzle/0006_large_sugar_man.sql" beforeDir="false" afterPath="$PROJECT_DIR$/drizzle/0006_large_sugar_man.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__test__/alerts/alert-comment-dialog.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/alerts/alert-comment-dialog.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/app-sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/app-sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/dashboard/dependency-graph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/dashboard/dependency-graph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/event-details-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/event-details-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/kpis/custom-kpi-creator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/kpis/custom-kpi-creator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/kpis/dependency-graph.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/kpis/dependency-graph.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/kpis/kpi-data-mapping.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/kpis/kpi-data-mapping.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/kpis/kpi-dependency-simulator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/kpis/kpi-dependency-simulator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/kpis/kpi-selection-form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/kpis/kpi-selection-form.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/rafed-admin/edit-user-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/rafed-admin/edit-user-dialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/rafed-admin/invitations-list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/rafed-admin/invitations-list.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/rafed-admin/invite-user-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/rafed-admin/invite-user-dialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sonar-project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/sonar-project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/rafed-types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/rafed-types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +97,7 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "MM-842-Upload-file-for-validation",
+    "git-widget-placeholder": "develop",
     "go.import.settings.migrated": "true",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
@@ -400,7 +413,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/__test__/components/forecast-data-table.test.tsx</url>
           <line>83</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

@@ -35,7 +35,7 @@ export function KPIDataMapping({
   dataRequirements,
   dataAvailability,
   onMappingComplete,
-}: KPIDataMappingProps) {
+}: Readonly<KPIDataMappingProps>) {
   const [open, setOpen] = useState(false)
   const [activeSource, setActiveSource] = useState<string | null>(
     dataRequirements.length > 0 ? dataRequirements[0].source : null,

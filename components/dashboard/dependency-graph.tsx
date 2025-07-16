@@ -52,7 +52,7 @@ export function DependencyGraph() {
         "link",
         d3
           .forceLink(links)
-          .id((d) => d.id)
+          .id((d: any) => d.id)
           .distance(100),
       )
       .force("charge", d3.forceManyBody().strength(-300))
@@ -106,9 +106,9 @@ export function DependencyGraph() {
       .selectAll("path")
       .data(links)
       .join("path")
-      .attr("stroke", (d) => (d.type === "positive" ? "#10B981" : d.type === "negative" ? "#EF4444" : "#6B7280"))
+      .attr("stroke", (d: any) => (d.type === "positive" ? "#10B981" : d.type === "negative" ? "#EF4444" : "#6B7280"))
       .attr("stroke-width", 2)
-      .attr("marker-end", (d) => `url(#arrow-${d.type})`)
+      .attr("marker-end", (d: any) => `url(#arrow-${d.type})`)
       .attr("fill", "none")
 
     // Create the nodes
@@ -123,42 +123,42 @@ export function DependencyGraph() {
     node
       .append("circle")
       .attr("r", 10)
-      .attr("fill", (d) => (d.group === 1 ? "#3B82F6" : d.group === 2 ? "#F59E0B" : "#8B5CF6"))
+      .attr("fill", (d: any) => (d.group === 1 ? "#3B82F6" : d.group === 2 ? "#F59E0B" : "#8B5CF6"))
 
     // Add text labels
     node
       .append("text")
       .attr("x", 15)
       .attr("y", 5)
-      .text((d) => d.name)
+      .text((d: any) => d.name)
       .attr("font-size", "10px")
       .attr("fill", "currentColor")
 
     // Update positions on simulation tick
     simulation.on("tick", () => {
-      link.attr("d", (d) => {
+      link.attr("d", (d: any) => {
         const dx = d.target.x - d.source.x
         const dy = d.target.y - d.source.y
         const dr = Math.sqrt(dx * dx + dy * dy)
         return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`
       })
 
-      node.attr("transform", (d) => `translate(${d.x},${d.y})`)
+      node.attr("transform", (d: any) => `translate(${d.x},${d.y})`)
     })
 
     // Drag functions
-    function dragstarted(event, d) {
+    function dragstarted(event: any, d: any) {
       if (!event.active) simulation.alphaTarget(0.3).restart()
       d.fx = d.x
       d.fy = d.y
     }
 
-    function dragged(event, d) {
+    function dragged(event: any, d: any) {
       d.fx = event.x
       d.fy = event.y
     }
 
-    function dragended(event, d) {
+    function dragended(event:  any, d: any) {
       if (!event.active) simulation.alphaTarget(0)
       d.fx = null
       d.fy = null

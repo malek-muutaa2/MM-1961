@@ -17,7 +17,7 @@ jest.mock("@/hooks/use-toast", () => ({
 }))
 
 // Simple mock component for testing
-const MockAlertCommentDialog = ({ alert, isOpen, onClose, onCommentAdded }) => {
+const MockAlertCommentDialog = ({ alert, isOpen, onClose, onCommentAdded }: any) => {
     const [comment, setComment] = React.useState("")
     const [isSubmitting, setIsSubmitting] = React.useState(false)
 
