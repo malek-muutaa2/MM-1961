@@ -36,7 +36,6 @@ export class GCSStorageService {
           throw new Error(`GCS upload failed: ${response.statusText}`)
         }
 
-        const result = await response.json()
         return {
           url: `https://storage.googleapis.com/${this.config.bucketName}/${filePath}`,
           pathname: filePath,

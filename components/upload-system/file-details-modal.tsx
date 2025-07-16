@@ -91,7 +91,8 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
   }
 
   if (!file) return null
-
+ console.log("loading", loading);
+ 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">

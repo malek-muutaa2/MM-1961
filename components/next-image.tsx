@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import { useState} from "react";
 
 
 export const NextImage = ({
@@ -19,7 +19,6 @@ export const NextImage = ({
 }) => {
 
     const [isLoading, setIsLoading] = useState(true);
-    // const [srcState, setSrcState] = useState("");
     const handleLoad = () => {
         setIsLoading(false);
     };
@@ -28,18 +27,11 @@ export const NextImage = ({
         setIsLoading(false);
     };
     console.log(isLoading, "isLoading");
-    // if (isLoading) {
-    //     return <div className="w-full h-full flex items-center justify-center">Loading...</div>;
-    // }
+ 
     if (!src) {
         return <div className="w-full h-full flex items-center justify-center">No image source provided</div>;
     }
-    // useEffect(() => {
-    //     if(src){
-    //         setIsLoading(false);
-    //         setSrcState(src)
-    //     }
-    // }, [src]);
+ 
 
 
 

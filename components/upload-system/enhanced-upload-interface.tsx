@@ -60,7 +60,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
         e.preventDefault()
         e.stopPropagation()
         setDragActive(false)
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        if (e.dataTransfer.files?.[0]) {
             // console.log( "rerfd", selectedConfig, selectedConfiguration)
             handleFileSelection(e.dataTransfer.files[0])
         }
@@ -110,7 +110,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
     }
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
+        if (e.target.files?.[0]) {
             console.log(selectedConfiguration)
             handleFileSelection(e.target.files[0])
         }
@@ -428,7 +428,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                                                 {validationErrors
                                                                     .sort((a, b) => (a.row || 0) - (b.row || 0))
                                                                     .map((error, index) => (
-                                                                        <TableRow key={index}>
+                                                                        <TableRow key={`${error.row ?? "no-row"}-${error.line ?? "no-line"}-${error.column ?? "no-col"}-${error.code}-${error.message}`}>
                                                                             <TableCell>{error.row || "-"}</TableCell>
                                                                             <TableCell>{error.line || "-"}</TableCell>
                                                                             <TableCell>
@@ -487,8 +487,10 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                                                     <CardContent>
                                                                         <div className="space-y-2">
                                                                             {errors.slice(0, 5).map((error, index) => (
-                                                                                <div key={index}
-                                                                                     className="text-sm flex justify-between">
+                                                                                <div
+                                                                                    key={`${errorType}-${error.row ?? "no-row"}-${error.column ?? "no-col"}-${error.code}-${error.message}`}
+                                                                                    className="text-sm flex justify-between"
+                                                                                >
                                           <span>
                                             Row {error.row}, Column {error.column}: {error.message}
                                           </span>

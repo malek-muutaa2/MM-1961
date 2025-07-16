@@ -314,19 +314,27 @@ export default function EnhancedFileManager() {
                         <TableCell>{file.config_name || "Unknown"}</TableCell>
                         <TableCell>{formatFileSize(file.size)}</TableCell>
                         <TableCell>
-                          <Badge
-                            variant={
-                              file.status === "completed"
-                                ? "default"
-                                : file.status === "partially_completed"
-                                  ? "secondary"
-                                  : "destructive"
+                            {(() => {
+                            let badgeVariant: "default" | "secondary" | "destructive";
+                            let badgeText: string;
+
+                            if (file.status === "completed") {
+                              badgeVariant = "default";
+                              badgeText = "Completed";
+                            } else if (file.status === "partially_completed") {
+                              badgeVariant = "secondary";
+                              badgeText = `${file.errorCount} errors`;
+                            } else {
+                              badgeVariant = "destructive";
+                              badgeText = "Failed";
                             }
-                          >
-                            {file.status === "completed" && "Completed"}
-                            {file.status === "partially_completed" && `${file.errorCount} errors`}
-                            {file.status === "failed" && "Failed"}
-                          </Badge>
+
+                            return (
+                              <Badge variant={badgeVariant}>
+                              {badgeText}
+                              </Badge>
+                            );
+                            })()}
                         </TableCell>
                         <TableCell>{formatDate(file.uploadedAt)}</TableCell>
                         <TableCell className="text-right">

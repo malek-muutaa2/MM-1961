@@ -41,7 +41,7 @@ interface AlertsResponse {
   pagination: PaginationInfo
 }
 
-export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "warning" | "info" }) {
+export function AlertsList({ filter = "all" }: Readonly<{ filter?: "all" | "critical" | "warning" | "info" }>) {
   const [sortField, setSortField] = useState<"severity" | "timestamp">("timestamp")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
   const [alerts, setAlerts] = useState<Alert[]>([])
@@ -204,7 +204,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
               </TableHeader>
               <TableBody>
                 {[...Array(5)].map((_, i) => (
-                    <TableRow key={i}>
+                    <TableRow key={`skeleton-${i}`}>
                       <TableCell>
                         <div className="flex items-start space-x-2">
                           <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
@@ -248,7 +248,25 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
         </div>
     )
   }
+  const severityIconMap: Record<string, React.ReactNode> = {
+    critical: <AlertCircle className="mr-1 h-3 w-3" />,
+    warning: <AlertTriangle className="mr-1 h-3 w-3" />,
+    info: <Info className="mr-1 h-3 w-3" />,
+  }
 
+  const severityVariantMap: Record<string, string> = {
+    critical: "destructive",
+    warning: "default",
+    info: "outline",
+  }
+
+  const getSeverityIcon = (severity: string) => {
+    return severityIconMap[severity] || <Info className="mr-1 h-3 w-3" />
+  }
+
+  const getSeverityVariant = (severity: string) => {
+    return severityVariantMap[severity] || "outline"
+  }
   return (
       <div className="space-y-4">
         <div className="rounded-md border">
@@ -286,22 +304,8 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                     </TableCell>
                     <TableCell>{alert.kpi}</TableCell>
                     <TableCell>
-                      <Badge
-                          variant={
-                            alert.severity === "critical"
-                                ? "destructive"
-                                : alert.severity === "warning"
-                                    ? "default"
-                                    : "outline"
-                          }
-                      >
-                        {alert.severity === "critical" ? (
-                            <AlertCircle className="mr-1 h-3 w-3" />
-                        ) : alert.severity === "warning" ? (
-                            <AlertTriangle className="mr-1 h-3 w-3" />
-                        ) : (
-                            <Info className="mr-1 h-3 w-3" />
-                        )}
+                      <Badge variant={getSeverityVariant(alert.severity)} className="text-xs">
+                        {getSeverityIcon(alert.severity)}
                         {alert.severity}
                       </Badge>
                     </TableCell>
@@ -333,7 +337,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                 {Math.min(pagination.currentPage * pagination.limit, pagination.totalCount)} of {pagination.totalCount}{" "}
                 alerts
               </div>
-              
+
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -346,7 +350,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                         className={!pagination.hasPreviousPage ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>
-                  
+
                   <PaginationItem>
                     <PaginationPrevious
                         href="#"
@@ -370,7 +374,7 @@ export function AlertsList({ filter = "all" }: { filter?: "all" | "critical" | "
                         className={!pagination.hasNextPage ? "pointer-events-none opacity-50" : ""}
                     />
                   </PaginationItem>
-                  
+
                   <PaginationItem>
                     <PaginationLast
                         href="#"

@@ -37,91 +37,77 @@ export function RegisterForm() {
     setFormData((prev) => ({ ...prev, [id]: value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+const PASSWORD_VALIDATION_MESSAGES = {
+  minLength: "Password must be at least 12 characters long",
+  mustIncludeLetters: "Password must include letters",
+  mustIncludeUppercase: "Password must include at least one uppercase letter",
+  mustIncludeNumbers: "Password must include numbers",
+  mustIncludeSpecialChar: "Password must include a special character",
+};
 
-    const pw = formData.password
-    const v = {
-      minLength: "Password must be at least 12 characters long",
-      mustIncludeLetters: "Password must include letters",
-      mustIncludeUppercase: "Password must include at least one uppercase letter",
-      mustIncludeNumbers: "Password must include numbers",
-      mustIncludeSpecialChar: "Password must include a special character",
-    }
- console.log("Form Data:", pw);
- 
-    if (pw.length < 12 || !/[a-zA-Z]/.test(pw) || !/[A-Z]/.test(pw) || !/\d/.test(pw) || !/[^a-zA-Z0-9]/.test(pw)) {
-      const reason =
-        pw.length < 12
-          ? v.minLength
-          : !/[a-zA-Z]/.test(pw)
-          ? v.mustIncludeLetters
-          : !/[A-Z]/.test(pw)
-          ? v.mustIncludeUppercase
-          : !/\d/.test(pw)
-          ? v.mustIncludeNumbers
-          : v.mustIncludeSpecialChar
+function getPasswordValidationError(pw: string): string | null {
+  if (pw.length < 12) return PASSWORD_VALIDATION_MESSAGES.minLength;
+  if (!/[a-zA-Z]/.test(pw)) return PASSWORD_VALIDATION_MESSAGES.mustIncludeLetters;
+  if (!/[A-Z]/.test(pw)) return PASSWORD_VALIDATION_MESSAGES.mustIncludeUppercase;
+  if (!/\d/.test(pw)) return PASSWORD_VALIDATION_MESSAGES.mustIncludeNumbers;
+  if (!/[^a-zA-Z0-9]/.test(pw)) return PASSWORD_VALIDATION_MESSAGES.mustIncludeSpecialChar;
+  return null;
+}
 
-      toast({ title: "Invalid Password", description: reason, variant: "destructive" })
-      setIsLoading(false)
-      return
-    }
+function showErrorToast(title: string, description: string) {
+  toast({ title, description, variant: "destructive" });
+}
 
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      })
-      setIsLoading(false)
-      return
-    }
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    if (!recaptchaToken) {
-      toast({
-        title: "reCAPTCHA Error",
-        description: "Please verify you are not a robot",
-        variant: "destructive",
-      })
-      setIsLoading(false)
-      return
-    }
+  const { password, confirmPassword } = formData;
 
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password,
-          jobTitle: formData.jobTitle,
-          department: formData.department,
-          workDomain: formData.workDomain,
-          organization: formData.organization,
-          recaptchaToken,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to register")
-      }
-
-      toast({ title: "Success", description: "Account created successfully!" })
-      router.push("/login")
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
-    }
+  const validationError = getPasswordValidationError(password);
+  if (validationError) {
+    showErrorToast("Invalid Password", validationError);
+    return setIsLoading(false);
   }
+
+  if (password !== confirmPassword) {
+    showErrorToast("Error", "Passwords do not match");
+    return setIsLoading(false);
+  }
+
+  if (!recaptchaToken) {
+    showErrorToast("reCAPTCHA Error", "Please verify you are not a robot");
+    return setIsLoading(false);
+  }
+
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.fullName,
+        email: formData.email,
+        password,
+        jobTitle: formData.jobTitle,
+        department: formData.department,
+        workDomain: formData.workDomain,
+        organization: formData.organization,
+        recaptchaToken,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.message || "Failed to register");
+
+    toast({ title: "Success", description: "Account created successfully!" });
+    router.push("/login");
+  } catch (error: any) {
+    showErrorToast("Error", error.message || "Something went wrong. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <Card className="w-full">

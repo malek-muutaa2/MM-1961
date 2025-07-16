@@ -1,5 +1,6 @@
 "use client"
 
+
 import {
   Database,
   Settings,
@@ -44,19 +45,27 @@ import {
   DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
 
-export function  AppSidebar({userinfo}: any) {
+export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-  const pathname = usePathname()
   const { role } = useRole()
   if(!userinfo) {
     return null
   }
+  let roleLabel = "";
+
+if (role === "rafed-admin") {
+  roleLabel = "Rafed Administrator";
+} else if (role === "rafed-provider") {
+  roleLabel = "Rafed Provider";
+} else {
+  roleLabel = "Supply Chain Manager";
+}
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">
@@ -413,11 +422,7 @@ export function  AppSidebar({userinfo}: any) {
                 <div className="flex flex-col items-start text-sm">
                   <span className="font-medium">{userinfo.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {role === "rafed-admin"
-                      ? "Rafed Administrator"
-                      : role === "rafed-provider"
-                        ? "Rafed Provider"
-                        : "Supply Chain Manager"}
+                    {roleLabel}
                   </span>
                 </div>
               )}
