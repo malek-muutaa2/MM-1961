@@ -16,6 +16,7 @@ import { FormSuccess } from "@/components/Form-success";
 import { newPassword } from "@/lib/new-password";
 import { useTheme } from "next-themes";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ResetPasswordProps } from "@/lib/audit";
 interface Form {
   passwordLabel: string;
   passwordPlaceholder: string;
@@ -37,7 +38,7 @@ interface PasswordValidation {
   mustIncludeSpecialChar: string;
 }
 
-interface ResetPassword {
+export interface ResetPassword {
   title: string;
   description: string;
   renew: string;
@@ -45,8 +46,11 @@ interface ResetPassword {
   formMessages: FormMessages;
   passwordValidation: PasswordValidation;
 }
-interface ResetPasswordProps {
-  ResetPassword: ResetPassword;
+function redirectToLogin() {
+  window.location.href = "/login";
+}
+function redirectToLoginAfterDelay() {
+  setTimeout(redirectToLogin, 2000);
 }
 export const NewPasswordForm = ({ ResetPassword }: ResetPasswordProps) => {
   const searchParams = useSearchParams();
@@ -92,9 +96,7 @@ export const NewPasswordForm = ({ ResetPassword }: ResetPasswordProps) => {
         setError(data?.error);
         setSuccess(data?.success);
         if (data?.success) {
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 2000);
+          redirectToLoginAfterDelay();
         }
       });
     });
@@ -105,7 +107,7 @@ export const NewPasswordForm = ({ ResetPassword }: ResetPasswordProps) => {
 
   useEffect(() => {
     setLogo(
-      resolvedTheme === "light" ? "/images/muutaa-logo.png" : "/images/muutaa-logo.png",
+     "/images/muutaa-logo.png"
     );
   }, [resolvedTheme]);
 

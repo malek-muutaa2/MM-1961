@@ -130,7 +130,7 @@ const providers = [
 
 export default function ProviderConnectionsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedProvider, setSelectedProvider] = useState(null)
+  const [selectedProvider, setSelectedProvider] = useState<any>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [dataManagementOpen, setDataManagementOpen] = useState(false)
 
@@ -156,17 +156,17 @@ export default function ProviderConnectionsPage() {
       p.type.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const handleViewDetails = (provider) => {
+  const handleViewDetails = (provider: any) => {
     setSelectedProvider(provider)
     setDetailsOpen(true)
   }
 
-  const handleManageData = (provider) => {
+  const handleManageData = (provider:any) => {
     setSelectedProvider(provider)
     setDataManagementOpen(true)
   }
 
-  const renderProviderCard = (provider) => (
+  const renderProviderCard = (provider: any) => (
     <Card key={provider.id}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">

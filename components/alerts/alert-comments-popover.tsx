@@ -33,7 +33,7 @@ interface AlertCommentsPopoverProps {
     alert: Alert
 }
 
-export function AlertCommentsPopover({ alert }: AlertCommentsPopoverProps) {
+export function AlertCommentsPopover({ alert }: Readonly<AlertCommentsPopoverProps>) {
     const [comments, setComments] = useState<Comment[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
@@ -126,6 +126,69 @@ export function AlertCommentsPopover({ alert }: AlertCommentsPopoverProps) {
         }
     }
 
+    // ✅ Remplace les ternaires imbriqués par des conditions claires
+    let content
+    if (isLoading) {
+        content = (
+            <div className="flex items-center justify-center py-4">
+                <div className="text-sm text-muted-foreground">Loading comments...</div>
+            </div>
+        )
+    } else if (error) {
+        content = (
+            <div className="flex items-center justify-center py-4 space-x-2">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+                <div className="text-sm text-red-500">{error}</div>
+            </div>
+        )
+    } else if (comments.length === 0) {
+        content = (
+            <div className="flex items-center justify-center py-4">
+                <div className="text-sm text-muted-foreground">No activity yet</div>
+            </div>
+        )
+    } else {
+        content = (
+            <ScrollArea className="h-80">
+                <div className="space-y-4">
+                    {comments.map((comment) => (
+                        <div key={comment.id} className="space-y-3 p-3 rounded-lg bg-muted/50 border">
+                            {/* Header with user info and timestamp */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <User className="h-3 w-3" />
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-medium">{comment.userName ?? "Unknown User"}</span>
+                                        {comment.userEmail && (
+                                            <span className="text-xs text-muted-foreground">{comment.userEmail}</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                                    <Clock className="h-3 w-3" />
+                                    {formatTimeAgo(comment.createdAt)}
+                                </div>
+                            </div>
+
+                            {/* Status badge if present */}
+                            {comment.updatedStatus && (
+                                <div className="flex items-center space-x-2">
+                                    {getStatusIcon(comment.updatedStatus)}
+                                    <Badge variant={getStatusColor(comment.updatedStatus)} className="text-xs">
+                                        Status: {comment.updatedStatus}
+                                    </Badge>
+                                </div>
+                            )}
+
+                            {/* Comment text */}
+                            <p className="text-sm leading-relaxed">{comment.comment}</p>
+                        </div>
+                    ))}
+                </div>
+            </ScrollArea>
+        )
+    }
+
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
@@ -137,63 +200,14 @@ export function AlertCommentsPopover({ alert }: AlertCommentsPopoverProps) {
                 <div className="space-y-3">
                     <div className="space-y-2">
                         <h4 className="font-medium leading-none">Comments & Activity</h4>
-                        <p className="text-sm text-muted-foreground">Activity log for: {alert.title || `Alert ${alert.id}`}</p>
+                        <p className="text-sm text-muted-foreground">
+                            Activity log for: {alert.title || `Alert ${alert.id}`}
+                        </p>
                     </div>
 
                     <Separator />
 
-                    {isLoading ? (
-                        <div className="flex items-center justify-center py-4">
-                            <div className="text-sm text-muted-foreground">Loading comments...</div>
-                        </div>
-                    ) : error ? (
-                        <div className="flex items-center justify-center py-4 space-x-2">
-                            <AlertCircle className="h-4 w-4 text-red-500" />
-                            <div className="text-sm text-red-500">{error}</div>
-                        </div>
-                    ) : comments.length === 0 ? (
-                        <div className="flex items-center justify-center py-4">
-                            <div className="text-sm text-muted-foreground">No activity yet</div>
-                        </div>
-                    ) : (
-                        <ScrollArea className="h-80">
-                            <div className="space-y-4">
-                                {comments.map((comment) => (
-                                    <div key={comment.id} className="space-y-3 p-3 rounded-lg bg-muted/50 border">
-                                        {/* Header with user info and timestamp */}
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center space-x-2">
-                                                <User className="h-3 w-3" />
-                                                <div className="flex flex-col">
-                                                    <span className="text-xs font-medium">{comment.userName || "Unknown User"}</span>
-                                                    {comment.userEmail && (
-                                                        <span className="text-xs text-muted-foreground">{comment.userEmail}</span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                                                <Clock className="h-3 w-3" />
-                                                {formatTimeAgo(comment.createdAt)}
-                                            </div>
-                                        </div>
-
-                                        {/* Status badge if present */}
-                                        {comment.updatedStatus && (
-                                            <div className="flex items-center space-x-2">
-                                                {getStatusIcon(comment.updatedStatus)}
-                                                <Badge variant={getStatusColor(comment.updatedStatus)} className="text-xs">
-                                                    Status: {comment.updatedStatus}
-                                                </Badge>
-                                            </div>
-                                        )}
-
-                                        {/* Comment text */}
-                                        <p className="text-sm leading-relaxed">{comment.comment}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </ScrollArea>
-                    )}
+                    {content}
                 </div>
             </PopoverContent>
         </Popover>

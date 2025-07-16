@@ -54,6 +54,7 @@ export function EditUserDialog({
 
     console.log("Updating user:", { id: user.id, name, email, role, status, organization })
      startTransition(async () => {
+      setStatus("active") // Ensure status is set to active before submission
          try {
            
            // Add your submit logic here, including the number of potential matches
@@ -96,7 +97,7 @@ export function EditUserDialog({
     setIsSubmitting(false)
     onOpenChange(false)
   }
-
+ 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">

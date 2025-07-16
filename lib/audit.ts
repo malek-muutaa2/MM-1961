@@ -1,8 +1,8 @@
 import { db } from "@/lib/db/dbpostgres";
-import { getServerSession } from "next-auth";
 import { headers } from "next/headers";
 import { audit_log, users } from "./db/schema";
 import { eq } from "drizzle-orm";
+import { ResetPassword } from "@/app/login/new-password/new-password-form";
 
 export interface AuditLog {
   // auto-generated ID
@@ -29,7 +29,6 @@ type AuditLogInput = Omit<AuditLog, "timestamp" | "client" | "actor">;
 
 export const audit = async (log: AuditLogInput) => {
   const headerList = await headers();
-    const session = await getServerSession();
   const timeZone = "America/Toronto";
   const now = new Date();
 
@@ -104,3 +103,6 @@ export const exportAuditLogsToCsv = async () => {
   );
   return csv.join("\n");
 };
+export interface ResetPasswordProps {
+  ResetPassword: ResetPassword;
+}

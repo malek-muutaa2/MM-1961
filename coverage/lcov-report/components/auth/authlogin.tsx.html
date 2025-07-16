@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.29% </span>
+                <span class="strong">76.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>251/329</span>
+                <span class='fraction'>248/326</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.29% </span>
+                <span class="strong">76.07% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>251/329</span>
+                <span class='fraction'>248/326</span>
             </div>
         
             
@@ -389,12 +389,7 @@
 <a name='L324'></a><a href='#L324'>324</a>
 <a name='L325'></a><a href='#L325'>325</a>
 <a name='L326'></a><a href='#L326'>326</a>
-<a name='L327'></a><a href='#L327'>327</a>
-<a name='L328'></a><a href='#L328'>328</a>
-<a name='L329'></a><a href='#L329'>329</a>
-<a name='L330'></a><a href='#L330'>330</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L327'></a><a href='#L327'>327</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -440,9 +435,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -547,6 +540,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -726,7 +720,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 &nbsp;
@@ -734,7 +728,7 @@ import { Input } from "@/components/ui/input";
 &nbsp;
 import { Button } from "@/components/ui/button";
 &nbsp;
-import { LoginSchema, LoginSchemaEn, TwoFASchema } from "@/lib/zodschema";
+import { LoginSchema, LoginSchemaEn } from "@/lib/zodschema";
 import { DisabledUserAction } from "@/lib/login";
 import { FormError } from "@/components/Form-error";
 import { FormSuccess } from "@/components/Form-success";
@@ -742,12 +736,10 @@ import { FormSuccess } from "@/components/Form-success";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 &nbsp;
-import { useToast } from "@/components/ui/use-toast";
 &nbsp;
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
 import { Login2fa2 } from "./login2fa";
-import { log } from "util";
 &nbsp;
 interface QrcodeType {
   qrCodeUrl: string;
@@ -767,7 +759,6 @@ interface FailedAttemptsState {
 &nbsp;
 export const LoginForm2fa = () =&gt; {
   const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === <span class="branch-0 cbranch-no" title="branch not covered" >"OAuthAccountNotLinked"</span>
 <span class="cstat-no" title="statement not covered" >      ? "Email already in use with different provider!"</span>
@@ -785,7 +776,6 @@ export const LoginForm2fa = () =&gt; {
     email: string;
     password: string;
   } | null&gt;(null);
-  const path = usePathname();
   const lang = "en";
   const loginschemaform = lang === "en" ? LoginSchemaEn<span class="branch-0 cbranch-no" title="branch not covered" > : LoginSchema;</span>
   const form = useForm&lt;z.infer&lt;typeof loginschemaform&gt;&gt;({
@@ -877,7 +867,8 @@ export const LoginForm2fa = () =&gt; {
     });
   };
 &nbsp;
-&nbsp;
+ console.log("hidelogin", hidelogin);
+ 
   const handleSubmitResend = <span class="fstat-no" title="function not covered" >async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    console.log("loginCredentials", loginCredentials);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1057,7 +1048,7 @@ export const LoginForm2fa = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-15T18:49:59.317Z
+                at 2025-07-15T20:53:25.713Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

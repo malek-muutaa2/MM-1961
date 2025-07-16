@@ -26,7 +26,7 @@ function blobToReadable(blob: Blob): Readable {
 }
 
 export class S3StorageService {
-  private config: S3Config
+  private readonly config: S3Config
 
   constructor(config: S3Config) {
     this.config = config
@@ -66,18 +66,7 @@ export class S3StorageService {
       for (let start = 0; start < file.size; start += partSize) {
         const end = Math.min(start + partSize, file.size);
         const chunk = file.slice(start, end);
-        // const body = blobToReadable(chunk);
-
-        // const chunkData = await (async () => {
-        //   if (typeof window === 'undefined') {
-        //     // Node.js environment
-        //     const { Readable } = await import('stream');
-        //     return Readable.from(chunk.stream());
-        //   } else {
-        //     // Browser environment
-        //     return await chunk.arrayBuffer();
-        //   }
-        // })();
+  
         const chunkData: any = await (async () => {
           if (typeof window === 'undefined') {
             // Environnement Node.js
@@ -182,7 +171,6 @@ export class S3StorageService {
         ContentType: file.type || "application/octet-stream",
 
       };
-      // console.log("Uploading file to S3:", uploadParams);
 
       // Simulate AWS S3 upload with timeout
       const controller = new AbortController()
@@ -308,7 +296,6 @@ export class S3StorageService {
           throw new Error(`S3 upload failed: ${response.statusText}`)
         }
 
-        const result = await response.json()
 
         return {
           url: `https://${this.config.bucketName}.s3.${this.config.region}.amazonaws.com/${filePath}`,

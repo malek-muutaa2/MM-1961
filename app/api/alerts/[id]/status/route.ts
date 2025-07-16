@@ -16,7 +16,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
         console.log("Current user:", currentUser)
         // Await params first
-        const resolvedParams = await params
+        const resolvedParams = params
         const alertId = Number.parseInt(resolvedParams.id)
         const { status, comment, currentStatus } = await request.json()
 
@@ -34,7 +34,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         const updatedAlert = await db
             .update(alerts)
             .set({
-                status: status as any,
+                status: status,
                 resolvedAt: status === "resolved" ? new Date() : null,
             })
             .where(eq(alerts.id, alertId))
@@ -51,10 +51,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
         await db.insert(alertComments).values({
             alertId,
-            updatedStatus: status as any,
+            updatedStatus: status,
             comment: commentText,
             createdAt: new Date(),
-            createdBy: currentUser.id, // TODO: Get from session
+            createdBy: currentUser.id,
         })
 
         return NextResponse.json({

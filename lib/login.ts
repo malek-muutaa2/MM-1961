@@ -22,7 +22,7 @@ export const login = async (
 
   const existingUser = await findUniqueUser(email);
   // console.log(existingUser)
-  if (!existingUser[0] || !existingUser[0].email || !existingUser[0].password) {
+  if (!existingUser[0]?.email || !existingUser[0]?.password) {
     return { error: "Utilisateur non trouvé." };
   }
   if (existingUser[0].isDisabled === true) {

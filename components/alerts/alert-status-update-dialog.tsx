@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import {useState, useEffect, JSX} from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -31,13 +31,32 @@ interface StatusOption {
     description: string
 }
 
-export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }: AlertStatusUpdateDialogProps) {
+export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }: Readonly<AlertStatusUpdateDialogProps>) {
     const [selectedStatus, setSelectedStatus] = useState<string>("")
     const [comment, setComment] = useState("")
     const [statusOptions, setStatusOptions] = useState<StatusOption[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingOptions, setIsLoadingOptions] = useState(true)
     const { toast } = useToast()
+
+    // Déduire le variant
+    const severityVariantMap: Record<string, "destructive" | "default" | "outline"> = {
+        critical: "destructive",
+        warning: "default",
+        info: "outline", // optionnel si tu veux être explicite
+    }
+
+    const severityVariant = severityVariantMap[alert.severity] ?? "outline"
+
+
+// Déduire l'icône
+    const severityIconsMap: Record<string, JSX.Element> = {
+        critical: <AlertCircle className="mr-1 h-2 w-2" />,
+        warning: <AlertTriangle className="mr-1 h-2 w-2" />,
+        info: <Info className="mr-1 h-2 w-2" />,
+    }
+
+    const severityIcon = severityIconsMap[alert.severity] ?? <Info className="mr-1 h-2 w-2" />
 
     // Récupérer les options de statut à partir de l'enum de la base de données
     useEffect(() => {
@@ -105,7 +124,7 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
             // Success toast with checkmark icon
             toast({
                 title: "Status Updated Successfully",
-                description: `Alert status changed from "${alert.status}" to "${selectedOption?.label || selectedStatus}"`,
+                description: `Alert status changed from "${alert.status}" to "${selectedOption?.label ?? selectedStatus}"`,
                 variant: "default",
                 duration: 5000,
             })
@@ -114,7 +133,7 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
             setTimeout(() => {
                 toast({
                     title: "✅ Status Updated",
-                    description: `Changed to ${selectedOption?.label || selectedStatus}`,
+                    description: `Changed to ${selectedOption?.label ?? selectedStatus}`,
                 })
             }, 100)
 
@@ -152,23 +171,8 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
                                 <div className="text-xs text-muted-foreground mt-1">{alert.description}</div>
                                 <div className="flex items-center justify-between mt-2">
                                     <div className="flex items-center space-x-2">
-                                        <Badge
-                                            variant={
-                                                alert.severity === "critical"
-                                                    ? "destructive"
-                                                    : alert.severity === "warning"
-                                                        ? "default"
-                                                        : "outline"
-                                            }
-                                            className="text-xs"
-                                        >
-                                            {alert.severity === "critical" ? (
-                                                <AlertCircle className="mr-1 h-2 w-2" />
-                                            ) : alert.severity === "warning" ? (
-                                                <AlertTriangle className="mr-1 h-2 w-2" />
-                                            ) : (
-                                                <Info className="mr-1 h-2 w-2" />
-                                            )}
+                                        <Badge variant={severityVariant} className="text-xs">
+                                            {severityIcon}
                                             {alert.severity}
                                         </Badge>
                                         <span className="text-xs text-muted-foreground">{alert.kpi}</span>
@@ -183,39 +187,44 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
 
                     {/* Status Selection */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">New Status</label>
-                        {isLoadingOptions ? (
-                            <div className="h-10 bg-muted animate-pulse rounded-md" />
-                        ) : (
-                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {statusOptions
-                                        .filter((option) => option.value !== alert.status) // Ne pas afficher le statut actuel
-                                        .map((option) => (
-                                            <SelectItem key={option.value} value={option.value}>
-                                                <div>
-                                                    <div className="font-medium capitalize">{option.label}</div>
-                                                    <div className="text-xs text-muted-foreground">{option.description}</div>
-                                                </div>
-                                            </SelectItem>
-                                        ))}
-                                </SelectContent>
-                            </Select>
-                        )}
+                        <label htmlFor="alert-status-select" className="text-sm font-medium">
+                            New Status
+                        </label> {isLoadingOptions ? (
+                        <div className="h-10 bg-muted animate-pulse rounded-md" />
+                    ) : (
+                        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {statusOptions
+                                    .filter((option) => option.value !== alert.status) // Ne pas afficher le statut actuel
+                                    .map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            <div>
+                                                <div className="font-medium capitalize">{option.label}</div>
+                                                <div className="text-xs text-muted-foreground">{option.description}</div>
+                                            </div>
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                    )}
                     </div>
 
                     {/* Comment Input */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">Comment (Optional)</label>
+                        <label htmlFor="alert-comment-textarea" className="text-sm font-medium">
+                            Comment (Optional)
+                        </label>
                         <Textarea
-                            placeholder="Add a comment about this status change..."
+                            id="alert-comment-textarea"
+                            placeholder="Write your comment here..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            rows={3}
+                            rows={4}
                         />
+
                     </div>
                 </div>
 

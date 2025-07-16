@@ -11,7 +11,6 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 export const ResetSchema = z.object({
@@ -46,12 +45,11 @@ export default function FormRecovery({
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const lang = "en";
   const { resolvedTheme } = useTheme();
   const [logo, setLogo] = useState("/images/muutaa-logo.png");
   useEffect(() => {
     setLogo(
-      resolvedTheme === "light" ? "/images/muutaa-logo.png" : "/images/muutaa-logo.png",
+      "/images/muutaa-logo.png"
     );
   }, [resolvedTheme]);
 

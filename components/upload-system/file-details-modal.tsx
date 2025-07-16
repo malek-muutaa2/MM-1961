@@ -21,7 +21,6 @@ interface FileDetailsModalProps {
 
 export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<FileDetailsModalProps>) {
   const [fileInfo, setFileInfo] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (isOpen && file) {
@@ -29,25 +28,40 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
     }
   }, [isOpen, file])
 
+  const getFileContentType = (fileName: string): string => {
+    const extension = fileName.split('.').pop()?.toLowerCase()
+    switch (extension) {
+      case "csv":
+        return "text/csv"
+      case "xlsx":
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      case "pdf":
+        return "application/pdf"
+      case "txt":
+        return "text/plain"
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg"
+      case "png":
+        return "image/png"
+      case "gif":
+        return "image/gif"
+      default:
+        return "application/octet-stream"
+    }
+  }
   const fetchFileDetails = async () => {
     if (!file) return
 
-    setLoading(true)
     try {
       // You could add an API endpoint to get detailed file info
       // For now, we'll use the basic file information
       setFileInfo({
-        contentType: file.name.endsWith(".csv")
-          ? "text/csv"
-          : file.name.endsWith(".xlsx")
-            ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            : "application/octet-stream",
+        contentType: getFileContentType(file.name),
         cacheControl: "public, max-age=31536000",
       })
     } catch (error) {
       console.error("Failed to fetch file details:", error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -77,6 +91,7 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
   }
 
   if (!file) return null
+ console.log("loading", loading);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -90,7 +105,7 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
           {/* Basic Information */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">File Name</label>
+              <label htmlFor={"File Name"} className="text-sm font-medium text-muted-foreground">File Name</label>
               <p className="text-sm font-mono bg-muted p-2 rounded">{file.name}</p>
             </div>
             <div>
@@ -109,7 +124,7 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
 
           {/* File URL */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground">File URL</label>
+            <label htmlFor="File URL" className="text-sm font-medium text-muted-foreground">File URL</label>
             <div className="flex items-center gap-2 mt-1">
               <p className="text-sm font-mono bg-muted p-2 rounded flex-1 truncate">{file.url}</p>
               <Button variant="outline" size="sm" onClick={() => copyToClipboard(file.url)}>

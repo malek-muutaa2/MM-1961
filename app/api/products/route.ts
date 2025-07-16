@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db/dbpostgres"
-import { products } from "@/lib/db/schema"
 
 export async function GET() {
   try {

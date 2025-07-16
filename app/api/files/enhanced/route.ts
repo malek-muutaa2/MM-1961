@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url)
         const configId = searchParams.get("config_id")
         const storageType = searchParams.get("storage_type")
-        const limit = Number.parseInt(searchParams.get("limit") || "100")
+        const limit = Number.parseInt(searchParams.get("limit") ?? "100")
 
         // Build query with joins to get configuration and storage details
         const query = db
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         const formattedFiles = filteredFiles.map((file) => ({
             id: file.id,
             name: file.fileName,
-            url: generateFileUrl(file.filePath, file.storageType || "local"),
+            url: generateFileUrl(file.filePath, file.storageType ?? "local"),
             size: file.fileSize,
             uploadedAt: file.completedAt || file.startedAt,
             status: file.status,
@@ -107,9 +107,6 @@ export async function GET(request: NextRequest) {
 function generateFileUrl(filePath: string, storageType: string): string {
     // Generate appropriate URLs based on storage type
     switch (storageType) {
-        case "vercel_blob":
-            return `https://blob.vercel-storage.com/${filePath}`
-        case "s3":
         case "vercel_blob":
             return `https://blob.vercel-storage.com/${filePath}`
         case "s3":
