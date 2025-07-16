@@ -36,7 +36,6 @@ export class AzureBlobStorageService {
           throw new Error(`Azure Blob upload failed: ${response.statusText}`)
         }
 
-        const result = await response.json()
         return {
           url: `https://${this.config.accountName}.blob.core.windows.net/${this.config.containerName}/${filePath}`,
           pathname: filePath,

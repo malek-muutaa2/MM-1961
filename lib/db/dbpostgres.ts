@@ -20,6 +20,16 @@ class MyLogger implements Logger {
     }
 }
 
+let logger: Logger | false;
+
+if (process.env.DB_HOST === 'localhost' && logSql) {
+    logger = new DefaultLogger({writer: new MyLogWriter()});
+} else if (process.env.DB_HOST !== 'localhost' && logSql) {
+    logger = new MyLogger();
+} else {
+    logger = false;
+}
+
 export const db = drizzleNode(
     new Pool({
         host: process.env.DB_HOST,
@@ -36,10 +46,7 @@ export const db = drizzleNode(
     }),
     {
         schema,
-        logger: process.env.DB_HOST === 'localhost' && logSql
-            ? new DefaultLogger({writer: new MyLogWriter()})
-            : process.env.DB_HOST !== 'localhost' && logSql
-                ? new MyLogger() : false,
+        logger,
     }
 )
 

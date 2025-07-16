@@ -45,9 +45,8 @@ import {
   DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,DropdownMenuItem
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
 import {UserType} from "@/lib/db/schema";
 
@@ -58,6 +57,16 @@ export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
   if(!userinfo) {
     return null
   }
+  let roleLabel = "";
+
+if (role === "rafed-admin") {
+  roleLabel = "Rafed Administrator";
+} else if (role === "rafed-provider") {
+  roleLabel = "Rafed Provider";
+} else {
+  roleLabel = "Supply Chain Manager";
+}
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">
@@ -414,11 +423,7 @@ export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
                 <div className="flex flex-col items-start text-sm">
                   <span className="font-medium">{userinfo.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {role === "rafed-admin"
-                      ? "Rafed Administrator"
-                      : role === "rafed-provider"
-                        ? "Rafed Provider"
-                        : "Supply Chain Manager"}
+                    {roleLabel}
                   </span>
                 </div>
               )}

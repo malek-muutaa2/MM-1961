@@ -283,7 +283,6 @@ export class ValidationService {
     ): ValidationError[] {
         const errors: ValidationError[] = []
 
-        // todo : check if valuesRequired
         // Required field validation
         if (columnConfig.valuesRequired && !value || columnConfig.valuesRequired && value.trim() === "") {
             errors.push({
@@ -773,10 +772,7 @@ export class ValidationService {
             // Normalize the format to lowercase and validate structure
             const normalizedFormat = format.toLowerCase();
             const separator = /[/-]/.exec(normalizedFormat)?.[0] || '-';
-            // const pattern = /^(yyyy|yy)([\/\-]?(mm|m)([\/\-]?(dd|d))|((mm|m)([\/\-]?(dd|d)([\/\-]?(yyyy|yy)))|((dd|d)([\/\-]?(mm|m)([\/\-]?(yyyy|yy))))$/
-            // if (!pattern.test(normalizedFormat)) {
-            //     throw new Error('INVALID_FORMAT_PATTERN');
-            // }
+        
             if (!this.isValidDateFormat(normalizedFormat)) {
                 throw new Error('INVALID_FORMAT_PATTERN');
             }
@@ -872,10 +868,7 @@ export class ValidationService {
         // If pattern is specified, validate against it first
         if (columnConfig?.pattern && columnConfig?.pattern.trim() !== "") {
             try {
-                // const regex = new RegExp(columnConfig.pattern)
-                // if (!regex.test(value)) {
-                // if (!this.validateWithFormat(value, columnConfig?.pattern)) {
-                // if (!this.validateDateWithFormat(value, columnConfig?.pattern)) {
+          
                 if (!isMatch(value,  columnConfig?.pattern.toLocaleLowerCase())) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
@@ -907,7 +900,6 @@ export class ValidationService {
         // const parsedDate = new Date(value)
         // if (isNaN(parsedDate.getTime())) {
         if (!this.validateGeneralPattern(value)) {
-        //  if(!isValid(value)){
             errors.push({
                 code: "INVALID_DATE",
                 message: `${columnConfig.display_name} is not a valid date`,
@@ -935,7 +927,6 @@ export class ValidationService {
         // If pattern is specified, validate against it first
         if (columnConfig.pattern) {
             try {
-                // if (!this.validateWithFormat(value, columnConfig?.pattern)) {
                 if (!this.validateDateTimeWithFormat(value, columnConfig?.pattern)) {
                     errors.push({
                         code: "DATETIME_FORMAT_MISMATCH",
