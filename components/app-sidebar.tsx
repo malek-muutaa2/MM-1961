@@ -48,7 +48,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { useRole } from "@/contexts/role-context"
-import {UserType} from "@/lib/db/schema";
 
 export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
   const { state } = useSidebar()

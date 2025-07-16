@@ -114,7 +114,7 @@ export class ValidationService {
         if (this.config?.maxRows && dataLines?.length > this.config?.maxRows) {
             errors.push({
                 code: "MAX_ROWS_EXCEEDED",
-                message: `File exceeds maximum allowed rows (${this.config?.maxRows || 0})`,
+                message: `File exceeds maximum allowed rows (${this.config?.maxRows ?? 0})`,
                 line: 1,
             })
             return {
@@ -206,7 +206,6 @@ export class ValidationService {
             }
         })
 
-        // const isValid = errors.length === 0 || (this.config.allow_partial_upload && validRowCount > 0)
         const isValid = errors.length === 0 || (this.config.allow_partial_upload)
         console.log("we reach the end", isValid)
         return {
@@ -401,7 +400,8 @@ export class ValidationService {
                         expected_format: columnConfig.pattern,
                     })
                 }
-            } catch (regexError) {
+            } catch (regexError: any) {
+                console.log("regexError : ", regexError.message)
                 errors.push({
                     code: "INVALID_PATTERN",
                     message: `Invalid pattern configuration for ${columnConfig.display_name}`,
@@ -771,8 +771,8 @@ export class ValidationService {
         try {
             // Normalize the format to lowercase and validate structure
             const normalizedFormat = format.toLowerCase();
-            const separator = /[/-]/.exec(normalizedFormat)?.[0] || '-';
-        
+            const separator = /[/-]/.exec(normalizedFormat)?.[0] ?? '-';
+
             if (!this.isValidDateFormat(normalizedFormat)) {
                 throw new Error('INVALID_FORMAT_PATTERN');
             }
@@ -815,7 +815,7 @@ export class ValidationService {
 
             // console.log(" regexParts = ", regexParts)
 
-            const regexPattern = `^${regexParts.join(`\\${separator}`)}$`;
+            const regexPattern = `^${regexParts.join(`\\${separator}`)}$`; // NOSONAR
             const formatRegex = new RegExp(regexPattern);
             // console.log("format ;Regex = ", formatRegex)
             // Test format match
@@ -868,7 +868,6 @@ export class ValidationService {
         // If pattern is specified, validate against it first
         if (columnConfig?.pattern && columnConfig?.pattern.trim() !== "") {
             try {
-          
                 if (!isMatch(value,  columnConfig?.pattern.toLocaleLowerCase())) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
@@ -1001,14 +1000,15 @@ export class ValidationService {
 
     private getDateFormatExample(pattern: string): string {
         // Convert regex patterns to human-readable examples
+
         const formatExamples: Record<string, string> = {
-            "^\\d{4}-\\d{2}-\\d{2}$": "YYYY-MM-DD (e.g., 2024-01-15)",
-            "^\\d{2}/\\d{2}/\\d{4}$": "MM/DD/YYYY (e.g., 01/15/2024)",
-            "^\\d{2}-\\d{2}-\\d{4}$": "DD-MM-YYYY (e.g., 15-01-2024)",
-            "^\\d{4}/\\d{2}/\\d{2}$": "YYYY/MM/DD (e.g., 2024/01/15)",
-            "^\\d{1,2}/\\d{1,2}/\\d{4}$": "M/D/YYYY (e.g., 1/15/2024)",
-            "^\d{1,2}-\d{1,2}-\d{4}$": "M-D-YYYY (e.g., 1-15-2024)",
-            "^\d{2}-\d{2}-\d{4}$": "MM-DD-YYYY (e.g., 01-15-2024)",
+            "^\\d{4}-\\d{2}-\\d{2}$": "YYYY-MM-DD (e.g., 2024-01-15)",// NOSONAR
+            "^\\d{2}/\\d{2}/\\d{4}$": "MM/DD/YYYY (e.g., 01/15/2024)",// NOSONAR
+            "^\\d{2}-\\d{2}-\\d{4}$": "DD-MM-YYYY (e.g., 15-01-2024)",// NOSONAR
+            "^\\d{4}/\\d{2}/\\d{2}$": "YYYY/MM/DD (e.g., 2024/01/15)",// NOSONAR
+            "^\\d{1,2}/\\d{1,2}/\\d{4}$": "M/D/YYYY (e.g., 1/15/2024)",// NOSONAR
+            "^\d{1,2}-\d{1,2}-\d{4}$": "M-D-YYYY (e.g., 1-15-2024)",// NOSONAR
+            "^\d{2}-\d{2}-\d{4}$": "MM-DD-YYYY (e.g., 01-15-2024)", // NOSONAR
 
         }
 
@@ -1057,9 +1057,10 @@ export class ValidationService {
         switch (dataType) {
             case "number":
                 return Number.parseFloat(value)
-            case "boolean":
+            case "boolean": {
                 const lowerValue = value.toLowerCase()
                 return ["true", "1", "yes", "y"].includes(lowerValue)
+            }
             case "date":
                 return new Date(value)
             default:

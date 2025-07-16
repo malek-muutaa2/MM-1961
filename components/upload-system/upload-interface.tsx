@@ -44,7 +44,9 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
         e.stopPropagation()
         setDragActive(false)
 
-        handleFileSelection(e.dataTransfer?.files?.[0])
+        if (e?.dataTransfer?.files && e?.dataTransfer.files?.[0]) {
+            handleFileSelection(e.dataTransfer.files[0])
+        }
     }, [])
 
     const handleFileSelection = (file: File) => {
@@ -88,10 +90,9 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
     }
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target?.files?.[0];
-if (file) {
-  handleFileSelection(file);
-}
+        if (e?.target?.files && e?.target?.files?.[0]) {
+            handleFileSelection(e.target.files[0])
+        }
     }
 
     const handleUpload = async () => {
@@ -209,9 +210,8 @@ if (file) {
                     {/* Configuration Selection */}
                     <div className="w-full flex flex-row justify-center items-center gap-4">
                         <div className="w-full space-y-2 flex-2">
-  <span id="config-label" className="text-sm font-medium">
-    Upload Configuration
-  </span>                            <Select value={selectedConfig} onValueChange={setSelectedConfig}>
+                            <label htmlFor="Upload" className="text-sm font-medium">Upload Configuration</label>
+                            <Select value={selectedConfig} onValueChange={setSelectedConfig}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select  an upload  configuration "/>
                                 </SelectTrigger>

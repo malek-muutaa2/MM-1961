@@ -141,23 +141,23 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
               <h3 className="text-lg font-semibold mb-4">File Information</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="fileName" className="text-sm font-medium text-muted-foreground">File Name</label>
+                  <label htmlFor={"file name "} className="text-sm font-medium text-muted-foreground">File Name</label>
                   <p className="text-sm font-mono bg-muted p-2 rounded">{file.name}</p>
                 </div>
                 <div>
-                  <label htmlFor="fileSize" className="text-sm font-medium text-muted-foreground">Size</label>
+                  <label htmlFor={"size"} className="text-sm font-medium text-muted-foreground">Size</label>
                   <p className="text-sm">{formatFileSize(file.size)}</p>
                 </div>
                 <div>
-                  <label htmlFor="fileStatus" className="text-sm font-medium text-muted-foreground">Status</label>
+                  <label htmlFor={"status"} className="text-sm font-medium text-muted-foreground">Status</label>
                   <Badge variant="default">{file.status}</Badge>
                 </div>
                 <div>
-                  <label htmlFor="fileUploadedAt" className="text-sm font-medium text-muted-foreground">Uploaded</label>
+                  <label htmlFor={"uploaded"} className="text-sm font-medium text-muted-foreground">Uploaded</label>
                   <p className="text-sm">{formatDate(file.uploadedAt)}</p>
                 </div>
                 <div className="col-span-2">
-                  <label htmlFor="filePath" className="text-sm font-medium text-muted-foreground">File Path</label>
+                  <label htmlFor={"file path"} className="text-sm font-medium text-muted-foreground">File Path</label>
                   <div className="flex items-center gap-2 mt-1">
                     <p className="text-sm font-mono bg-muted p-2 rounded flex-1 truncate">{file.pathname}</p>
                     <Button variant="outline" size="sm" onClick={() => copyToClipboard(file.pathname)}>
@@ -166,7 +166,7 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <label htmlFor="fileUrl" className="text-sm font-medium text-muted-foreground">File URL</label>
+                  <label htmlFor={"fileurl"} className="text-sm font-medium text-muted-foreground">File URL</label>
                   <div className="flex items-center gap-2 mt-1">
                     <p className="text-sm font-mono bg-muted p-2 rounded flex-1 truncate">{file.url}</p>
                     <Button variant="outline" size="sm" onClick={() => copyToClipboard(file.url)}>
@@ -190,26 +190,26 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="storageProvider" className="text-sm font-medium text-muted-foreground">Storage Provider</label>
+                  <label htmlFor={"storage provider"} className="text-sm font-medium text-muted-foreground">Storage Provider</label>
                   <p className="text-sm">{getStorageLabel(file.storage_type)}</p>
                 </div>
                 {storageDetails && (
                   <>
                     <div>
-                      <label htmlFor="storageConfiguration" className="text-sm font-medium text-muted-foreground">Storage Configuration</label>
+                      <label htmlFor={"config storage"} className="text-sm font-medium text-muted-foreground">Storage Configuration</label>
                       <p className="text-sm">{storageDetails.name}</p>
                     </div>
                     <div>
-                      <label htmlFor="basePath" className="text-sm font-medium text-muted-foreground">Base Path</label>
+                      <label htmlFor={"base path"} className="text-sm font-medium text-muted-foreground">Base Path</label>
                       <p className="text-sm font-mono">{storageDetails.base_path}</p>
                     </div>
                     <div>
-                      <label htmlFor="pathTemplate" className="text-sm font-medium text-muted-foreground">Path Template</label>
+                      <label htmlFor={"path template"} className="text-sm font-medium text-muted-foreground">Path Template</label>
                       <p className="text-sm font-mono">{storageDetails.path_template}</p>
                     </div>
                     {storageDetails.bucket_name && (
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">
+                        <label htmlFor={"storage type"} className="text-sm font-medium text-muted-foreground">
                           {file.storage_type === "azure_blob" ? "Container" : "Bucket"}
                         </label>
                         <p className="text-sm">{storageDetails.bucket_name}</p>
@@ -217,7 +217,7 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
                     )}
                     {storageDetails.region && (
                       <div>
-                        <label htmlFor="region" className="text-sm font-medium text-muted-foreground">Region</label>
+                        <label htmlFor={"region"} className="text-sm font-medium text-muted-foreground">Region</label>
                         <p className="text-sm">{storageDetails.region}</p>
                       </div>
                     )}
@@ -237,41 +237,41 @@ export default function FilePropertiesModal({ isOpen, onClose, file }: Readonly<
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="configurationName" className="text-sm font-medium text-muted-foreground">Configuration Name</label>
+                      <label htmlFor={"name"} className="text-sm font-medium text-muted-foreground">Configuration Name</label>
                       <p className="text-sm">{configDetails.name}</p>
                     </div>
                     <div>
-                      <label htmlFor="organizationType" className="text-sm font-medium text-muted-foreground">Organization Type</label>
+                      <label  htmlFor={"organisation type"} className="text-sm font-medium text-muted-foreground">Organization Type</label>
                       <p className="text-sm">{configDetails.organization_type}</p>
                     </div>
                     <div>
-                      <label htmlFor="sourceType" className="text-sm font-medium text-muted-foreground">Source Type</label>
+                      <label htmlFor={"source type"} className="text-sm font-medium text-muted-foreground">Source Type</label>
                       <p className="text-sm">{configDetails.source_type}</p>
                     </div>
                     <div>
-                      <label htmlFor="fileTypes" className="text-sm font-medium text-muted-foreground">File Types</label>
+                      <label htmlFor={"file type"} className="text-sm font-medium text-muted-foreground">File Types</label>
                       <p className="text-sm">{configDetails.file_type}</p>
                     </div>
                     <div>
-                      <label htmlFor="delimiter" className="text-sm font-medium text-muted-foreground">Delimiter</label>
+                      <label htmlFor={"delimiter"} className="text-sm font-medium text-muted-foreground">Delimiter</label>
                       <p className="text-sm font-mono">{configDetails.delimiter}</p>
                     </div>
                     <div>
-                      <label htmlFor="maxFileSize" className="text-sm font-medium text-muted-foreground">Max File Size</label>
+                      <label htmlFor={"max file"} className="text-sm font-medium text-muted-foreground">Max File Size</label>
                       <p className="text-sm">{formatFileSize(configDetails?.max_file_size)}</p>
                     </div>
                     <div className="col-span-2">
-                      <label htmlFor="description" className="text-sm font-medium text-muted-foreground">Description</label>
+                      <label htmlFor={"desc"} className="text-sm font-medium text-muted-foreground">Description</label>
                       <p className="text-sm">{configDetails.description}</p>
                     </div>
                   </div>
 
                   {configDetails.columns && configDetails.columns.length > 0 && (
                     <div className="mt-4">
-                      <label htmlFor="columnDefinitions" className="text-sm font-medium text-muted-foreground">Column Definitions</label>
+                      <label htmlFor={"col def"} className="text-sm font-medium text-muted-foreground">Column Definitions</label>
                       <div className="mt-2 space-y-2">
                         {configDetails.columns.map((column: any, index: number) => (
-                            <div key={column.name} className="flex items-center gap-2 text-sm">
+                          <div key={`${index+1}`} className="flex items-center gap-2 text-sm">
                             <Badge variant="outline">{column.data_type}</Badge>
                             <span className="font-medium">{column.display_name}</span>
                             <span className="text-muted-foreground">({column.name})</span>

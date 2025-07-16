@@ -16,7 +16,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
         console.log("Current user:", currentUser)
         // Await params first
-        const resolvedParams = await params
+        const resolvedParams = params
         const alertId = Number.parseInt(resolvedParams.id)
         const { status, comment, currentStatus } = await request.json()
 
