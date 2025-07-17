@@ -52,7 +52,7 @@ export const login = async (
 export const DisabledUserAction = async (email: string) => {
   const existingUser = await findUniqueUser(email);
 
-  if (!existingUser[0] || !existingUser[0].email || !existingUser[0].password) {
+  if (!existingUser[0]?.email || !existingUser[0]?.password) {
     return { error: "L'email n'existe pas !" };
   }
   await db

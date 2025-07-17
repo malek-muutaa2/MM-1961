@@ -50,7 +50,7 @@ export default function HistoryPage() {
         <CardContent>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div>
-              <label className="mb-2 block text-sm font-medium">Search</label>
+              <label htmlFor="search" className="mb-2 block text-sm font-medium">Search</label>
               <Input
                 placeholder="Search forecasts..."
                 value={searchQuery}
@@ -59,7 +59,7 @@ export default function HistoryPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Year</label>
+              <label htmlFor="year" className="mb-2 block text-sm font-medium">Year</label>
               <Select value={yearFilter} onValueChange={setYearFilter}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Year" />
@@ -74,7 +74,7 @@ export default function HistoryPage() {
               </Select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Month</label>
+              <label htmlFor="month" className="mb-2 block text-sm font-medium">Month</label>
               <Select value={monthFilter} onValueChange={setMonthFilter}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Month" />
@@ -89,7 +89,7 @@ export default function HistoryPage() {
               </Select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Status</label>
+              <label htmlFor="status" className="mb-2 block text-sm font-medium">Status</label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Status" />

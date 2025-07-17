@@ -172,26 +172,36 @@ export default function DashboardPage() {
               .filter((kpi) => kpi.category === "continuous_operations")
               .map((kpi) => (
                 <Card key={kpi.id}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">{kpi.name}</CardTitle>
-                    <div
-                      className={`h-4 w-4 rounded-full ${
-                        kpi.status === "on_target"
-                          ? "bg-green-500"
-                          : kpi.status === "warning"
-                            ? "bg-amber-500"
-                            : "bg-red-500"
-                      }`}
-                    />
-                  </CardHeader>
+                    {(() => {
+                      let statusColor = "";
+                      if (kpi.status === "on_target") {
+                      statusColor = "bg-green-500";
+                      } else if (kpi.status === "warning") {
+                      statusColor = "bg-amber-500";
+                      } else {
+                      statusColor = "bg-red-500";
+                      }
+                      return <div className={`h-4 w-4 rounded-full ${statusColor}`} />;
+                    })()}
+                    </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
                       {kpi.currentValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {(() => {
+                        if (kpi.unit === "percentage") return "%";
+                        if (kpi.unit === "days") return " days";
+                        return "";
+                        })()}
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Target: {kpi.targetValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {(() => {
+                        if (kpi.unit === "percentage") return "%";
+                        if (kpi.unit === "days") return " days";
+                        return "";
+                        })()}
                     </p>
                   </CardContent>
                 </Card>
@@ -214,26 +224,36 @@ export default function DashboardPage() {
               .filter((kpi) => kpi.category === "financial_optimization")
               .map((kpi) => (
                 <Card key={kpi.id}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">{kpi.name}</CardTitle>
-                    <div
-                      className={`h-4 w-4 rounded-full ${
-                        kpi.status === "on_target"
-                          ? "bg-green-500"
-                          : kpi.status === "warning"
-                            ? "bg-amber-500"
-                            : "bg-red-500"
-                      }`}
-                    />
-                  </CardHeader>
+                    {(() => {
+                      let statusColor = "";
+                      if (kpi.status === "on_target") {
+                      statusColor = "bg-green-500";
+                      } else if (kpi.status === "warning") {
+                      statusColor = "bg-amber-500";
+                      } else {
+                      statusColor = "bg-red-500";
+                      }
+                      return <div className={`h-4 w-4 rounded-full ${statusColor}`} />;
+                    })()}
+                    </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
                       {kpi.currentValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {(() => {
+                        if (kpi.unit === "percentage") return "%";
+                        if (kpi.unit === "days") return " days";
+                        return "";
+                        })()}
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Target: {kpi.targetValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {(() => {
+                        if (kpi.unit === "percentage") return "%";
+                        if (kpi.unit === "days") return " days";
+                        return "";
+                        })()}
                     </p>
                   </CardContent>
                 </Card>

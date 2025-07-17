@@ -183,7 +183,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
       console.error("Error fetching paginated data:", error)
       toast({
         title: "Erreur",
-        description: "Failed to load forecast data",
+        description: "Impossible de charger les données de prévision",
         variant: "destructive",
       })
     } finally {
@@ -285,14 +285,14 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
         fetchPaginatedData(pagination.page)
 
         toast({
-          title: "Forecast Updated",
-          description: `${forecastType.name} for ${editingItem.productName} (${editingItem.date}) updated to ${newQuantity}`,
+          title: "Prévision mise à jour",
+          description: `${forecastType.name} pour ${editingItem.productName} (${editingItem.date}) mis à jour à ${newQuantity}`,
         })
       } catch (error) {
         console.error("Error updating forecast:", error)
         toast({
-          title: "Update Failed",
-          description: "Failed to update forecast data. Please try again.",
+          title: "Échec de la mise à jour",
+          description: "Impossible de mettre à jour les données de prévision. Veuillez réessayer.",
           variant: "destructive",
         })
       } finally {
@@ -306,205 +306,211 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 
   if (loading && pagination.page === 1) {
     return (
-        <div className="flex h-[400px] items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-        </div>
+      <div className="flex h-[400px] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+      </div>
     )
   }
 
   return (
-      <div className="space-y-4">
-        {/* Filters */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-1 items-center space-x-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search products..." value={searchTerm} onChange={handleSearchChange} className="pl-8" />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All categories</SelectItem>
-                  {classifications.map((classification) => (
-                      <SelectItem key={classification.id} value={classification.name}>
-                        {classification.name}
-                      </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>SKU</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Date</TableHead>
-                {forecastTypes.map((type) => (
-                    <TableHead key={type.id} className="text-right">
-                      {type.name}
-                    </TableHead>
-                ))}
-                <TableHead>Unit</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
-                      <div className="flex items-center justify-center">
-                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                        <span className="ml-2">Loading...</span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-              ) : forecastData.length > 0 ? (
-                  forecastData.map((item, index) => (
-                      <TableRow key={`${item.productId}-${item.originalDate}-${index}`}>
-                        <TableCell className="font-medium">{item.sku}</TableCell>
-                        <TableCell>{item.productName}</TableCell>
-                        <TableCell>{item.classificationName}</TableCell>
-                        <TableCell>{item.date}</TableCell>
-                        {forecastTypes.map((type) => {
-                          const typeName = type.name.replace(/\s+/g, "")
-                          return (
-                              <TableCell key={type.id} className="text-right">
-                                {type.isEditable ? (
-                                    <button
-                                        onClick={() => handleEditClick(item, typeName)}
-                                        className="inline-flex items-center text-primary hover:underline focus:outline-none"
-                                    >
-                                      {item[typeName]?.toLocaleString() || 0}
-                                      <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
-                                    </button>
-                                ) : (
-                                    item[typeName]?.toLocaleString() || 0
-                                )}
-                              </TableCell>
-                          )
-                        })}
-                        <TableCell>Units</TableCell>
-                      </TableRow>
-                  ))
-              ) : (
-                  <TableRow>
-                    <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
-                      No forecast data available.
-                    </TableCell>
-                  </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} results
+    <div className="space-y-4">
+      {/* Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-1 items-center space-x-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Rechercher des produits..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="pl-8"
+            />
           </div>
           <div className="flex items-center space-x-2">
-            <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={!pagination.hasPrev || loading}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            <div className="flex items-center space-x-1">
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                const pageNumber = Math.max(1, pagination.page - 2) + i
-                if (pageNumber > pagination.totalPages) return null
-
-                return (
-                    <Button
-                        key={pageNumber}
-                        variant={pageNumber === pagination.page ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(pageNumber)}
-                        disabled={loading}
-                        className="w-8 h-8 p-0"
-                    >
-                      {pageNumber}
-                    </Button>
-                )
-              })}
-            </div>
-            <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={!pagination.hasNext || loading}
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Toutes les catégories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
+                {classifications.map((classification) => (
+                  <SelectItem key={classification.id} value={classification.name}>
+                    {classification.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-
-        {/* Edit Modal */}
-        <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Edit Forecast Quantity</DialogTitle>
-              <DialogDescription>
-                Update forecast quantity for {editingItem?.productName} ({editingItem?.date})
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              {forecastTypes.map((type) => {
-                const typeName = type.name.replace(/\s+/g, "")
-                if (editingItem && editingItem[typeName] !== undefined && typeName !== editingForecastType) {
-                  return (
-                      <div key={type.id} className="grid grid-cols-4 items-center gap-4">
-                        <label className="text-right text-sm font-medium col-span-2">{type.name}:</label>
-                        <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() || 0} Unités</div>
-                      </div>
-                  )
-                }
-                return null
-              })}
-
-              {editingForecastType && (
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
-                      New{" "}
-                      {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Forecast"}:
-                    </label>
-                    <div className="col-span-2">
-                      <Input
-                          id="new-forecast"
-                          type="number"
-                          value={newQuantity}
-                          onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
-                          min={0}
-                          className="w-full"
-                      />
-                    </div>
-                  </div>
-              )}
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
+
+      {/* Table */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>SKU</TableHead>
+              <TableHead>Nom du produit</TableHead>
+              <TableHead>Catégorie</TableHead>
+              <TableHead>Date</TableHead>
+              {forecastTypes.map((type) => (
+                <TableHead key={type.id} className="text-right">
+                  {type.name}
+                </TableHead>
+              ))}
+              <TableHead>Unité</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
+                  <div className="flex items-center justify-center">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                    <span className="ml-2">Chargement...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : forecastData.length > 0 ? (
+              forecastData.map((item, index) => (
+                <TableRow key={`${item.productId}-${item.originalDate}-${index}`}>
+                  <TableCell className="font-medium">{item.sku}</TableCell>
+                  <TableCell>{item.productName}</TableCell>
+                  <TableCell>{item.classificationName}</TableCell>
+                  <TableCell>{item.date}</TableCell>
+                  {forecastTypes.map((type) => {
+                    const typeName = type.name.replace(/\s+/g, "")
+                    return (
+                      <TableCell key={type.id} className="text-right">
+                        {type.isEditable ? (
+                          <button
+                            onClick={() => handleEditClick(item, typeName)}
+                            className="inline-flex items-center text-primary hover:underline focus:outline-none"
+                          >
+                            {item[typeName]?.toLocaleString() || 0}
+                            <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
+                          </button>
+                        ) : (
+                          item[typeName]?.toLocaleString() || 0
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                  <TableCell>Unités</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
+                  Aucune donnée de prévision disponible.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Affichage de {(pagination.page - 1) * pagination.limit + 1} à{" "}
+          {Math.min(pagination.page * pagination.limit, pagination.total)} sur {pagination.total} résultats
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(pagination.page - 1)}
+            disabled={!pagination.hasPrev || loading}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Précédent
+          </Button>
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+              const pageNumber = Math.max(1, pagination.page - 2) + i
+              if (pageNumber > pagination.totalPages) return null
+
+              return (
+                <Button
+                  key={pageNumber}
+                  variant={pageNumber === pagination.page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(pageNumber)}
+                  disabled={loading}
+                  className="w-8 h-8 p-0"
+                >
+                  {pageNumber}
+                </Button>
+              )
+            })}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(pagination.page + 1)}
+            disabled={!pagination.hasNext || loading}
+          >
+            Suivant
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Edit Modal */}
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Modifier la quantité de prévision</DialogTitle>
+            <DialogDescription>
+              Mettre à jour la quantité de prévision pour {editingItem?.productName} ({editingItem?.date})
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {forecastTypes.map((type) => {
+              const typeName = type.name.replace(/\s+/g, "")
+              if (editingItem && editingItem[typeName] !== undefined && typeName !== editingForecastType) {
+                return (
+                  <div key={type.id} className="grid grid-cols-4 items-center gap-4">
+                    <label className="text-right text-sm font-medium col-span-2">{type.name}:</label>
+                    <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() || 0} Unités</div>
+                  </div>
+                )
+              }
+              return null
+            })}
+
+            {editingForecastType && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
+                  Nouveau{" "}
+                  {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Prévision"}
+                  :
+                </label>
+                <div className="col-span-2">
+                  <Input
+                    id="new-forecast"
+                    type="number"
+                    value={newQuantity}
+                    onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+                    min={0}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
+              Sauvegarder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }

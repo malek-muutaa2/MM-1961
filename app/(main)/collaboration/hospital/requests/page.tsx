@@ -414,7 +414,7 @@ export default function SupplyRequestsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Provider</label>
+                  <label htmlFor="provider" className="text-sm font-medium">Provider</label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select provider" />
@@ -428,7 +428,7 @@ export default function SupplyRequestsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Department</label>
+                  <label htmlFor="department" className="text-sm font-medium">Department</label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select department" />
@@ -444,7 +444,7 @@ export default function SupplyRequestsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Priority</label>
+                  <label htmlFor="priority" className="text-sm font-medium">Priority</label>
                   <Select defaultValue="normal">
                     <SelectTrigger>
                       <SelectValue />
@@ -459,13 +459,13 @@ export default function SupplyRequestsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Expected Delivery Date</label>
-                  <Input type="date" />
+                  <label htmlFor="expected-delivery-date" className="text-sm font-medium">Expected Delivery Date</label>
+                  <Input type="date" id="expected-delivery-date" />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Notes</label>
-                  <Textarea placeholder="Add any special instructions or notes..." rows={3} />
+                  <label htmlFor="notes" className="text-sm font-medium">Notes</label>
+                  <Textarea id="notes" placeholder="Add any special instructions or notes..." rows={3} />
                 </div>
 
                 <div className="pt-2">

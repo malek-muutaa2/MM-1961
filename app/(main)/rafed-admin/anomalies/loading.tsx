@@ -9,10 +9,8 @@ export default function AnomalyDetectionLoading() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {Array(4)
-          .fill(0)
-          .map((_, i) => (
-            <Card key={i}>
+        {["card-1", "card-2", "card-3", "card-4"].map((key) => (
+            <Card key={key}>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div className="w-full">
@@ -28,25 +26,25 @@ export default function AnomalyDetectionLoading() {
 
       <div className="space-y-4">
         <div className="flex">
-          {Array(3)
-            .fill(0)
-            .map((_, i) => (
-              <Skeleton key={i} className="h-10 w-24 mx-1" />
-            ))}
+          {["btn-1", "btn-2", "btn-3"].map((key) => (
+            <Skeleton key={key} className="h-10 w-24 mx-1" />
+          ))}
         </div>
 
         <Card>
           <CardHeader>
+
             <Skeleton className="h-6 w-48 mb-2" />
             <Skeleton className="h-4 w-72" />
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              {Array(3)
+                {Array(3)
                 .fill(0)
-                .map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-full" />
-                ))}
+                .map(() => {
+                  const uniqueKey = crypto.randomUUID();
+                  return <Skeleton key={uniqueKey} className="h-10 w-full" />;
+                })}
             </div>
           </CardContent>
         </Card>
@@ -60,9 +58,11 @@ export default function AnomalyDetectionLoading() {
             <Skeleton className="h-8 w-full mb-4" />
             {Array(5)
               .fill(0)
-              .map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full mb-2" />
-              ))}
+              .map(() => {
+                // Generate a unique key for each skeleton row
+                const uniqueKey = crypto.randomUUID();
+                return <Skeleton key={uniqueKey} className="h-12 w-full mb-2" />;
+              })}
           </CardContent>
         </Card>
       </div>
