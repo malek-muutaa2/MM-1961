@@ -215,13 +215,13 @@ export async function POST(request: NextRequest) {
         // Upload to storage using storage service (only S3 for now)
         const storageService = new StorageService({
             storage_type: config.storageConfig?.storageType as any,
-            base_path: config.storageConfig?.basePath || "uploads",
-            path_template: config.storageConfig?.pathTemplate || "{base_path}/{file_name}.{ext}",
+            base_path: config.storageConfig?.basePath ?? "uploads",
+            path_template: config.storageConfig?.pathTemplate ?? "{base_path}/{file_name}.{ext}",
             access_type: config.storageConfig?.accessType as any,
-            bucket_name: config.storageConfig?.bucketName || "optivians-bucket",
-            region: config.storageConfig?.region || "us-east-1",
-            aws_access_key_id: config.storageConfig?.awsAccessKeyId || "",
-            aws_secret_access_key: config.storageConfig?.awsSecretAccessKey || "",
+            bucket_name: config.storageConfig?.bucketName ?? "optivians-bucket",
+            region: config.storageConfig?.region ?? "us-east-1",
+            aws_access_key_id: config.storageConfig?.awsAccessKeyId ?? "",
+            aws_secret_access_key: config.storageConfig?.awsSecretAccessKey ?? "",
         })
 
         let uploadResult

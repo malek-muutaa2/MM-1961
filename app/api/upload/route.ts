@@ -219,7 +219,6 @@ async function processFileContent(content: string, config: any) {
   // Validate headers
   const requiredColumns = config.columns.filter((col: any) => col.required)
 
-  // todo :  add check for valuesRequired
   for (const requiredCol of requiredColumns) {
     if (!headers.includes(requiredCol.name)) {
       rowErrors.push({
@@ -286,7 +285,7 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
       }
       break
 
-    case "number":
+    case "number": {
       const numValue = Number.parseFloat(value)
       if (isNaN(numValue)) {
         return {
@@ -317,7 +316,8 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
       }
       break
 
-    case "string":
+    }
+    case "string": {
       if (columnConfig.minLength && value.length < columnConfig.minLength) {
         return {
           code: "VALUE_TOO_SHORT",
@@ -349,6 +349,7 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
         }
       }
       break
+    }
   }
 
   return null

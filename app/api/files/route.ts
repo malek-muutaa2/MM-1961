@@ -4,8 +4,8 @@ import { list, del } from "@vercel/blob"
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const prefix = searchParams.get("prefix") || ""
-    const limit = Number.parseInt(searchParams.get("limit") || "50")
+    const prefix = searchParams.get("prefix") ?? ""
+    const limit = Number.parseInt(searchParams.get("limit") ?? "50")
 
     const result = await list({
       prefix,
