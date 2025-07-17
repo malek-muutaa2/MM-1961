@@ -254,7 +254,7 @@ export const getKPIHistoricalData = (kpiId: string, timeRange: "30d" | "90d" | "
 
   for (let i = 0; i < dataPoints; i++) {
     // Add some random noise to make the data more realistic
-    const noise = (Math.random() - 0.5) * (kpi.trendValue / 2)
+    const noise = (Math.random() - 0.5) * (kpi.trendValue / 2) //NOSONAR
 
     // For older data points, reverse the trend
     value = value - (kpi.trend === "increasing" ? changePerDay : -changePerDay) + noise

@@ -19,7 +19,7 @@ type EventDetailsModalProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function EventDetailsModal({ event, open, onOpenChange }: EventDetailsModalProps) {
+export function EventDetailsModal({ event, open, onOpenChange }: Readonly<EventDetailsModalProps>) {
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case "high":

@@ -20,7 +20,7 @@ const invitations: Invitation[] = [
   {
     id: "1",
     email: "david.miller@hospital.com",
-    role: "provider",
+    role: "Provider",
     organization: "Central Hospital",
     status: "pending",
     createdAt: "2023-06-01T10:30:00Z",
@@ -30,7 +30,7 @@ const invitations: Invitation[] = [
   {
     id: "2",
     email: "lisa.wong@supplier.com",
-    role: "supplier",
+    role: "Supplier",
     organization: "Wong Medical Supplies",
     status: "pending",
     createdAt: "2023-06-02T14:15:00Z",
@@ -40,7 +40,7 @@ const invitations: Invitation[] = [
   {
     id: "3",
     email: "mark.taylor@admin.com",
-    role: "admin",
+    role: "Admin",
     organization: "Rafed Admin",
     status: "accepted",
     createdAt: "2023-05-25T09:45:00Z",
@@ -50,7 +50,7 @@ const invitations: Invitation[] = [
   {
     id: "4",
     email: "jennifer.adams@hospital.com",
-    role: "provider",
+    role: "Provider",
     organization: "Adams Medical Center",
     status: "expired",
     createdAt: "2023-05-15T13:10:00Z",
@@ -73,13 +73,13 @@ export function InvitationsList({ searchQuery }: InvitationsListProps) {
 
   const getRoleBadgeVariant = (role: UserRole) => {
     switch (role) {
-      case "admin":
+      case "Admin":
         return "default"
-      case "provider":
+      case "Provider":
         return "secondary"
-      case "supplier":
+      case "Supplier":
         return "outline"
-      case "viewer":
+      case "Viewer":
         return "destructive"
       default:
         return "default"

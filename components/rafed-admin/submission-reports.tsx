@@ -453,7 +453,7 @@ export function SubmissionReports() {
 
   // Format large numbers with commas
   const formatNumber = (num: number) => {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") //NOSONAR
   }
 
   // Get all available categories and products
@@ -489,7 +489,7 @@ export function SubmissionReports() {
 
     return months.map((month) => ({
       month: month,
-      quantity: Math.floor(Math.random() * 300000) + 200000,
+      quantity: Math.floor(Math.random() * 300000) + 200000, //NOSONAR
     }))
   }
 
@@ -500,7 +500,7 @@ export function SubmissionReports() {
   const generateRafedAdjustedData = () => {
     return aggregatedTimeSeriesData.map((point) => {
       // Apply a random adjustment factor between 0.92 and 1.08
-      const adjustmentFactor = 0.92 + Math.random() * 0.16
+      const adjustmentFactor = 0.92 + Math.random() * 0.16 //NOSONAR
       return {
         month: point.month,
         quantity: Math.round(point.quantity * adjustmentFactor),

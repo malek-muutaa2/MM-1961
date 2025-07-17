@@ -313,23 +313,6 @@ if (role === "rafed-admin") {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
-        {(role === "rafed-admin" || role === "obtivian" || role === "Admin") && (
-            <SidebarGroup>
-              <SidebarGroupLabel>File Upload System</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Upload Forecast">
-                      <Link href="/upload-system/upload">
-                        <FileUp />
-                        <span>Upload Data</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-        )}
 
         {/* Rafed Admin Module - Show for Rafed Admin only */}
         {(role === "rafed-admin" || role === "obtivian") && (

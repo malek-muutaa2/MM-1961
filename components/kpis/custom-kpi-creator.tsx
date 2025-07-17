@@ -41,7 +41,7 @@ interface CustomKPICreatorProps {
   onKPICreated: (kpi: any) => void
 }
 
-export function CustomKPICreator({ onKPICreated }: CustomKPICreatorProps) {
+export function CustomKPICreator({ onKPICreated }: Readonly<CustomKPICreatorProps>) {
   const [open, setOpen] = useState(false)
   const [activeStep, setActiveStep] = useState(1)
   const [kpiData, setKpiData] = useState({

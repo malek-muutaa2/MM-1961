@@ -308,7 +308,7 @@ export const updateLock = async (newStatus: boolean, userId: number) => {
 export const updateUser = async (
   id: number,
   username: string,
-  role: "Admin" | "User",
+  role: "Admin" | "User" | "Provider" | "Supplier" | "Viewer",
   organization: string | null,
 ) => {
   try {

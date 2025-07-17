@@ -108,15 +108,15 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
               <p className="text-sm font-mono bg-muted p-2 rounded">{file.name}</p>
             </div>
             <div>
-              <label htmlFor={"Size"} className="text-sm font-medium text-muted-foreground">Size</label>
+              <label htmlFor={"size"} className="text-sm font-medium text-muted-foreground">Size</label>
               <p className="text-sm">{formatFileSize(file.size)}</p>
             </div>
             <div>
-              <label htmlFor={"Status"} className="text-sm font-medium text-muted-foreground">Status</label>
+              <label htmlFor={"status"} className="text-sm font-medium text-muted-foreground">Status</label>
               <Badge variant="default">{file.status}</Badge>
             </div>
             <div>
-              <label htmlFor={"Uploaded"} className="text-sm font-medium text-muted-foreground">Uploaded</label>
+              <label htmlFor={"uploaded"} className="text-sm font-medium text-muted-foreground">Uploaded</label>
               <p className="text-sm">{formatDate(file.uploadedAt)}</p>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function FileDetailsModal({ isOpen, onClose, file }: Readonly<Fil
               <h4 className="text-sm font-medium mb-3">Technical Details</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <label htmlFor="Content Type" className="font-medium text-muted-foreground">Content Type</label>
+                  <label htmlFor={"content type"} className="font-medium text-muted-foreground">Content Type</label>
                   <p className="font-mono">{fileInfo.contentType}</p>
                 </div>
                 <div>
