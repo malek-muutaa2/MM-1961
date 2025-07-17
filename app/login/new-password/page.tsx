@@ -9,7 +9,7 @@ export default async function NewPasswordpage() {
     "description": "Set or recover your Optivian account",
     "renew": " Your password expired have been expired and need to be changed ",
     "form": {
-      "passwordLabel": "Password",
+      "passwordLabel": "Password",//NOSONAR
       "passwordPlaceholder": "******", //NOSONAR
       "resetButton": "Reset Password", //NOSONAR
     },

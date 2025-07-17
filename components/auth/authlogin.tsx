@@ -68,87 +68,98 @@ export const LoginForm2fa = () => {
       password: "",
     },
   });
- 
-  const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
-    setError("");
-    setSuccess("");
-    
-    startTransition(async () => {
-      Login2fa2(values)
-        .then(async (data) => {
-          if (data?.error) {
-            setError(data.error);
-            sethidelogin("false");
+ async function handleLoginError(values: any, errorMsg: string) {
+  setError(errorMsg);
+  sethidelogin("false");
 
-            // Update failed attempts info and check if we need to disable the user
-            setFailedAttemptsInfo((prev) => {
-              const currentAttempts = (prev[values.email]?.attempts || 0) + 1;
-              return {
-                ...prev,
-                [values.email]: {
-                  attempts: currentAttempts,
-                  password: values.password,
-                },
-              };
-            });
+  setFailedAttemptsInfo((prev) => {
+    const currentAttempts = (prev[values.email]?.attempts || 0) + 1;
+    return {
+      ...prev,
+      [values.email]: {
+        attempts: currentAttempts,
+        password: values.password,
+      },
+    };
+  });
 
-            // Check if the user needs to be disabled based on updated info
-            const attempts = failedAttemptsInfo[values.email]?.attempts || 0;
-            if (attempts + 1 >= 5) {
-              // We add 1 because we're checking before the state has updated
-              try {
-                const disableResponse = await DisabledUserAction(values.email);
-                if (disableResponse?.error) {
-                  console.error("Error disabling user:", disableResponse.error);
-                } else if (disableResponse?.success) {
-                  console.log(
-                    "User disabled successfully:",
-                    disableResponse.success,
-                  );
-                  // Optionally reset attempts or handle success
-                }
-              } catch (error) {
-                console.error("An error occurred:", error);
-                setError("Something went wrong");
-              }
-            }
-          }
+  const attempts = failedAttemptsInfo[values.email]?.attempts || 0;
 
-          if (data?.success) {
-            setSuccess(data.success);
-            const result = await signIn("credentials", {
-              redirect: false, // Prevent automatic redirection
-              email: values.email,
-              password: values.password,
-              callbackUrl: "/",
-            });
-            form.reset();
-            setError(null);
+  if (attempts + 1 >= 5) {
+    try {
+      const disableResponse = await DisabledUserAction(values.email);
+      if (disableResponse?.error) {
+        console.error("Error disabling user:", disableResponse.error);
+      } else if (disableResponse?.success) {
+        console.log("User disabled successfully:", disableResponse.success);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setError("Something went wrong");
+    }
+  }
+}
 
-            if (result?.error) {
-              // Handle error by setting the error message in state
-              setError(result.error);
-            } else {
-              // Redirect on successful login
-              window.location.href = result?.url ?? "/dashboard";
-            }
-          }
-          if (data?.isexpired) {
-            if (data?.passwordResetToken) {
-              window.location.href = `/login/new-password?token=${data?.passwordResetToken}&renewpassword=true`;
-            }
-          }
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-            setLoginCredentials({
-              email: values.email,
-              password: values.password,
-            });
-          }
-        })
-        .catch(() => setError("Something went wrong!"));
-    });
-  };
+async function handleSuccessfulLogin(values: any) {
+  setSuccess("User authenticated successfully");
+  const result = await signIn("credentials", {
+    redirect: false,
+    email: values.email,
+    password: values.password,
+    callbackUrl: "/",
+  });
+  form.reset();
+  setError(null);
+
+  if (result?.error) {
+    setError(result.error);
+  } else {
+    window.location.href = result?.url ?? "/dashboard";
+  }
+}
+
+function redirectToPasswordReset(token: string) {
+  window.location.href = `/login/new-password?token=${token}&renewpassword=true`;
+}
+
+function promptTwoFactor(values: any) {
+  setShowTwoFactor(true);
+  setLoginCredentials({
+    email: values.email,
+    password: values.password,
+  });
+}
+
+const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
+  setError("");
+  setSuccess("");
+
+  startTransition(() => {
+    Login2fa2(values)
+      .then(async (data) => {
+        if (data?.error) {
+          await handleLoginError(values, data.error);
+          return;
+        }
+
+        if (data?.success) {
+          await handleSuccessfulLogin(values);
+          return;
+        }
+
+        if (data?.isexpired && data?.passwordResetToken) {
+          redirectToPasswordReset(data.passwordResetToken);
+          return;
+        }
+
+        if (data?.twoFactor) {
+          promptTwoFactor(values);
+        }
+      })
+      .catch(() => setError("Something went wrong!"));
+  });
+};
+
 
  console.log("hidelogin", hidelogin);
  

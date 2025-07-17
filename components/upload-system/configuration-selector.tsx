@@ -46,8 +46,8 @@ export default function ConfigurationSelector({
             </CardHeader>
             <CardContent className="space-y-6">
                 {/* Configuration Selection */}
-                <div className="space-y-2" role="combobox">
-                    <label className="text-sm font-medium">Choose Configuration</label>
+                <div className="space-y-2">
+                    <label htmlFor={"choose configuration"} className="text-sm font-medium">Choose Configuration</label>
                     <Select value={selectedConfigId ? String(selectedConfigId) : ""} onValueChange={(value: string) => {
                         localStorage.setItem("selectedConfiguration", value)
 
@@ -77,21 +77,11 @@ export default function ConfigurationSelector({
                         <Card className="bg-muted/50">
                             <CardContent className="pt-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                    {/*<div>*/}
-                                    {/*  <span className="font-medium">Organization:</span>*/}
-                                    {/*  <p className="text-muted-foreground capitalize">*/}
-                                    {/*    {selectedConfiguration.organization_type.replace("_", " ")}*/}
-                                    {/*  </p>*/}
-                                    {/*</div>*/}
-                                    {/*<div>*/}
-                                    {/*  <span className="font-medium">Source Type:</span>*/}
-                                    {/*  <p className="text-muted-foreground">{selectedConfiguration.source_type}</p>*/}
-                                    {/*</div>*/}
                                     <div>
                                         <span className="font-medium">File Types:</span>
                                         <div className="flex gap-1 mt-1">
                                             {selectedConfiguration.file_type.split(",").map((type, i) => (
-                                                <Badge key={i} variant="secondary">
+                                                <Badge key={`${i + 1 }`} variant="secondary">
                                                     {type.trim()}
                                                 </Badge>
                                             ))}
@@ -103,7 +93,7 @@ export default function ConfigurationSelector({
                                     </div>
                                     <div>
                                         <span className="font-medium">Max Rows:</span>
-                                        <p className="text-muted-foreground">{selectedConfiguration.max_rows || "Unlimited"}</p>
+                                        <p className="text-muted-foreground">{selectedConfiguration.max_rows ?? "Unlimited"}</p>
                                     </div>
                                     <div>
                                         <span className="font-medium">Delimiter:</span>

@@ -154,9 +154,9 @@ export default function ConfigurationManager({
     }
     const isValidDatePattern = (format: string) => {
         // Accepte : YYYY-MM-DD, DD/MM/YYYY, MM-DD-YYYY, etc.
-        const regex1 = /^(y{2,4})[-\/](m{1,2})[-\/](d{1,2})$/i;
-        const regex2 = /^(d{1,2})[-\/](m{1,2})[-\/](y{2,4})$/i;
-        const regex3 = /^(m{1,2})[-\/](d{1,2})[-\/](y{2,4})$/i;
+        const regex1 = /^(y{2,4})[-/](m{1,2})[-/](d{1,2})$/i;
+        const regex2 = /^(d{1,2})[-/](m{1,2})[-/](y{2,4})$/i;
+        const regex3 = /^(m{1,2})[-/](d{1,2})[-/](y{2,4})$/i;
 
         return regex1.test(format.trim()) ?? regex2.test(format.trim()) ?? regex3.test(format.trim());
     }
@@ -164,7 +164,7 @@ export default function ConfigurationManager({
     function isValidDateTimeFormat(format: string): boolean {
         // All supported tokens
         const tokenPattern =
-            /y{2,4}|M{1,2}|d{1,2}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S{1,3}|a|Z{1,2}|T|[\/:.\- à]/ig;
+            /y{2,4}|M{1,2}|d{1,2}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S{1,3}|a|Z{1,2}|T|[/:.\- à]/ig; // NOSONAR
 
         // Remove all valid tokens from the format
         const cleaned = format.toLocaleLowerCase().replace(tokenPattern, '');

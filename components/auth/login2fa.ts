@@ -17,106 +17,98 @@ type credentials = {
   email: string;
   password: string;
 };
+async function handlePasswordExpiry(user: any) {
+  const passwordUpdatedAt = new Date(user.passwordupdatedat);
+  passwordUpdatedAt.setMonth(passwordUpdatedAt.getMonth() + 8);
 
-export const Login2fa2 = async (
-  values: z.infer<typeof LoginSchema>,
-  
-) => { 
+  if (passwordUpdatedAt < new Date()) {
+    const resetToken = await generatePasswordResetToken(user.email);
+    return {
+      error: "Password has expired. Please reset your password.",
+      isexpired: true,
+      passwordResetToken: resetToken[0].resetpasswordtoken,
+    };
+  }
+
+  return { success: "User authenticated successfully." };
+}
+
+async function handle2FACode(code: string, user: any) {
+  const [tokenData] = await db
+    .select()
+    .from(twoFactorAuth)
+    .where(eq(twoFactorAuth.userId, user.id));
+
+  if (!tokenData) return { error: "Invalid code!" };
+
+  const result = await bcrypt.compare(code, tokenData.twoFactorToken);
+
+const isMatch = Boolean(result); // force conversion just in case
+
+if (!isMatch) {
+    return { error: "Invalid two-factor authentication code." };
+}
+
+
+  if (new Date(tokenData.twoFactorTokenExpiry) < new Date()) {
+    return { error: "Two-factor authentication code has expired." };
+  }
+
+  await db
+    .update(twoFactorAuth)
+    .set({ twoFactorToken: "", twoFactorTokenExpiry: null })
+    .where(eq(twoFactorAuth.userId, user.id));
+
+  return { success: "User authenticated successfully." };
+}
+
+async function send2FACodeFlow(user: any) {
+  const passwordUpdatedAt = new Date(user.passwordupdatedat);
+  passwordUpdatedAt.setMonth(passwordUpdatedAt.getMonth() + 8);
+
+  if (passwordUpdatedAt < new Date()) {
+    const resetToken = await generatePasswordResetToken(user.email);
+    return {
+      error: "password has expired. Please reset your password.",
+      isexpired: true,
+      passwordResetToken: resetToken[0].resetpasswordtoken,
+    };
+  }
+
+  const twoFactorToken = await generateTwoFactorToken(user.id, user.email);
+  if (twoFactorToken) {
+    await sendTwoFactorTokenEmail(user.email, twoFactorToken.token, "en");
+    return { twoFactor: true };
+  }
+
+  return { error: "Failed to generate 2FA token." };
+}
+
+export const Login2fa2 = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
+  if (!validatedFields.success) return { error: "Invalid fields!" };
 
-if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-}
-const { email, password, code } = validatedFields.data;
-const existingUser = await findUniqueUser(email);
-if (!existingUser[0]?.email || !existingUser[0]?.password) {
-  return { error: "User not found." };
-}
-if (existingUser[0].isDisabled === true) {
-    return { error: "Account is disabled." };
-}
-if (existingUser[0].deleted_at !== null) {
-    return { error: "Account does not exist." };
-}
-if (password) {
-    const isMatch = await bcrypt.compare(password, existingUser[0]?.password);
-    if (!isMatch) {
-        // If the passwords do not match, return null to indicate unsuccessful authentication
-        return { error: "Incorrect password." };
-    }
+  const { email, password, code } = validatedFields.data;
+  const user = (await findUniqueUser(email))[0];
 
-    if (!existingUser[0].isTwoFactorEnabled) {
-        const passwordupdateat = new Date(existingUser[0].passwordupdatedat);
-        passwordupdateat.setMonth(passwordupdateat.getMonth() + 8);
-        const isexpired = passwordupdateat < new Date();
+  if (!user?.email || !user?.password) return { error: "User not found." };
+  if (user.isDisabled) return { error: "Account is disabled." };
+  if (user.deleted_at !== null) return { error: "Account does not exist." };
 
-        if (isexpired) {
-            const passwordResetToken = await generatePasswordResetToken(email);
-            return {
-              error: "Password has expired. Please reset your password.",
-              isexpired: true,
-              passwordResetToken: passwordResetToken[0].resetpasswordtoken,
-            };
-        }
-        return {
-            success: "User authenticated successfully.",
-        };
-    }
-}
+  if (password) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return { error: "Incorrect password." };
 
-if (code) {
-    const twoFactorToken =  await db.select().from(twoFactorAuth).where(
-        eq(twoFactorAuth.userId, existingUser[0].id))
-
-    if (!twoFactorToken[0]) {
-        return { error: "Invalid code!" };
-    }
-    const isMatch = await bcrypt.compare(
-        code,
-        twoFactorToken[0].twoFactorToken,
-    );
-
-    if (!isMatch) {
-        return { error: "Invalid two-factor authentication code." };
-    }
-
-    const hasExpired =
-        new Date(twoFactorToken[0].TwoFactorTokenExpiry) < new Date();
-
-    if (hasExpired) {
-        return { error: "Two-factor authentication code has expired." };
-    }
-
-    await db
-        .update(twoFactorAuth)
-        .set({ twoFactorToken: "", twoFactorTokenExpiry: null})
-        .where(eq(twoFactorAuth.userId, existingUser[0].id));
-    return { success: "User authenticated successfully." };
-}
-  else {
-    const passwordupdateat = new Date(existingUser[0].passwordupdatedat);
-    passwordupdateat.setMonth(passwordupdateat.getMonth() + 8);
-    const isexpired = passwordupdateat < new Date();
-
-    if (isexpired) {
-      const passwordResetToken = await generatePasswordResetToken(email);
-      return {
-        error: "password has expired. Please reset your password.",
-        isexpired: true,
-        passwordResetToken: passwordResetToken[0].resetpasswordtoken,
-      };
-    }
-    const twoFactorToken = await generateTwoFactorToken(existingUser[0].id,existingUser[0].email);
-
-    if (twoFactorToken) {
-      await sendTwoFactorTokenEmail(
-        existingUser[0].email,
-        twoFactorToken.token,
-        "en"
-        
-      );
-
-      return { twoFactor: true };
+    if (!user.isTwoFactorEnabled) {
+      return await handlePasswordExpiry(user);
     }
   }
+   
+  if (code) {
+    console.log("Handling 2FA code for user:", code);
+    
+    return await handle2FACode(code, user);
+  }
+
+  return await send2FACodeFlow(user);
 };

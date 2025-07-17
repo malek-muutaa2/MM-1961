@@ -255,6 +255,7 @@ export function ForecastProductTimeline({
       // Ajouter les données historiques pour les 12 premiers mois
       if (i < 12) {
         const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
+        // NOSONAR: Using Math.random is safe here for non-secure test data
         dataPoint[historicalTypeName] = Math.floor(Math.random() * 1000) + 500
       }
 
@@ -262,6 +263,8 @@ export function ForecastProductTimeline({
       if (i >= 12) {
         forecastTypes.forEach((type) => {
           const typeName = type.name.replace(/\s+/g, "")
+          
+          // NOSONAR: Using Math.random is safe here for non-secure test data
           dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
         })
       }
@@ -507,7 +510,7 @@ export function ForecastProductTimeline({
                         })
                         .map((item, index) => {
                           return (
-                              <TableRow key={index}>
+                                <TableRow key={item.month + "-" + selectedProduct}>
                                 <TableCell className="font-medium">
                                   {selectedProductDetails.name?.substring(0, 4).toUpperCase() +
                                       "-" +
@@ -515,11 +518,15 @@ export function ForecastProductTimeline({
                                 </TableCell>
                                 <TableCell>{selectedProductDetails.name}</TableCell>
                                 <TableCell>
-                                  {selectedProductDetails.classificationId === 1
-                                      ? "Pharmaceuticals"
-                                      : selectedProductDetails.classificationId === 2
-                                          ? "Medical Devices"
-                                          : "Other"}
+                                    {(() => {
+                                    let category = "Other";
+                                    if (selectedProductDetails.classificationId === 1) {
+                                      category = "Pharmaceuticals";
+                                    } else if (selectedProductDetails.classificationId === 2) {
+                                      category = "Medical Devices";
+                                    }
+                                    return category;
+                                    })()}
                                 </TableCell>
                                 <TableCell>{item.date}</TableCell>
                                 {forecastOnlyTypes.map((type, typeIndex) => {
@@ -566,7 +573,7 @@ export function ForecastProductTimeline({
             </DialogHeader>
             <div className="grid gap-4 py-4">
               {/* Afficher l'historique en lecture seule si disponible */}
-              {editingItem && editingItem[historicalDataConfig.name.replace(/\s+/g, "")] && (
+                {editingItem?.[historicalDataConfig.name.replace(/\s+/g, "")] && (
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label className="text-right text-sm font-medium col-span-2">
                       <div className="flex items-center justify-end gap-2">
