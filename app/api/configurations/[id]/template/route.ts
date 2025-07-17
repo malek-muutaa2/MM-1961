@@ -35,31 +35,44 @@ export async function GET(request: NextRequest, { params }: { params: { id: numb
 
     // Generate example data
     const headers = columns.map((col: { name: any }) => col.name)
-    const exampleData = columns.map((col: UploadConfigurationColumnType) => {
+    const exampleData = columns.map((col: UploadConfigurationColumnType) => { // NOSONAR
       switch (col.dataType) {
         case "string":
           return col.required ?  "Example Text" : ""
         case "number":
           return col.required ? "123" : ""
-        case "date":
-          return col.required ?
-              col.pattern ?
-                    col.pattern?.toLowerCase()
-                        .replace("yyyy", "2023")
-                        .replace("mm", "01")
-                        .replace("dd", "01")
-                :
-                  "2023-01-01" : ""
-        case "datetime":
-          return  col.required ?
-                col.pattern ?
-                      col.pattern?.toLowerCase()
-                          .replace("yyyy", "2023")
-                          .replace("mm", "01")
-                          .replace("dd", "01")
-                          .replace("hh", "12")
-                          .replace("mm", "00")
-                          .replace("ss", "00") : "2023-01-01 12:00:00" : ""
+        case "date": {
+          if (col.required) {
+            if (col.pattern) {
+              return col.pattern?.toLowerCase()
+                  .replace("yyyy", "2023")
+                  .replace("mm", "01")
+                  .replace("dd", "01");
+            } else {
+              return "2023-01-01";
+            }
+          } else {
+            return "";
+          }
+        }
+        case "datetime": {
+          if (col.required){
+            if (col.pattern) {
+              return col.pattern?.toLowerCase()
+                  .replace("yyyy", "2023")
+                  .replace("mm", "01")
+                  .replace("dd", "01")
+                  .replace("hh", "12")
+                  .replace("mm", "00")
+                  .replace("ss", "00");
+            } else {
+              return "2023-01-01 12:00:00";
+            }
+          }else {
+            return "";
+          }
+
+        }
         case "boolean":
           return col.required ? "true" : ""
         case "email":

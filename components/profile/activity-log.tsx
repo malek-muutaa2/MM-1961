@@ -30,7 +30,7 @@ export function ActivityLog() {
       action: "Login",
       description: "Successful login from Chrome on Windows",
       timestamp: "Today at 10:23 AM",
-      ip: "192.168.1.1",
+      ip: "192.168.1.1", // NOSONAR
       location: "New York, USA",
       type: "login",
     },
@@ -39,7 +39,7 @@ export function ActivityLog() {
       action: "Profile Update",
       description: "Updated personal information",
       timestamp: "Today at 9:45 AM",
-      ip: "192.168.1.1",
+      ip: "192.168.1.1", // NOSONAR
       location: "New York, USA",
       type: "settings",
     },
@@ -48,7 +48,7 @@ export function ActivityLog() {
       action: "Data Export",
       description: "Exported KPI data as CSV",
       timestamp: "Yesterday at 3:12 PM",
-      ip: "192.168.1.1",
+      ip: "192.168.1.1",// NOSONAR
       location: "New York, USA",
       type: "export",
     },
@@ -57,7 +57,7 @@ export function ActivityLog() {
       action: "API Access",
       description: "API key used to access KPI data",
       timestamp: "Yesterday at 1:30 PM",
-      ip: "192.168.1.2",
+      ip: "192.168.1.2",// NOSONAR
       location: "New York, USA",
       type: "api",
     },
@@ -66,7 +66,7 @@ export function ActivityLog() {
       action: "Settings Change",
       description: "Changed notification preferences",
       timestamp: "May 10, 2023 at 11:15 AM",
-      ip: "192.168.1.1",
+      ip: "192.168.1.1",// NOSONAR
       location: "New York, USA",
       type: "settings",
     },
@@ -75,7 +75,7 @@ export function ActivityLog() {
       action: "Login",
       description: "Successful login from Mobile App on iOS",
       timestamp: "May 9, 2023 at 8:30 AM",
-      ip: "192.168.0.5",
+      ip: "192.168.0.5",// NOSONAR
       location: "Boston, USA",
       type: "login",
     },
@@ -84,7 +84,7 @@ export function ActivityLog() {
       action: "Data Update",
       description: "Updated KPI thresholds for Inventory Turnover",
       timestamp: "May 8, 2023 at 2:45 PM",
-      ip: "192.168.1.1",
+      ip: "192.168.1.1",// NOSONAR
       location: "New York, USA",
       type: "data",
     },
@@ -118,7 +118,7 @@ export function ActivityLog() {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                    <Calendar mode="single" selected={date} onSelect={setDate} autoFocus/>
                   </PopoverContent>
                 </Popover>
               </div>

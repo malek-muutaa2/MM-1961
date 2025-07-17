@@ -58,8 +58,8 @@ export default function EnhancedFileManager() {
 
       const [filesData, configsData] = await Promise.all([filesRes.json(), configsRes.json()])
 
-      setFiles(filesData.files || [])
-      setConfigurations(configsData || [])
+      setFiles(filesData.files ?? [])
+      setConfigurations(configsData ?? [])
     } catch (error) {
       console.error("Failed to fetch data:", error)
     } finally {
@@ -311,7 +311,7 @@ export default function EnhancedFileManager() {
                             {file.name}
                           </div>
                         </TableCell>
-                        <TableCell>{file.config_name || "Unknown"}</TableCell>
+                        <TableCell>{file.config_name ?? "Unknown"}</TableCell>
                         <TableCell>{formatFileSize(file.size)}</TableCell>
                         <TableCell>
                             {(() => {
