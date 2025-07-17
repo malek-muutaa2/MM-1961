@@ -38,10 +38,10 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
         if (!initConfiguration) {
             localStorage.setItem("selectedConfiguration", configurations[0]?.id.toString())
             setSelectedConfig(configurations[0]?.id)
-            setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig || configurations[0]?.id)));
+            setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig ?? configurations[0]?.id)));
         } else {
             setSelectedConfig(Number(initConfiguration))
-            setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig || Number(initConfiguration))));
+            setSelectedConfiguration(configurations.find((c: any) => c.id === (selectedConfig ?? Number(initConfiguration))));
         }
     }, [configurations, selectedConfig]);
 
@@ -82,7 +82,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
         const allowedTypes = selectedConfiguration.file_type.split(",").map((t) => t.trim())
         const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
-        if (!allowedTypes.includes(fileExtension || "")) {
+        if (!allowedTypes.includes(fileExtension ?? "")) {
             toast({
                 title: "File types",
                 description: `File type not allowed. Allowed types: ${allowedTypes.join(", ")}`,
@@ -166,6 +166,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                 completed_at: result.completed_at,
             })
         } catch (error) {
+            console.log('Upload error:', error)
             setUploadResult({
                 status: "failed",
                 started_at : new Date(),
@@ -221,6 +222,37 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
         const criticalErrors = ["MISSING_REQUIRED_COLUMN", "MISSING_REQUIRED_VALUE", "INVALID_REQUIRED_VALUE", "EMPTY_FILE", "ROW_NOT_FOUND"]
         return criticalErrors.includes(errorCode) ? "critical" : "warning"
     }
+    //
+    //                                         uploadResult.status === "success"
+    //                                             ? "border-green-500 bg-green-50"
+    //                                             : uploadResult.status === "partially_completed"
+    //                                                 ? "border-yellow-500 bg-yellow-50"
+    //                                                 : "border-red-500 bg-red-50"
+    //
+    const getAlertClass = (status: string) => {
+        switch (status) {
+            case "success":
+                return "border-green-500 bg-green-50"
+            case "partially_completed":
+                return "border-yellow-500 bg-yellow-50"
+            case "failed":
+                return "border-red-500 bg-red-50"
+            case "default":
+                return "border-muted-foreground/25 hover:border-muted-foreground/50"
+            default:
+                return "border-red-500 bg-red-50"
+        }
+    }
+    const dropZoneClass = (dragActive: boolean, selectedFile: File | null) => {
+        const baseClass = "border-2 border-dashed rounded-lg p-8 text-center transition-colors";
+        if (dragActive) {
+            return `${baseClass} border-primary bg-primary/5`;
+        }else if( selectedFile) {
+            return `${baseClass} border-green-500 bg-green-50`;
+        }else {
+            return `${baseClass} border-muted-foreground/25 hover:border-muted-foreground/50`;
+        }
+    }
 
     return (
         <div className="max-w-6xl mx-auto p-6 space-y-6">
@@ -243,13 +275,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                     <CardContent className="space-y-6">
                         {/* File Drop Zone */}
                         <div
-                            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                                dragActive
-                                    ? "border-primary bg-primary/5"
-                                    : selectedFile
-                                        ? "border-green-500 bg-green-50"
-                                        : "border-muted-foreground/25 hover:border-muted-foreground/50"
-                            }`}
+                            className={dropZoneClass(dragActive, selectedFile)}
                             onDragEnter={handleDrag}
                             onDragLeave={handleDrag}
                             onDragOver={handleDrag}
@@ -310,8 +336,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                             </div>
                         )}
                         {/* display duration time in second or minute or hour here from  UploadDuration started_at and completed_at */}
-
-                        {uploadDuration && uploadDuration.started_at && uploadDuration.completed_at && (
+                        {uploadDuration?.started_at && uploadDuration?.completed_at && (
                             <div className="text-sm text-muted-foreground">
                                 Durée du traitement :{" "}
                                 {(() => {
@@ -321,9 +346,21 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                     const diffSec = Math.floor(diffMs / 1000);
                                     if (diffSec < 60) return `${diffSec} seconde${diffSec > 1 ? "s" : ""}`;
                                     const diffMin = Math.floor(diffSec / 60);
-                                    if (diffMin < 60) return `${diffMin} minute${diffMin > 1 ? "s" : ""} ${diffSec % 60 ? `${diffSec % 60} seconde${diffSec % 60 > 1 ? "s" : ""}` : ""}`;
+                                    if (diffMin < 60) {
+                                        const remainingSeconds = diffSec % 60;
+                                        let secondsPart = "";
+                                        if (remainingSeconds) {
+                                            secondsPart = `${remainingSeconds} seconde${remainingSeconds > 1 ? "s" : ""}`;
+                                        }
+                                        return `${diffMin} minute${diffMin > 1 ? "s" : ""} ${secondsPart}`;
+                                    }
                                     const diffHour = Math.floor(diffMin / 60);
-                                    return `${diffHour} heure${diffHour > 1 ? "s" : ""} ${diffMin % 60 ? `${diffMin % 60} minute${diffMin % 60 > 1 ? "s" : ""}` : ""}`;
+                                    const hourString = `${diffHour} heure${diffHour > 1 ? "s" : ""}`;
+                                    let minuteString = "";
+                                    if (diffMin % 60) {
+                                        minuteString = `${diffMin % 60} minute${diffMin % 60 > 1 ? "s" : ""}`;
+                                    }
+                                    return `${hourString} ${minuteString}`;
                                 })()}
                             </div>
                         )}
@@ -331,19 +368,12 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                         {/* Upload Result */}
                         {uploadResult && (
                             <div className="space-y-4">
-                                <Alert
-                                    className={
-                                        uploadResult.status === "success"
-                                            ? "border-green-500 bg-green-50"
-                                            : uploadResult.status === "partially_completed"
-                                                ? "border-yellow-500 bg-yellow-50"
-                                                : "border-red-500 bg-red-50"
-                                    }
-                                >
+                                <Alert className={getAlertClass(uploadResult.status)}>
                                     <div className="flex items-start gap-2">
                                         {uploadResult.status === "success" ? (
                                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5"/>
-                                        ) : uploadResult.status === "partially_completed" ? (
+                                        ) : ""}
+                                        {uploadResult.status === "partially_completed" ? (
                                             <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5"/>
                                         ) : (
                                             <AlertCircle className="h-4 w-4 text-red-600 mt-0.5"/>
@@ -378,7 +408,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                                                 {uploadResult.error.details.file_level_errors
                                                                     .filter((x, idx) => idx < 20) // Limit to first 20 errors
                                                                     .map((error, i) => (
-                                                                    <li key={i} className="text-sm text-red-700">
+                                                                    <li key={`${i+1}`} className="text-sm text-red-700">
                                                                         • {error.message}
                                                                     </li>
                                                                 ))}
@@ -426,11 +456,11 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                                             </TableHeader>
                                                             <TableBody>
                                                                 {validationErrors
-                                                                    .sort((a, b) => (a.row || 0) - (b.row || 0))
+                                                                    .toSorted((a, b) => (a?.row ?? 0) - (b?.row ?? 0))
                                                                     .map((error, index) => (
                                                                         <TableRow key={`${error.row ?? "no-row"}-${error.line ?? "no-line"}-${error.column ?? "no-col"}-${error.code}-${error.message}`}>
-                                                                            <TableCell>{error.row || "-"}</TableCell>
-                                                                            <TableCell>{error.line || "-"}</TableCell>
+                                                                            <TableCell>{error.row ?? "-"}</TableCell>
+                                                                            <TableCell>{error.line ?? "-"}</TableCell>
                                                                             <TableCell>
                                                                                 {error.column && <Badge
                                                                                     variant="outline">{error.column}</Badge>}
@@ -452,7 +482,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                                                             <TableCell>
                                                                                 <code
                                                                                     className="text-xs bg-muted px-1 py-0.5 rounded">
-                                                                                    {error.value || "empty"}
+                                                                                    {error.value ?? "empty"}
                                                                                 </code>
                                                                             </TableCell>
                                                                             <TableCell
@@ -496,7 +526,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                           </span>
                                                                                     <code
                                                                                         className="text-xs bg-muted px-1 py-0.5 rounded">
-                                                                                        {error.value || "empty"}
+                                                                                        {error.value ?? "empty"}
                                                                                     </code>
                                                                                 </div>
                                                                             ))}

@@ -1,10 +1,9 @@
 "use server"
-import { and, asc, desc, eq,  isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq,  isNull, sql , InferSelectModel } from "drizzle-orm";
 import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { InferSelectModel } from "drizzle-orm";
 
 import { revalidatePath } from "next/cache";
 import { generatePasswordResetToken } from "./reset";
@@ -38,6 +37,16 @@ export const getusers = async (
     order?: string,
 ) => {
     try {
+      let orderByClause;
+if (column && column in users) {
+  if (order === "asc") {
+    orderByClause = [asc(users[column])];
+  } else if (order === "desc") {
+    orderByClause = [desc(users[column])];
+  } else {
+    orderByClause = [desc(users.createdAt)];
+  }
+}
         const searchWord = `%${search}%`
         return await db.query.users.findMany({
             // orderBy: (configurations:any, { asc }: any) => [asc(configurations.updated_at)],
@@ -46,7 +55,7 @@ export const getusers = async (
             ...(column &&
                 column in users && {
                     orderBy:
-                        order === "asc" ? [asc(users[column])] : order === "desc" ? [desc(users[column])] : [desc(users.createdAt)],
+                        orderByClause,
                 }),
 
       ...(search

@@ -46,7 +46,7 @@ export function SecuritySettings({
   const validatePassword = (password: string): boolean => {
     const hasUpperCase = /[A-Z]/.test(password)
     const hasLowerCase = /[a-z]/.test(password)
-    const hasNumber = /[0-9]/.test(password)
+    const hasNumber = /\d/.test(password)
     const hasSpecialChar = /[^A-Za-z0-9]/.test(password)
     const isLongEnough = password.length >= 8
 

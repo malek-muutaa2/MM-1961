@@ -44,7 +44,7 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
         e.stopPropagation()
         setDragActive(false)
 
-        if (e?.dataTransfer?.files && e?.dataTransfer.files?.[0]) {
+        if (e?.dataTransfer?.files?.[0]) {
             handleFileSelection(e.dataTransfer.files[0])
         }
     }, [])
@@ -90,7 +90,7 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
     }
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e?.target?.files && e?.target?.files?.[0]) {
+        if (e.target?.files?.[0]) {
             handleFileSelection(e.target.files[0])
         }
     }

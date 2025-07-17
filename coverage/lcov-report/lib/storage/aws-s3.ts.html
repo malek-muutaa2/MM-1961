@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.47% </span>
+                <span class="strong">19.15% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>68/368</span>
+                <span class='fraction'>68/355</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.47% </span>
+                <span class="strong">19.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/368</span>
+                <span class='fraction'>68/355</span>
             </div>
         
             
@@ -418,20 +418,7 @@
 <a name='L353'></a><a href='#L353'>353</a>
 <a name='L354'></a><a href='#L354'>354</a>
 <a name='L355'></a><a href='#L355'>355</a>
-<a name='L356'></a><a href='#L356'>356</a>
-<a name='L357'></a><a href='#L357'>357</a>
-<a name='L358'></a><a href='#L358'>358</a>
-<a name='L359'></a><a href='#L359'>359</a>
-<a name='L360'></a><a href='#L360'>360</a>
-<a name='L361'></a><a href='#L361'>361</a>
-<a name='L362'></a><a href='#L362'>362</a>
-<a name='L363'></a><a href='#L363'>363</a>
-<a name='L364'></a><a href='#L364'>364</a>
-<a name='L365'></a><a href='#L365'>365</a>
-<a name='L366'></a><a href='#L366'>366</a>
-<a name='L367'></a><a href='#L367'>367</a>
-<a name='L368'></a><a href='#L368'>368</a>
-<a name='L369'></a><a href='#L369'>369</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L356'></a><a href='#L356'>356</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -467,17 +454,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -654,7 +630,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -711,7 +686,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -827,7 +801,7 @@ export interface S3Config {
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 export class S3StorageService {
-  private config: S3Config
+  private readonly config: S3Config
 &nbsp;
 <span class="fstat-no" title="function not covered" >  constructor(config: S3Config) {</span>
 <span class="cstat-no" title="statement not covered" >    this.config = config</span>
@@ -867,18 +841,7 @@ export class S3StorageService {
 <span class="cstat-no" title="statement not covered" >      for (let start = 0; start &lt; file.size; start += partSize) {</span>
 <span class="cstat-no" title="statement not covered" >        const end = Math.min(start + partSize, file.size);</span>
 <span class="cstat-no" title="statement not covered" >        const chunk = file.slice(start, end);</span>
-<span class="cstat-no" title="statement not covered" >        // const body = blobToReadable(chunk);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        // const chunkData = await (async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        //   if (typeof window === 'undefined') {</span>
-<span class="cstat-no" title="statement not covered" >        //     // Node.js environment</span>
-<span class="cstat-no" title="statement not covered" >        //     const { Readable } = await import('stream');</span>
-<span class="cstat-no" title="statement not covered" >        //     return Readable.from(chunk.stream());</span>
-<span class="cstat-no" title="statement not covered" >        //   } else {</span>
-<span class="cstat-no" title="statement not covered" >        //     // Browser environment</span>
-<span class="cstat-no" title="statement not covered" >        //     return await chunk.arrayBuffer();</span>
-<span class="cstat-no" title="statement not covered" >        //   }</span>
-<span class="cstat-no" title="statement not covered" >        // })();</span>
+<span class="cstat-no" title="statement not covered" >  </span>
 <span class="cstat-no" title="statement not covered" >        const chunkData: any = await (async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >          if (typeof window === 'undefined') {</span>
 <span class="cstat-no" title="statement not covered" >            // Environnement Node.js</span>
@@ -983,7 +946,6 @@ export class S3StorageService {
 <span class="cstat-no" title="statement not covered" >        ContentType: file.type || "application/octet-stream",</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >      // console.log("Uploading file to S3:", uploadParams);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      // Simulate AWS S3 upload with timeout</span>
 <span class="cstat-no" title="statement not covered" >      const controller = new AbortController()</span>
@@ -1109,7 +1071,6 @@ export class S3StorageService {
 <span class="cstat-no" title="statement not covered" >          throw new Error(`S3 upload failed: ${response.statusText}`)</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        const result = await response.json()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        return {</span>
 <span class="cstat-no" title="statement not covered" >          url: `https://${this.config.bucketName}.s3.${this.config.region}.amazonaws.com/${filePath}`,</span>
@@ -1174,7 +1135,7 @@ export type AwsS3RegionCode = typeof AWS_S3_REGIONS[number]["code"];
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-15T20:53:25.713Z
+                at 2025-07-16T16:35:53.273Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

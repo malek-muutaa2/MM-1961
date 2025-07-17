@@ -75,6 +75,19 @@ export default function FileManager() {
     window.open(file.url, "_blank")
   }
 
+  const getBadgeVariant = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "default"
+      case "partially_completed":
+        return "secondary"
+      case "default":
+        return "default"
+      default:
+        return "destructive"
+    }
+  }
+
   const handleDelete = async (fileId: string) => {
     if (confirm("Are you sure you want to delete this file?")) {
       try {
@@ -154,13 +167,7 @@ export default function FileManager() {
                   <TableCell>{formatFileSize(file.size)}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={
-                        file.status === "completed"
-                          ? "default"
-                          : file.status === "partially_completed"
-                            ? "secondary"
-                            : "destructive"
-                      }
+                      variant={getBadgeVariant(file.status)}
                     >
                       {file.status === "completed" && "Completed"}
                       {file.status === "partially_completed" && `${file.errorCount} errors`}

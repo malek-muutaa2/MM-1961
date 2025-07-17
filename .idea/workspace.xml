@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: sonar fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/clover.xml" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/clover.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/coverage-final.json" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/coverage-final.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" afterDir="false" />
@@ -69,6 +71,7 @@
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov.info" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +81,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="MM-842-Upload-file-for-validation" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -91,6 +94,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="fix-sonar-cloud-issue" />
+                    <option name="lastUsedInstant" value="1752683624" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="develop" />
                     <option name="lastUsedInstant" value="1752066864" />
@@ -145,7 +152,7 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "MM-842-Upload-file-for-validation",
+    "git-widget-placeholder": "fix-sonar-cloud-issue",
     "go.import.settings.migrated": "true",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
@@ -290,11 +297,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.Enhanced Upload API.should handle successful upload with no validation errors" />
-        <item itemvalue="Jest.Enhanced Upload API" />
         <item itemvalue="Jest.ValidationService" />
         <item itemvalue="Jest.StorageService" />
         <item itemvalue="Jest.EnhancedUploadInterface" />
+        <item itemvalue="Jest.Enhanced Upload API.should handle successful upload with no validation errors" />
+        <item itemvalue="Jest.Enhanced Upload API" />
       </list>
     </recent_temporary>
   </component>
@@ -495,7 +502,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/__test__/components/forecast-data-table.test.tsx</url>
           <line>83</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
