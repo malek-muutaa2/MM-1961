@@ -199,7 +199,7 @@ export function KPIDependencySimulator() {
     // Choose a target that's at least 20% away from current value
     let targetValue
     do {
-      targetValue = sliderMin + Math.random() * range
+      targetValue = sliderMin + Math.random() * range //NOSONAR
     } while (Math.abs(targetValue - currentValue) < range * 0.2)
 
     simulationTargetRef.current = targetValue
@@ -227,7 +227,7 @@ export function KPIDependencySimulator() {
 
           // Generate a new target value
           const range = sliderMax - sliderMin
-          const newTarget = sliderMin + Math.random() * range
+          const newTarget = sliderMin + Math.random() * range //NOSONAR
           simulationTargetRef.current = newTarget
           simulationProgressRef.current = 0
         }

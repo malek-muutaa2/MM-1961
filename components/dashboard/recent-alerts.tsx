@@ -49,7 +49,7 @@ const generateAlerts = () => {
           title: `${kpi.name} Alert`,
           description,
           severity,
-          timestamp: `${Math.floor(Math.random() * 24)} hours ago`,
+          timestamp: `${Math.floor(Math.random() * 24)} hours ago`, //NOSONAR
           kpi: kpi.name,
         })
       }

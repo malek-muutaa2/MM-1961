@@ -28,7 +28,7 @@ const generateTrendData = () => {
         const monthsBack = months.length - 1 - i
 
         // Calculate value for this month with some random noise
-        const noise = (Math.random() - 0.5) * (changePerMonth / 2)
+        const noise = (Math.random() - 0.5) * (changePerMonth / 2) //NOSONAR
         const value = kpi.currentValue - (kpi.trend === "increasing" ? 1 : -1) * changePerMonth * monthsBack + noise
 
         dataPoint[kpi.name] = Number(Math.max(0, value).toFixed(1))
