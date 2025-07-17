@@ -17,6 +17,7 @@ import {
 import { Edit2 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { Separator } from "@/components/ui/separator"
+import { randomInt } from "crypto"
 
 interface ForecastProductTimelineProps {
   forecastExecutionId: number
@@ -256,16 +257,17 @@ export function ForecastProductTimeline({
       if (i < 12) {
         const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
         // NOSONAR: Using Math.random is safe here for non-secure test data
-        dataPoint[historicalTypeName] = Math.floor(Math.random() * 1000) + 500
+        dataPoint[historicalTypeName] = randomInt(500, 1500);
+
       }
 
       // Ajouter les prévisions pour les mois actuels et futurs (à partir du mois 12)
       if (i >= 12) {
         forecastTypes.forEach((type) => {
           const typeName = type.name.replace(/\s+/g, "")
-          
+
           // NOSONAR: Using Math.random is safe here for non-secure test data
-          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500
+          dataPoint[typeName] = randomInt(500, 1500);
         })
       }
 

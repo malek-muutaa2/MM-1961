@@ -332,7 +332,7 @@ export default function ForecastingPage() {
                     <SelectContent>
                       <SelectItem value="all">All Hospitals</SelectItem>
                       {hospitals.map((hospital, index) => (
-                        <SelectItem key={index} value={hospital}>
+                        <SelectItem key={crypto.randomUUID()} value={hospital}>
                           {hospital}
                         </SelectItem>
                       ))}
@@ -434,7 +434,7 @@ export default function ForecastingPage() {
           <CardContent>
             <div className="space-y-4">
               {seasonalTrends.map((season, index) => (
-                <div key={index} className="space-y-2">
+                <div key={crypto.randomUUID()} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{season.season}</span>
                     <Badge variant={season.trend === "up" ? "default" : "destructive"}>
@@ -476,7 +476,7 @@ export default function ForecastingPage() {
             </div>
             <div className="divide-y">
               {anomalies.map((anomaly, index) => (
-                <div key={index} className="grid grid-cols-5 p-2">
+                <div key={crypto.randomUUID()} className="grid grid-cols-5 p-2">
                   <div className="col-span-1 flex items-center gap-2">
                     <Package className="h-4 w-4 text-muted-foreground" />
                     <span>{anomaly.product}</span>

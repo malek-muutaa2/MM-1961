@@ -12,7 +12,7 @@ export default function SubmissionReportsLoading() {
         {Array(3)
           .fill(0)
           .map((_, i) => (
-            <Card key={i}>
+            <Card key={crypto.randomUUID()}>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div className="w-full">
@@ -32,7 +32,7 @@ export default function SubmissionReportsLoading() {
           {Array(3)
             .fill(0)
             .map((_, i) => (
-              <Skeleton key={i} className="h-10 w-24 mx-1" />
+              <Skeleton key={crypto.randomUUID()} className="h-10 w-24 mx-1" />
             ))}
         </div>
 
@@ -59,7 +59,7 @@ export default function SubmissionReportsLoading() {
             {Array(7)
               .fill(0)
               .map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full mb-2" />
+                <Skeleton key={crypto.randomUUID()} className="h-12 w-full mb-2" />
               ))}
           </CardContent>
         </Card>

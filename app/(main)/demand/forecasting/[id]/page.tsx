@@ -247,8 +247,8 @@ export default function ForecastDetailPage() {
                   <div className="col-span-1 text-center">Variance</div>
                 </div>
                 <div className="divide-y">
-                  {monthlyForecastData.map((month, index) => (
-                    <div key={index} className="grid grid-cols-4 p-2">
+                  {monthlyForecastData.map((month) => (
+                    <div key={month.month} className="grid grid-cols-4 p-2">
                       <div className="col-span-1 flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>{month.month}</span>
@@ -286,8 +286,8 @@ export default function ForecastDetailPage() {
                   <div className="col-span-1 text-center">Confidence</div>
                 </div>
                 <div className="divide-y">
-                  {hospitalData.map((hospital, index) => (
-                    <div key={index} className="grid grid-cols-3 p-2">
+                  {hospitalData.map((hospital) => (
+                    <div key={hospital.name} className="grid grid-cols-3 p-2">
                       <div className="col-span-1 flex items-center gap-2">
                         <Hospital className="h-4 w-4 text-muted-foreground" />
                         <span>{hospital.name}</span>
@@ -297,7 +297,11 @@ export default function ForecastDetailPage() {
                           <div className="flex items-center justify-center gap-2">
                             {hospital.demand.toLocaleString()}
                             <Badge variant={hospital.trend === "up" ? "default" : "destructive"} className="ml-2">
-                              {hospital.trend === "up" ? "↑" : hospital.trend === "down" ? "↓" : "—"}
+                                {(() => {
+                                if (hospital.trend === "up") return "↑";
+                                if (hospital.trend === "down") return "↓";
+                                return "—";
+                                })()}
                             </Badge>
                           </div>
                         ) : (
