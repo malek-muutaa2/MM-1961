@@ -144,7 +144,7 @@ export function AddEventModal({ open, onOpenChange }: Readonly<AddEventModalProp
                     mode="single"
                     selected={endDate}
                     onSelect={setEndDate}
-                    initialFocus
+                    autoFocus
                     disabled={(date) => (startDate ? date < startDate : false)}
                   />
                 </PopoverContent>

@@ -269,11 +269,12 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
   }
 
   if (!value) return null // Skip validation for empty optional fields
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   // Data type validation
   switch (columnConfig.dataType) {
     case "email":
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
       if (!emailRegex.test(value)) {
         return {
           code: "INVALID_EMAIL",
@@ -285,7 +286,7 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
       }
       break
 
-    case "number": {
+    case "number":
       const numValue = Number.parseFloat(value)
       if (isNaN(numValue)) {
         return {
@@ -316,8 +317,7 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
       }
       break
 
-    }
-    case "string": {
+    case "string":
       if (columnConfig.minLength && value.length < columnConfig.minLength) {
         return {
           code: "VALUE_TOO_SHORT",
@@ -349,7 +349,6 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
         }
       }
       break
-    }
   }
 
   return null
