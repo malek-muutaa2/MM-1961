@@ -20,8 +20,8 @@ import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../ui/input-otp";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { Login2fa2 } from "./login2fa";
 
 interface QrcodeType {
@@ -204,6 +204,7 @@ const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
                         disabled={isPending}
                         placeholder=""
                         type="email"
+                        data-testid="email-input"
                       />
                     </FormControl>
                     <FormMessage />
@@ -225,6 +226,7 @@ const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
                         disabled={isPending}
                         placeholder=""
                         type="password"
+                        data-testid="password-input"
                       />
                     </FormControl>
                     <Button

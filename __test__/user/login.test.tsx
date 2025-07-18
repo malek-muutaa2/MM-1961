@@ -61,8 +61,9 @@ describe('<LoginForm2fa />', () => {
 
   it('renders email/password inputs and a disabled login button', () => {
     const { container } = render(<LoginForm2fa />)
-    expect(container.querySelector('input[name="email"]')).toBeInTheDocument()
-    expect(container.querySelector('input[name="password"]')).toBeInTheDocument()
+expect(screen.getByTestId('email-input')).toBeInTheDocument();
+expect(screen.getByTestId('password-input')).toBeInTheDocument();
+
   })
 
   it('shows 2FA inputs when Login2fa2 returns twoFactor=true', async () => {
