@@ -36,9 +36,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as nextAuth from 'next-auth/react'
 
-import { Login2fa2 } from '../../components/auth/login2fa'
-import { DisabledUserAction } from '../../lib/login'
-import { LoginForm2fa } from '../../components/auth/authlogin'
+import { Login2fa2 } from '@/components/auth/login2fa'
+import { LoginForm2fa } from '@/components/auth/authlogin'
 
 // other mocks
 jest.mock('next/navigation', () => ({

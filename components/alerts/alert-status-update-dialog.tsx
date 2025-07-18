@@ -64,7 +64,7 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
             try {
                 // Option 1: Utiliser l'API
                 const response = await fetch("/api/alerts/status-options")
-                if (response.ok) {
+                if (response?.ok) {
                     const data = await response.json()
                     setStatusOptions(data.statusOptions)
                 } else {
@@ -113,7 +113,7 @@ export function AlertStatusUpdateDialog({ alert, open, onOpenChange, onSuccess }
                 }),
             })
 
-            if (!response.ok) {
+            if (!response?.ok) {
                 throw new Error("Failed to update alert status")
             }
 

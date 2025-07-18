@@ -136,7 +136,7 @@ const onSubmitcode2fa = async (values: z.infer<typeof loginschemaform>) => {
 
   startTransition(() => {
     Login2fa2(values)
-      .then(async (data) => {
+      .then(async (data: any) => {
         if (data?.error) {
           await handleLoginError(values, data.error);
           return;
