@@ -4,32 +4,78 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: sonar fix">
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: fix develop issue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/collaboration/provider/network/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/collaboration/provider/network/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/collaboration/provider/shared-kpis/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/collaboration/provider/shared-kpis/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/demand/forecasting/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/demand/forecasting/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/demand/forecasting/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/demand/forecasting/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/demand/products/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/demand/products/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/events/loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/events/loading.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/kpis/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/kpis/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/kpis/continuous-operations/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/kpis/continuous-operations/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/kpis/financial-optimization/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/kpis/financial-optimization/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/kpis/selection/KPISelectionClientPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/kpis/selection/KPISelectionClientPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/rafed-admin/orders/loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/rafed-admin/orders/loading.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/rafed-provider/history/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/rafed-provider/history/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(main)/rafed-provider/upload/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(main)/rafed-provider/upload/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/alerts/bulk/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/alerts/bulk/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/upload/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/upload/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/alerts/alerts-list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/alerts/alerts-list.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/events/add-event-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/add-event-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/rafed-admin/user-management.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/rafed-admin/user-management.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/rafed-provider/forecast-data-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/rafed-provider/forecast-data-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/upload-system/enhanced-upload-interface.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/enhanced-upload-interface.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useNotifications.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useNotifications.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/db/schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/db/schema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__test__/notification/notification.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/notification/notification.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__test__/user/login.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/user/login.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/alerts/alert-status-update-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/alerts/alert-status-update-dialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/clover.xml" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/clover.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/coverage-final.json" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/coverage-final.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-actions-cell.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-actions-cell.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comment-dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comment-dialog.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comments-popover.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comments-popover.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-status-update-dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-status-update-dialog.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-columns.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-columns.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-data-table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-data-table.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-list.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-list.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/register-form.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/register-form.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-data-table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-data-table.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-product-timeline.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/forecast-product-timeline.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/rafed-provider/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/theme-provider.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/theme-provider.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/top-nav.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/top-nav.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/avatar.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/avatar.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/badge.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/badge.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/button.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/button.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/card.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/card.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dialog.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dropdown-menu.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/dropdown-menu.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/form.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/form.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input-otp.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input-otp.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/input.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/label.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/label.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/pagination2.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/pagination2.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/popover.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/popover.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/scroll-area.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/scroll-area.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/select.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/select.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/separator.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/separator.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/sheet.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/sheet.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/sidebar.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/sidebar.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/skeleton.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/skeleton.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/table.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/textarea.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/textarea.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/tooltip.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/tooltip.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/ui/use-toast.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/ui/use-toast.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/configuration-selector.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/configuration-selector.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/upload-system/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/hooks/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/hooks/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-mobile.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-mobile.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-toast.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/hooks/use-toast.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/alert-utils.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/alert-utils.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/db/dbpostgres.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/db/dbpostgres.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/db/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/db/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/db/schema.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/db/schema.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/reset.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/reset.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/aws-s3.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/aws-s3.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/azure-blob.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/azure-blob.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/gcs.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/gcs.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/storage/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/utils.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/validation-service.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/lib/zodschema.ts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov.info" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +98,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="fix-all-develop-issue" />
+                    <option name="lastUsedInstant" value="1752839105" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="develop" />
                     <option name="lastUsedInstant" value="1752833694" />
@@ -93,48 +143,57 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.Dockerfile deps.executor": "Run",
-    "Jest.ConfigurationSelector.executor": "Run",
-    "Jest.Enhanced Upload API.executor": "Run",
-    "Jest.Enhanced Upload API.should handle successful upload with no validation errors.executor": "Run",
-    "Jest.EnhancedUploadInterface.executor": "Run",
-    "Jest.ForecastDataTable.executor": "Run",
-    "Jest.StorageService.executor": "Run",
-    "Jest.ValidationService.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "develop",
-    "go.import.settings.migrated": "true",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "last_opened_file_path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/drizzle/meta",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.jest.jest_package": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/jest",
-    "nodejs_package_manager_path": "yarn",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "project.scopes",
-    "show.migrate.to.gradle.popup": "false",
-    "ts.external.directory.path": "/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.Dockerfile deps.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.&lt;LoginForm2fa /&gt;.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertCommentDialog Component.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertCommentsPopover.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertStatusUpdateDialog.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertsDataTable.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertsList Component.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ConfigurationSelector.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.Enhanced Upload API.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.Enhanced Upload API.should handle successful upload with no validation errors.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.EnhancedUploadInterface.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ForecastDataTable.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.RegisterForm.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.StorageService.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.ValidationService.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.notification Component.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.renders ForecastProductTimeline with fetched data.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix-all-develop-issue&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/drizzle/meta&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/jest&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.scopes&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/konate081049/Downloads/others/MUUTAA/v0/optivian/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -153,7 +212,7 @@
       <recent name="$PROJECT_DIR$/app/(main)" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.Enhanced Upload API.should handle successful upload with no validation errors">
+  <component name="RunManager" selected="Jest.&lt;LoginForm2fa /&gt;">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="optivian" />
       <working_directory value="$PROJECT_DIR$" />
@@ -173,64 +232,63 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
-    <configuration name="Enhanced Upload API" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertStatusUpdateDialog" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alert-status-update-dialog.test.tsx" />
       <test-names>
-        <test-name value="Enhanced Upload API" />
+        <test-name value="AlertStatusUpdateDialog" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="Enhanced Upload API.should handle successful upload with no validation errors" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
-      <test-names>
-        <test-name value="Enhanced Upload API" />
-        <test-name value="should handle successful upload with no validation errors" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="EnhancedUploadInterface" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertsDataTable" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/enhanced-upload-interface.test.tsx" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alerts-data-table.test.tsx" />
       <test-names>
-        <test-name value="EnhancedUploadInterface" />
+        <test-name value="AlertsDataTable" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="StorageService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertsList Component" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/storage-service.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alerts-list.test.tsx" />
       <test-names>
-        <test-name value="StorageService" />
+        <test-name value="AlertsList Component" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="ValidationService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="RegisterForm" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/validation-service.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/user/register.test.tsx" />
       <test-names>
-        <test-name value="ValidationService" />
+        <test-name value="RegisterForm" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="&lt;LoginForm2fa /&gt;" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/user/login.test.tsx" />
+      <test-names>
+        <test-name value="&lt;LoginForm2fa /&gt;" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -255,11 +313,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.ValidationService" />
-        <item itemvalue="Jest.StorageService" />
-        <item itemvalue="Jest.EnhancedUploadInterface" />
-        <item itemvalue="Jest.Enhanced Upload API.should handle successful upload with no validation errors" />
-        <item itemvalue="Jest.Enhanced Upload API" />
+        <item itemvalue="Jest.&lt;LoginForm2fa /&gt;" />
+        <item itemvalue="Jest.RegisterForm" />
+        <item itemvalue="Jest.AlertsList Component" />
+        <item itemvalue="Jest.AlertsDataTable" />
+        <item itemvalue="Jest.AlertStatusUpdateDialog" />
       </list>
     </recent_temporary>
   </component>
@@ -419,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752612602264</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="MM-1414: fix develop issue">
+      <option name="closed" value="true" />
+      <created>1752839139297</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1752839139297</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -444,7 +510,8 @@
     <MESSAGE value="MM-1414: fix sonar check" />
     <MESSAGE value="MM-1414: after merge" />
     <MESSAGE value="MM-1414: sonar fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: sonar fix" />
+    <MESSAGE value="MM-1414: fix develop issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: fix develop issue" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

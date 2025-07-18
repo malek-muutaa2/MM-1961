@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.39% </span>
+                <span class="strong">80.62% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>410/510</span>
+                <span class='fraction'>416/516</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54% </span>
+                <span class="strong">55.76% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>27/50</span>
+                <span class='fraction'>29/52</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.39% </span>
+                <span class="strong">80.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>410/510</span>
+                <span class='fraction'>416/516</span>
             </div>
         
             
@@ -573,7 +573,13 @@
 <a name='L508'></a><a href='#L508'>508</a>
 <a name='L509'></a><a href='#L509'>509</a>
 <a name='L510'></a><a href='#L510'>510</a>
-<a name='L511'></a><a href='#L511'>511</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L511'></a><a href='#L511'>511</a>
+<a name='L512'></a><a href='#L512'>512</a>
+<a name='L513'></a><a href='#L513'>513</a>
+<a name='L514'></a><a href='#L514'>514</a>
+<a name='L515'></a><a href='#L515'>515</a>
+<a name='L516'></a><a href='#L516'>516</a>
+<a name='L517'></a><a href='#L517'>517</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -934,6 +940,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -943,7 +954,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -1050,6 +1061,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -1268,7 +1280,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 <span class="cstat-no" title="statement not covered" >      console.error("Error fetching paginated data:", error)</span>
 <span class="cstat-no" title="statement not covered" >      toast({</span>
 <span class="cstat-no" title="statement not covered" >        title: "Erreur",</span>
-<span class="cstat-no" title="statement not covered" >        description: "Failed to load forecast data",</span>
+<span class="cstat-no" title="statement not covered" >        description: "Impossible de charger les données de prévision",</span>
 <span class="cstat-no" title="statement not covered" >        variant: "destructive",</span>
 <span class="cstat-no" title="statement not covered" >      })</span>
     } finally {
@@ -1295,9 +1307,9 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 &nbsp;
         acc[key] = {
           productId: item.productId,
-          productName: item.productName<span class="branch-0 cbranch-no" title="branch not covered" > || `Product ${item.productId}`,</span>
-          classificationId: item.classificationId<span class="branch-0 cbranch-no" title="branch not covered" > || 0,</span>
-          classificationName: item.classificationName<span class="branch-0 cbranch-no" title="branch not covered" > || "Unknown",</span>
+          productName: item.productName<span class="branch-0 cbranch-no" title="branch not covered" > ?? `Product ${item.productId}`,</span>
+          classificationId: item.classificationId<span class="branch-0 cbranch-no" title="branch not covered" > ?? 0,</span>
+          classificationName: item.classificationName<span class="branch-0 cbranch-no" title="branch not covered" > ?? "Unknown",</span>
           sku: sku,
           date: formatDateToMonthYear(item.date),
           originalDate: item.date,
@@ -1315,7 +1327,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
     }, {})
 &nbsp;
     // Convertir en tableau et maintenir l'ordre
-    const result = Object.values(groupedByProductAndDate) as ForecastData[]
+    const result: ForecastData[] = Object.values(groupedByProductAndDate)
 &nbsp;
     // Trier par date originale puis par nom de produit
     return result.sort((a, b) =&gt; {
@@ -1340,7 +1352,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
   const handleEditClick = <span class="fstat-no" title="function not covered" >(item: ForecastData, forecastType: string) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setEditingItem(item)</span>
 <span class="cstat-no" title="statement not covered" >    setEditingForecastType(forecastType)</span>
-<span class="cstat-no" title="statement not covered" >    setNewQuantity(item[forecastType] || 0)</span>
+<span class="cstat-no" title="statement not covered" >    setNewQuantity(item[forecastType] ?? 0)</span>
 <span class="cstat-no" title="statement not covered" >    setEditModalOpen(true)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
@@ -1370,14 +1382,14 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 <span class="cstat-no" title="statement not covered" >        fetchPaginatedData(pagination.page)</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        toast({</span>
-<span class="cstat-no" title="statement not covered" >          title: "Forecast Updated",</span>
-<span class="cstat-no" title="statement not covered" >          description: `${forecastType.name} for ${editingItem.productName} (${editingItem.date}) updated to ${newQuantity}`,</span>
+<span class="cstat-no" title="statement not covered" >          title: "Prévision mise à jour",</span>
+<span class="cstat-no" title="statement not covered" >          description: `${forecastType.name} pour ${editingItem.productName} (${editingItem.date}) mis à jour à ${newQuantity}`,</span>
 <span class="cstat-no" title="statement not covered" >        })</span>
 <span class="cstat-no" title="statement not covered" >      } catch (error) {</span>
 <span class="cstat-no" title="statement not covered" >        console.error("Error updating forecast:", error)</span>
 <span class="cstat-no" title="statement not covered" >        toast({</span>
-<span class="cstat-no" title="statement not covered" >          title: "Update Failed",</span>
-<span class="cstat-no" title="statement not covered" >          description: "Failed to update forecast data. Please try again.",</span>
+<span class="cstat-no" title="statement not covered" >          title: "Échec de la mise à jour",</span>
+<span class="cstat-no" title="statement not covered" >          description: "Impossible de mettre à jour les données de prévision. Veuillez réessayer.",</span>
 <span class="cstat-no" title="statement not covered" >          variant: "destructive",</span>
 <span class="cstat-no" title="statement not covered" >        })</span>
 <span class="cstat-no" title="statement not covered" >      } finally {</span>
@@ -1391,206 +1403,212 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 &nbsp;
   if (loading &amp;&amp; pagination.page === 1) {
     return (
-        &lt;div className="flex h-[400px] items-center justify-center"&gt;
-          &lt;div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"&gt;&lt;/div&gt;
-        &lt;/div&gt;
+      &lt;div className="flex h-[400px] items-center justify-center"&gt;
+        &lt;div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"&gt;&lt;/div&gt;
+      &lt;/div&gt;
     )
   }
 &nbsp;
   return (
-      &lt;div className="space-y-4"&gt;
-        {/* Filters */}
-        &lt;div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"&gt;
-          &lt;div className="flex flex-1 items-center space-x-2"&gt;
-            &lt;div className="relative flex-1"&gt;
-              &lt;Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /&gt;
-              &lt;Input placeholder="Search products..." value={searchTerm} onChange={handleSearchChange} className="pl-8" /&gt;
-            &lt;/div&gt;
-            &lt;div className="flex items-center space-x-2"&gt;
-              &lt;Filter className="h-4 w-4 text-muted-foreground" /&gt;
-              &lt;Select value={selectedCategory} onValueChange={handleCategoryChange}&gt;
-                &lt;SelectTrigger className="w-[180px]"&gt;
-                  &lt;SelectValue placeholder="All categories" /&gt;
-                &lt;/SelectTrigger&gt;
-                &lt;SelectContent&gt;
-                  &lt;SelectItem value="all"&gt;All categories&lt;/SelectItem&gt;
-                  {classifications.map((classification) =&gt; (
-                      &lt;SelectItem key={classification.id} value={classification.name}&gt;
-                        {classification.name}
-                      &lt;/SelectItem&gt;
-                  ))}
-                &lt;/SelectContent&gt;
-              &lt;/Select&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-&nbsp;
-        {/* Table */}
-        &lt;div className="rounded-md border"&gt;
-          &lt;Table&gt;
-            &lt;TableHeader&gt;
-              &lt;TableRow&gt;
-                &lt;TableHead&gt;SKU&lt;/TableHead&gt;
-                &lt;TableHead&gt;Product Name&lt;/TableHead&gt;
-                &lt;TableHead&gt;Category&lt;/TableHead&gt;
-                &lt;TableHead&gt;Date&lt;/TableHead&gt;
-                {forecastTypes.map((type) =&gt; (
-                    &lt;TableHead key={type.id} className="text-right"&gt;
-                      {type.name}
-                    &lt;/TableHead&gt;
-                ))}
-                &lt;TableHead&gt;Unit&lt;/TableHead&gt;
-              &lt;/TableRow&gt;
-            &lt;/TableHeader&gt;
-            &lt;TableBody&gt;
-              {<span class="branch-0 cbranch-no" title="branch not covered" >loading ? (</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;TableRow&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;div className="flex items-center justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                        &lt;div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"&gt;&lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                        &lt;span className="ml-2"&gt;Loading...&lt;/span&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    &lt;/TableCell&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  &lt;/TableRow&gt;</span>
-              ) : forecastData.length &gt; 0 ? (
-                  forecastData.map((item, index) =&gt; (
-                      &lt;TableRow key={`${item.productId}-${item.originalDate}-${index}`}&gt;
-                        &lt;TableCell className="font-medium"&gt;{item.sku}&lt;/TableCell&gt;
-                        &lt;TableCell&gt;{item.productName}&lt;/TableCell&gt;
-                        &lt;TableCell&gt;{item.classificationName}&lt;/TableCell&gt;
-                        &lt;TableCell&gt;{item.date}&lt;/TableCell&gt;
-                        {forecastTypes.map((type) =&gt; {
-                          const typeName = type.name.replace(/\s+/g, "")
-                          return (
-                              &lt;TableCell key={type.id} className="text-right"&gt;
-                                {type.isEditable ? (
-                                    &lt;button
-                                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; handleEditClick(item, typeName)}</span>
-                                        className="inline-flex items-center text-primary hover:underline focus:outline-none"
-                                    &gt;
-                                      {item[typeName]?.<span class="branch-0 cbranch-no" title="branch not covered" >toLocaleString() || 0}</span>
-                                      &lt;Edit2 className="ml-1 h-3 w-3 text-muted-foreground" /&gt;
-                                    &lt;/button&gt;
-                                ) : (
-                                    item[typeName]?.<span class="branch-0 cbranch-no" title="branch not covered" >toLocaleString() || 0</span>
-                                )}
-                              &lt;/TableCell&gt;
-                          )
-                        })}
-                        &lt;TableCell&gt;Units&lt;/TableCell&gt;
-                      &lt;/TableRow&gt;
-                  ))
-              ) : (
-                  &lt;TableRow&gt;
-                    &lt;TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center"&gt;
-                      No forecast data available.
-                    &lt;/TableCell&gt;
-                  &lt;/TableRow&gt;
-              )}
-            &lt;/TableBody&gt;
-          &lt;/Table&gt;
-        &lt;/div&gt;
-&nbsp;
-        {/* Pagination */}
-        &lt;div className="flex items-center justify-between"&gt;
-          &lt;div className="text-sm text-muted-foreground"&gt;
-            Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} results
+    &lt;div className="space-y-4"&gt;
+      {/* Filters */}
+      &lt;div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"&gt;
+        &lt;div className="flex flex-1 items-center space-x-2"&gt;
+          &lt;div className="relative flex-1"&gt;
+            &lt;Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /&gt;
+            &lt;Input
+              placeholder="Rechercher des produits..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="pl-8"
+            /&gt;
           &lt;/div&gt;
           &lt;div className="flex items-center space-x-2"&gt;
-            &lt;Button
-                variant="outline"
-                size="sm"
-                onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pagination.page - 1)}</span>
-                disabled={!pagination.hasPrev<span class="branch-0 cbranch-no" title="branch not covered" > || loading}</span>
-            &gt;
-              &lt;ChevronLeft className="h-4 w-4" /&gt;
-              Previous
-            &lt;/Button&gt;
-            &lt;div className="flex items-center space-x-1"&gt;
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) =&gt; {
-                const pageNumber = Math.max(1, pagination.page - 2) + i
-                if (pageNumber &gt; pagination.totalPages) <span class="branch-0 cbranch-no" title="branch not covered" >return null</span>
-&nbsp;
-                return (
-                    &lt;Button
-                        key={pageNumber}
-                        variant={pageNumber === pagination.page ? <span class="branch-0 cbranch-no" title="branch not covered" >"default" : "outline"}</span>
-                        size="sm"
-                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pageNumber)}</span>
-                        disabled={loading}
-                        className="w-8 h-8 p-0"
-                    &gt;
-                      {pageNumber}
-                    &lt;/Button&gt;
-                )
-              })}
-            &lt;/div&gt;
-            &lt;Button
-                variant="outline"
-                size="sm"
-                onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pagination.page + 1)}</span>
-                disabled={!pagination.hasNext<span class="branch-0 cbranch-no" title="branch not covered" > || loading}</span>
-            &gt;
-              Next
-              &lt;ChevronRight className="h-4 w-4" /&gt;
-            &lt;/Button&gt;
+            &lt;Filter className="h-4 w-4 text-muted-foreground" /&gt;
+            &lt;Select value={selectedCategory} onValueChange={handleCategoryChange}&gt;
+              &lt;SelectTrigger className="w-[180px]"&gt;
+                &lt;SelectValue placeholder="Toutes les catégories" /&gt;
+              &lt;/SelectTrigger&gt;
+              &lt;SelectContent&gt;
+                &lt;SelectItem value="all"&gt;Toutes les catégories&lt;/SelectItem&gt;
+                {classifications.map((classification) =&gt; (
+                  &lt;SelectItem key={classification.id} value={classification.name}&gt;
+                    {classification.name}
+                  &lt;/SelectItem&gt;
+                ))}
+              &lt;/SelectContent&gt;
+            &lt;/Select&gt;
           &lt;/div&gt;
         &lt;/div&gt;
-&nbsp;
-        {/* Edit Modal */}
-        &lt;Dialog open={editModalOpen} onOpenChange={setEditModalOpen}&gt;
-          &lt;DialogContent className="sm:max-w-md"&gt;
-            &lt;DialogHeader&gt;
-              &lt;DialogTitle&gt;Edit Forecast Quantity&lt;/DialogTitle&gt;
-              &lt;DialogDescription&gt;
-                Update forecast quantity for {<span class="branch-0 cbranch-no" title="branch not covered" >editingItem?.productName} </span>({<span class="branch-0 cbranch-no" title="branch not covered" >editingItem?.date})</span>
-              &lt;/DialogDescription&gt;
-            &lt;/DialogHeader&gt;
-            &lt;div className="grid gap-4 py-4"&gt;
-              {forecastTypes.map((type) =&gt; {
-                const typeName = type.name.replace(/\s+/g, "")
-                if (<span class="branch-0 cbranch-no" title="branch not covered" >editingItem &amp;&amp; editingItem[typeName] !== <span class="branch-0 cbranch-no" title="branch not covered" >undefined &amp;&amp; t</span>ypeName !== editingForecastType) <span class="branch-0 cbranch-no" title="branch not covered" >{</span></span>
-<span class="cstat-no" title="statement not covered" >                  return (</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;div key={type.id} className="grid grid-cols-4 items-center gap-4"&gt;</span>
-<span class="cstat-no" title="statement not covered" >                        &lt;label className="text-right text-sm font-medium col-span-2"&gt;{type.name}:&lt;/label&gt;</span>
-<span class="cstat-no" title="statement not covered" >                        &lt;div className="col-span-2 font-medium"&gt;{editingItem[typeName]?.toLocaleString() || 0} Unités&lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                  )</span>
-<span class="cstat-no" title="statement not covered" >                }</span>
-                return null
-              })}
-&nbsp;
-              {editingForecastType &amp;&amp; (
-                  &lt;div className="grid grid-cols-4 items-center gap-4"&gt;
-                    &lt;label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2"&gt;
-                      New{" "}
-                      {forecastTypes.find((ft) =&gt; ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Forecast"}:
-                    &lt;/label&gt;
-                    &lt;div className="col-span-2"&gt;
-                      &lt;Input
-                          id="new-forecast"
-                          type="number"
-                          value={newQuantity}
-                          onChange={<span class="fstat-no" title="function not covered" >(e) =&gt; setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}</span>
-                          min={0}
-                          className="w-full"
-                      /&gt;
-                    &lt;/div&gt;
-                  &lt;/div&gt;
-              )}
-            &lt;/div&gt;
-            &lt;DialogFooter&gt;
-              &lt;Button variant="outline" onClick={<span class="fstat-no" title="function not covered" >() =&gt; setEditModalOpen(false)}&gt;</span>
-                Cancel
-              &lt;/Button&gt;
-              &lt;Button onClick={handleSaveEdit} disabled={newQuantity === ""}&gt;
-                Save
-              &lt;/Button&gt;
-            &lt;/DialogFooter&gt;
-          &lt;/DialogContent&gt;
-        &lt;/Dialog&gt;
       &lt;/div&gt;
+&nbsp;
+      {/* Table */}
+      &lt;div className="rounded-md border"&gt;
+        &lt;Table&gt;
+          &lt;TableHeader&gt;
+            &lt;TableRow&gt;
+              &lt;TableHead&gt;SKU&lt;/TableHead&gt;
+              &lt;TableHead&gt;Nom du produit&lt;/TableHead&gt;
+              &lt;TableHead&gt;Catégorie&lt;/TableHead&gt;
+              &lt;TableHead&gt;Date&lt;/TableHead&gt;
+              {forecastTypes.map((type) =&gt; (
+                &lt;TableHead key={type.id} className="text-right"&gt;
+                  {type.name}
+                &lt;/TableHead&gt;
+              ))}
+              &lt;TableHead&gt;Unité&lt;/TableHead&gt;
+            &lt;/TableRow&gt;
+          &lt;/TableHeader&gt;
+          &lt;TableBody&gt;
+            {<span class="branch-0 cbranch-no" title="branch not covered" >loading ? (</span>
+<span class="cstat-no" title="statement not covered" >              &lt;TableRow&gt;</span>
+<span class="cstat-no" title="statement not covered" >                &lt;TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" >                  &lt;div className="flex items-center justify-center"&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    &lt;div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"&gt;&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    &lt;span className="ml-2"&gt;Chargement...&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" >                  &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >                &lt;/TableCell&gt;</span>
+<span class="cstat-no" title="statement not covered" >              &lt;/TableRow&gt;</span>
+            ) : ""} {forecastData.length &gt; 0 ? (
+              forecastData.map((item, index) =&gt; (
+                &lt;TableRow key={`${item.productId}-${item.originalDate}-${index}`}&gt;
+                  &lt;TableCell className="font-medium"&gt;{item.sku}&lt;/TableCell&gt;
+                  &lt;TableCell&gt;{item.productName}&lt;/TableCell&gt;
+                  &lt;TableCell&gt;{item.classificationName}&lt;/TableCell&gt;
+                  &lt;TableCell&gt;{item.date}&lt;/TableCell&gt;
+                  {forecastTypes.map((type) =&gt; {
+                    const typeName = type.name.replace(/\s+/g, "")
+                    return (
+                      &lt;TableCell key={type.id} className="text-right"&gt;
+                        {type.isEditable ? (
+                          &lt;button
+                            onClick={<span class="fstat-no" title="function not covered" >() =&gt; handleEditClick(item, typeName)}</span>
+                            className="inline-flex items-center text-primary hover:underline focus:outline-none"
+                          &gt;
+                            {item[typeName]?.<span class="branch-0 cbranch-no" title="branch not covered" >toLocaleString() ?? 0}</span>
+                            &lt;Edit2 className="ml-1 h-3 w-3 text-muted-foreground" /&gt;
+                          &lt;/button&gt;
+                        ) : (
+                          item[typeName]?.<span class="branch-0 cbranch-no" title="branch not covered" >toLocaleString() ?? 0</span>
+                        )}
+                      &lt;/TableCell&gt;
+                    )
+                  })}
+                  &lt;TableCell&gt;Unités&lt;/TableCell&gt;
+                &lt;/TableRow&gt;
+              ))
+            ) : (
+              &lt;TableRow&gt;
+                &lt;TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center"&gt;
+                  Aucune donnée de prévision disponible.
+                &lt;/TableCell&gt;
+              &lt;/TableRow&gt;
+            )}
+          &lt;/TableBody&gt;
+        &lt;/Table&gt;
+      &lt;/div&gt;
+&nbsp;
+      {/* Pagination */}
+      &lt;div className="flex items-center justify-between"&gt;
+        &lt;div className="text-sm text-muted-foreground"&gt;
+          Affichage de {(pagination.page - 1) * pagination.limit + 1} à{" "}
+          {Math.min(pagination.page * pagination.limit, pagination.total)} sur {pagination.total} résultats
+        &lt;/div&gt;
+        &lt;div className="flex items-center space-x-2"&gt;
+          &lt;Button
+            variant="outline"
+            size="sm"
+            onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pagination.page - 1)}</span>
+            disabled={!pagination.hasPrev<span class="branch-0 cbranch-no" title="branch not covered" > || loading}</span>
+          &gt;
+            &lt;ChevronLeft className="h-4 w-4" /&gt;
+            Précédent
+          &lt;/Button&gt;
+          &lt;div className="flex items-center space-x-1"&gt;
+            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) =&gt; {
+              const pageNumber = Math.max(1, pagination.page - 2) + i
+              if (pageNumber &gt; pagination.totalPages) <span class="branch-0 cbranch-no" title="branch not covered" >return null</span>
+&nbsp;
+              return (
+                &lt;Button
+                  key={pageNumber}
+                  variant={pageNumber === pagination.page ? <span class="branch-0 cbranch-no" title="branch not covered" >"default" : "outline"}</span>
+                  size="sm"
+                  onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pageNumber)}</span>
+                  disabled={loading}
+                  className="w-8 h-8 p-0"
+                &gt;
+                  {pageNumber}
+                &lt;/Button&gt;
+              )
+            })}
+          &lt;/div&gt;
+          &lt;Button
+            variant="outline"
+            size="sm"
+            onClick={<span class="fstat-no" title="function not covered" >() =&gt; handlePageChange(pagination.page + 1)}</span>
+            disabled={!pagination.hasNext<span class="branch-0 cbranch-no" title="branch not covered" > || loading}</span>
+          &gt;
+            Suivant
+            &lt;ChevronRight className="h-4 w-4" /&gt;
+          &lt;/Button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+&nbsp;
+      {/* Edit Modal */}
+      &lt;Dialog open={editModalOpen} onOpenChange={setEditModalOpen}&gt;
+        &lt;DialogContent className="sm:max-w-md"&gt;
+          &lt;DialogHeader&gt;
+            &lt;DialogTitle&gt;Modifier la quantité de prévision&lt;/DialogTitle&gt;
+            &lt;DialogDescription&gt;
+              Mettre à jour la quantité de prévision pour {<span class="branch-0 cbranch-no" title="branch not covered" >editingItem?.productName} </span>({<span class="branch-0 cbranch-no" title="branch not covered" >editingItem?.date})</span>
+            &lt;/DialogDescription&gt;
+          &lt;/DialogHeader&gt;
+          &lt;div className="grid gap-4 py-4"&gt;
+            {forecastTypes.map((type) =&gt; {
+              const typeName = type.name.replace(/\s+/g, "")
+              if (<span class="branch-0 cbranch-no" title="branch not covered" >editingItem &amp;&amp; editingItem[typeName] !== <span class="branch-0 cbranch-no" title="branch not covered" >undefined &amp;&amp; t</span>ypeName !== editingForecastType) <span class="branch-0 cbranch-no" title="branch not covered" >{</span></span>
+<span class="cstat-no" title="statement not covered" >                return (</span>
+<span class="cstat-no" title="statement not covered" >                  &lt;div key={type.id} className="grid grid-cols-4 items-center gap-4"&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    &lt;label className="text-right text-sm font-medium col-span-2"&gt;{type.name}:&lt;/label&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    &lt;div className="col-span-2 font-medium"&gt;{editingItem[typeName]?.toLocaleString() ?? 0} Unités&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >                  &lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >                )</span>
+<span class="cstat-no" title="statement not covered" >              }</span>
+              return null
+            })}
+&nbsp;
+            {editingForecastType &amp;&amp; (
+              &lt;div className="grid grid-cols-4 items-center gap-4"&gt;
+                &lt;label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2"&gt;
+                  Nouveau{" "}
+                  {forecastTypes.find((ft) =&gt; ft.name.replace(/\s+/g, "") === editingForecastType)?.name ?? "Prévision"}
+                  :
+                &lt;/label&gt;
+                &lt;div className="col-span-2"&gt;
+                  &lt;Input
+                    id="new-forecast"
+                    type="number"
+                    value={newQuantity}
+                    onChange={<span class="fstat-no" title="function not covered" >(e) =&gt; setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}</span>
+                    min={0}
+                    className="w-full"
+                  /&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            )}
+          &lt;/div&gt;
+          &lt;DialogFooter&gt;
+            &lt;Button variant="outline" onClick={<span class="fstat-no" title="function not covered" >() =&gt; setEditModalOpen(false)}&gt;</span>
+              Annuler
+            &lt;/Button&gt;
+            &lt;Button onClick={handleSaveEdit} disabled={newQuantity === ""}&gt;
+              Sauvegarder
+            &lt;/Button&gt;
+          &lt;/DialogFooter&gt;
+        &lt;/DialogContent&gt;
+      &lt;/Dialog&gt;
+    &lt;/div&gt;
   )
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -1600,7 +1618,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-16T16:35:53.273Z
+                at 2025-07-18T11:56:08.471Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
