@@ -260,7 +260,7 @@ function KPICard({
   currentValue,
   targetValue,
   unit,
-}: KPICardProps) {
+}: Readonly<KPICardProps>) {
   const getStatusBadge = () => {
     switch (status) {
       case "critical":
@@ -271,7 +271,7 @@ function KPICard({
         )
       case "warning":
         return (
-          <Badge variant="warning" className="flex items-center gap-1 bg-amber-500">
+          <Badge variant="secondary" className="flex items-center gap-1 bg-amber-500">
             <Clock size={12} /> Needs Attention
           </Badge>
         )

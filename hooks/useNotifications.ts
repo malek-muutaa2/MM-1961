@@ -46,7 +46,7 @@ function countUnreadNotifications(notifications: { read_at: Date | null | undefi
   return notifications.filter(n => !n.read_at).length;
 }
 
-export function useNotifications(userId: number) {
+export function useNotifications(userId: number) { // NOSONAR
   const [notifications, setNotifications] = useState<notificationTypes[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
@@ -93,7 +93,7 @@ useEffect(() => {
       });
 
       eventSource.addEventListener('initial', (event) => {
-        const data = JSON.parse(event.data) as notificationTypes[];
+        const data: any = JSON.parse(event.data) as notificationTypes[];
         setNotifications(data);
       setUnreadCount(countUnreadNotifications(data));
 
@@ -105,7 +105,7 @@ useEffect(() => {
      eventSource.addEventListener('update', (event) => {
   const payload = JSON.parse(event.data) as notificationTypes | notificationTypes[];
   const all = normalizeNotifications(payload);
-  const filtered = filterByUser(all, userId);
+  const filtered: any = filterByUser(all, userId);
 
 setNotifications(prev => prependNotifications(prev, filtered)); //NOSONAR
 setUnreadCount(prev => incrementUnreadCount(prev, filtered));

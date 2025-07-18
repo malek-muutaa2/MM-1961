@@ -15,7 +15,32 @@ export const metadata: Metadata = {
 export default function FinancialOptimizationPage() {
   const kpis = getKPIsByCategory("financial_optimization")
 
-  return (
+
+    const calculateProgressValue = (kpi: any) => {
+        if (kpi.currentValue >= kpi.targetValue && kpi.trend === "increasing") {
+            return 100;
+        } else if (kpi.currentValue <= kpi.targetValue && kpi.trend === "decreasing") {
+            return 100;
+        } else if (kpi.trend === "increasing") {
+            return (kpi.currentValue / kpi.targetValue) * 100;
+        } else {
+            return 100 - ((kpi.currentValue - kpi.targetValue) / kpi.targetValue) * 100;
+        }
+    }
+
+    const getBadgeVariant = (status: string): "default" | "outline" | "destructive" => {
+        switch (status) {
+            case "on_target":
+                return "default"
+            case "warning":
+                return "outline"
+            case "critical":
+                return "destructive"
+            default:
+                return "default"
+        }
+    }
+    return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Financial Optimization KPIs</h2>
@@ -31,11 +56,9 @@ export default function FinancialOptimizationPage() {
               <div className="flex items-start justify-between">
                 <CardTitle>{kpi.name}</CardTitle>
                 <Badge
-                  variant={
-                    kpi.status === "on_target" ? "default" : kpi.status === "warning" ? "outline" : "destructive"
-                  }
+                  variant={getBadgeVariant(kpi.status)}
                 >
-                  {kpi.status === "on_target" ? "On Target" : kpi.status === "warning" ? "Warning" : "Critical"}
+                  {kpi.status === "on_target" ? "On Target" : ""} {kpi.status === "warning" ? "Warning" : "Critical"}
                 </Badge>
               </div>
               <CardDescription>{kpi.description}</CardDescription>
@@ -60,15 +83,7 @@ export default function FinancialOptimizationPage() {
                   </span>
                 </div>
                 <Progress
-                  value={
-                    kpi.currentValue >= kpi.targetValue && kpi.trend === "increasing"
-                      ? 100
-                      : kpi.currentValue <= kpi.targetValue && kpi.trend === "decreasing"
-                        ? 100
-                        : kpi.trend === "increasing"
-                          ? (kpi.currentValue / kpi.targetValue) * 100
-                          : 100 - ((kpi.currentValue - kpi.targetValue) / kpi.targetValue) * 100
-                  }
+                  value={calculateProgressValue(kpi)}
                   className="h-2"
                 />
               </div>

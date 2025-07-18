@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">97.4% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>160/164</span>
+                <span class='fraction'>150/154</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">97.4% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>160/164</span>
+                <span class='fraction'>150/154</span>
             </div>
         
             
@@ -217,17 +217,7 @@
 <a name='L152'></a><a href='#L152'>152</a>
 <a name='L153'></a><a href='#L153'>153</a>
 <a name='L154'></a><a href='#L154'>154</a>
-<a name='L155'></a><a href='#L155'>155</a>
-<a name='L156'></a><a href='#L156'>156</a>
-<a name='L157'></a><a href='#L157'>157</a>
-<a name='L158'></a><a href='#L158'>158</a>
-<a name='L159'></a><a href='#L159'>159</a>
-<a name='L160'></a><a href='#L160'>160</a>
-<a name='L161'></a><a href='#L161'>161</a>
-<a name='L162'></a><a href='#L162'>162</a>
-<a name='L163'></a><a href='#L163'>163</a>
-<a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L155'></a><a href='#L155'>155</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -282,16 +272,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -439,8 +419,8 @@ export default function ConfigurationSelector({
             &lt;/CardHeader&gt;
             &lt;CardContent className="space-y-6"&gt;
                 {/* Configuration Selection */}
-                &lt;div className="space-y-2" role="combobox"&gt;
-                    &lt;label className="text-sm font-medium"&gt;Choose Configuration&lt;/label&gt;
+                &lt;div className="space-y-2"&gt;
+                    &lt;label htmlFor={"choose configuration"} className="text-sm font-medium"&gt;Choose Configuration&lt;/label&gt;
                     &lt;Select value={selectedConfigId ? String(<span class="branch-0 cbranch-no" title="branch not covered" >selectedConfigId) : ""} o</span>nValueChange={<span class="fstat-no" title="function not covered" >(value: string) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                        localStorage.setItem("selectedConfiguration", value)</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -470,21 +450,11 @@ export default function ConfigurationSelector({
                         &lt;Card className="bg-muted/50"&gt;
                             &lt;CardContent className="pt-4"&gt;
                                 &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm"&gt;
-                                    {/*&lt;div&gt;*/}
-                                    {/*  &lt;span className="font-medium"&gt;Organization:&lt;/span&gt;*/}
-                                    {/*  &lt;p className="text-muted-foreground capitalize"&gt;*/}
-                                    {/*    {selectedConfiguration.organization_type.replace("_", " ")}*/}
-                                    {/*  &lt;/p&gt;*/}
-                                    {/*&lt;/div&gt;*/}
-                                    {/*&lt;div&gt;*/}
-                                    {/*  &lt;span className="font-medium"&gt;Source Type:&lt;/span&gt;*/}
-                                    {/*  &lt;p className="text-muted-foreground"&gt;{selectedConfiguration.source_type}&lt;/p&gt;*/}
-                                    {/*&lt;/div&gt;*/}
                                     &lt;div&gt;
                                         &lt;span className="font-medium"&gt;File Types:&lt;/span&gt;
                                         &lt;div className="flex gap-1 mt-1"&gt;
                                             {selectedConfiguration.file_type.split(",").map((type, i) =&gt; (
-                                                &lt;Badge key={i} variant="secondary"&gt;
+                                                &lt;Badge key={`${i + 1 }`} variant="secondary"&gt;
                                                     {type.trim()}
                                                 &lt;/Badge&gt;
                                             ))}
@@ -496,7 +466,7 @@ export default function ConfigurationSelector({
                                     &lt;/div&gt;
                                     &lt;div&gt;
                                         &lt;span className="font-medium"&gt;Max Rows:&lt;/span&gt;
-                                        &lt;p className="text-muted-foreground"&gt;{selectedConfiguration.max_rows || "Unlimited"}&lt;/p&gt;
+                                        &lt;p className="text-muted-foreground"&gt;{selectedConfiguration.max_rows ?? "Unlimited"}&lt;/p&gt;
                                     &lt;/div&gt;
                                     &lt;div&gt;
                                         &lt;span className="font-medium"&gt;Delimiter:&lt;/span&gt;
@@ -562,7 +532,7 @@ export default function ConfigurationSelector({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-16T16:35:53.273Z
+                at 2025-07-18T11:56:08.471Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

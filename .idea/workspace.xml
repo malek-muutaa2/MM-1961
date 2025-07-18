@@ -4,20 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: sonar fix">
+    <list default="true" id="405ccbf0-39bb-487f-ab93-0d06eb18b5a2" name="Changes" comment="MM-1414: fix develop issue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/upload-system/file-details-modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__test__/notification/notification.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/notification/notification.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__test__/user/login.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/user/login.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/alerts/alert-status-update-dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/alerts/alert-status-update-dialog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/clover.xml" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/clover.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/coverage-final.json" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/coverage-final.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/app/api/sendnotification/route.ts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-error.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/Form-success.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-actions-cell.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-actions-cell.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comment-dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comment-dialog.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comments-popover.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-comments-popover.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-status-update-dialog.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alert-status-update-dialog.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-columns.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-columns.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-data-table.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-data-table.tsx.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-list.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/alerts-list.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/alerts/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/authlogin.tsx.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/coverage/lcov-report/components/auth/index.html" afterDir="false" />
@@ -95,12 +99,16 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="fix-sonar-cloud-issue" />
-                    <option name="lastUsedInstant" value="1752683624" />
+                    <option name="branchName" value="fix-all-develop-issue" />
+                    <option name="lastUsedInstant" value="1752839105" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="develop" />
-                    <option name="lastUsedInstant" value="1752066864" />
+                    <option name="lastUsedInstant" value="1752833694" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="fix-sonar-cloud-issue" />
+                    <option name="lastUsedInstant" value="1752683624" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="MM-842-Upload-file-for-validation" />
@@ -138,13 +146,22 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Docker.Dockerfile deps.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.&lt;LoginForm2fa /&gt;.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertCommentDialog Component.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertCommentsPopover.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertStatusUpdateDialog.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertsDataTable.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.AlertsList Component.executor&quot;: &quot;Run&quot;,
     &quot;Jest.ConfigurationSelector.executor&quot;: &quot;Run&quot;,
     &quot;Jest.Enhanced Upload API.executor&quot;: &quot;Run&quot;,
     &quot;Jest.Enhanced Upload API.should handle successful upload with no validation errors.executor&quot;: &quot;Run&quot;,
     &quot;Jest.EnhancedUploadInterface.executor&quot;: &quot;Run&quot;,
     &quot;Jest.ForecastDataTable.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.RegisterForm.executor&quot;: &quot;Run&quot;,
     &quot;Jest.StorageService.executor&quot;: &quot;Run&quot;,
     &quot;Jest.ValidationService.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.notification Component.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.renders ForecastProductTimeline with fetched data.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -152,7 +169,7 @@
     &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
     &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fix-sonar-cloud-issue&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix-all-develop-issue&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
@@ -195,7 +212,7 @@
       <recent name="$PROJECT_DIR$/app/(main)" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.Enhanced Upload API.should handle successful upload with no validation errors">
+  <component name="RunManager" selected="Jest.&lt;LoginForm2fa /&gt;">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="optivian" />
       <working_directory value="$PROJECT_DIR$" />
@@ -215,64 +232,63 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
-    <configuration name="Enhanced Upload API" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertStatusUpdateDialog" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alert-status-update-dialog.test.tsx" />
       <test-names>
-        <test-name value="Enhanced Upload API" />
+        <test-name value="AlertStatusUpdateDialog" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="Enhanced Upload API.should handle successful upload with no validation errors" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/upload-api.test.ts" />
-      <test-names>
-        <test-name value="Enhanced Upload API" />
-        <test-name value="should handle successful upload with no validation errors" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="EnhancedUploadInterface" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertsDataTable" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/enhanced-upload-interface.test.tsx" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alerts-data-table.test.tsx" />
       <test-names>
-        <test-name value="EnhancedUploadInterface" />
+        <test-name value="AlertsDataTable" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="StorageService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="AlertsList Component" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/storage-service.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/alerts/alerts-list.test.tsx" />
       <test-names>
-        <test-name value="StorageService" />
+        <test-name value="AlertsList Component" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="ValidationService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="RegisterForm" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__test__/upload-system/validation-service.test.ts" />
+      <test-file value="$PROJECT_DIR$/__test__/user/register.test.tsx" />
       <test-names>
-        <test-name value="ValidationService" />
+        <test-name value="RegisterForm" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="&lt;LoginForm2fa /&gt;" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__test__/user/login.test.tsx" />
+      <test-names>
+        <test-name value="&lt;LoginForm2fa /&gt;" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -297,11 +313,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.ValidationService" />
-        <item itemvalue="Jest.StorageService" />
-        <item itemvalue="Jest.EnhancedUploadInterface" />
-        <item itemvalue="Jest.Enhanced Upload API.should handle successful upload with no validation errors" />
-        <item itemvalue="Jest.Enhanced Upload API" />
+        <item itemvalue="Jest.&lt;LoginForm2fa /&gt;" />
+        <item itemvalue="Jest.RegisterForm" />
+        <item itemvalue="Jest.AlertsList Component" />
+        <item itemvalue="Jest.AlertsDataTable" />
+        <item itemvalue="Jest.AlertStatusUpdateDialog" />
       </list>
     </recent_temporary>
   </component>
@@ -461,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752612602264</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="MM-1414: fix develop issue">
+      <option name="closed" value="true" />
+      <created>1752839139297</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1752839139297</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -486,7 +510,8 @@
     <MESSAGE value="MM-1414: fix sonar check" />
     <MESSAGE value="MM-1414: after merge" />
     <MESSAGE value="MM-1414: sonar fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: sonar fix" />
+    <MESSAGE value="MM-1414: fix develop issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="MM-1414: fix develop issue" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

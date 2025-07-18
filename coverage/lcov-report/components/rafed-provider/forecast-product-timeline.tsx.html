@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.4% </span>
+                <span class="strong">68.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>433/633</span>
+                <span class='fraction'>439/642</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">67.3% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>34/51</span>
+                <span class='fraction'>35/52</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.4% </span>
+                <span class="strong">68.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>433/633</span>
+                <span class='fraction'>439/642</span>
             </div>
         
             
@@ -695,7 +695,17 @@
 <a name='L630'></a><a href='#L630'>630</a>
 <a name='L631'></a><a href='#L631'>631</a>
 <a name='L632'></a><a href='#L632'>632</a>
-<a name='L633'></a><a href='#L633'>633</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L633'></a><a href='#L633'>633</a>
+<a name='L634'></a><a href='#L634'>634</a>
+<a name='L635'></a><a href='#L635'>635</a>
+<a name='L636'></a><a href='#L636'>636</a>
+<a name='L637'></a><a href='#L637'>637</a>
+<a name='L638'></a><a href='#L638'>638</a>
+<a name='L639'></a><a href='#L639'>639</a>
+<a name='L640'></a><a href='#L640'>640</a>
+<a name='L641'></a><a href='#L641'>641</a>
+<a name='L642'></a><a href='#L642'>642</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -968,6 +978,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1214,9 +1228,13 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1346,6 +1364,7 @@ import {
 import { Edit2 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { Separator } from "@/components/ui/separator"
+import { randomInt } from "crypto"
 &nbsp;
 interface ForecastProductTimelineProps {
   forecastExecutionId: number
@@ -1584,14 +1603,18 @@ export function ForecastProductTimeline({
 <span class="cstat-no" title="statement not covered" >      // Ajouter les données historiques pour les 12 premiers mois</span>
 <span class="cstat-no" title="statement not covered" >      if (i &lt; 12) {</span>
 <span class="cstat-no" title="statement not covered" >        const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")</span>
-<span class="cstat-no" title="statement not covered" >        dataPoint[historicalTypeName] = Math.floor(Math.random() * 1000) + 500</span>
+<span class="cstat-no" title="statement not covered" >        // NOSONAR: Using Math.random is safe here for non-secure test data</span>
+<span class="cstat-no" title="statement not covered" >        dataPoint[historicalTypeName] = randomInt(500, 1500);</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      // Ajouter les prévisions pour les mois actuels et futurs (à partir du mois 12)</span>
 <span class="cstat-no" title="statement not covered" >      if (i &gt;= 12) {</span>
 <span class="cstat-no" title="statement not covered" >        forecastTypes.forEach((type) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >          const typeName = type.name.replace(/\s+/g, "")</span>
-<span class="cstat-no" title="statement not covered" >          dataPoint[typeName] = Math.floor(Math.random() * 1000) + 500</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >          // NOSONAR: Using Math.random is safe here for non-secure test data</span>
+<span class="cstat-no" title="statement not covered" >          dataPoint[typeName] = randomInt(500, 1500);</span>
 <span class="cstat-no" title="statement not covered" >        })</span>
 <span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1836,7 +1859,7 @@ export function ForecastProductTimeline({
                         })
                         .map((item, index) =&gt; {
                           return (
-                              &lt;TableRow key={index}&gt;
+                                &lt;TableRow key={item.month + "-" + selectedProduct}&gt;
                                 &lt;TableCell className="font-medium"&gt;
                                   {selectedProductDetails.name?.substring(0, 4).toUpperCase() +
                                       "-" +
@@ -1844,11 +1867,15 @@ export function ForecastProductTimeline({
                                 &lt;/TableCell&gt;
                                 &lt;TableCell&gt;{selectedProductDetails.name}&lt;/TableCell&gt;
                                 &lt;TableCell&gt;
-                                  {selectedProductDetails.classificationId === 1
-                                      ? <span class="branch-0 cbranch-no" title="branch not covered" >"Pharmaceuticals"</span>
-<span class="cstat-no" title="statement not covered" >                                      : selectedProductDetails.classificationId === 2</span>
-<span class="cstat-no" title="statement not covered" >                                          ? "Medical Devices"</span>
-<span class="cstat-no" title="statement not covered" >                                          : "Other"}</span>
+                                    {(() =&gt; {
+                                    let category = "Other";
+                                    if (selectedProductDetails.classificationId === 1) {
+                                      category = "Pharmaceuticals";
+<span class="branch-0 cbranch-no" title="branch not covered" >                                    } else if (selectedProductDetails.classificationId === 2) {</span>
+<span class="cstat-no" title="statement not covered" >                                      category = "Medical Devices";</span>
+<span class="cstat-no" title="statement not covered" >                                    }</span>
+                                    return category;
+                                    })()}
                                 &lt;/TableCell&gt;
                                 &lt;TableCell&gt;{item.date}&lt;/TableCell&gt;
                                 {forecastOnlyTypes.map((type, typeIndex) =&gt; {
@@ -1895,7 +1922,7 @@ export function ForecastProductTimeline({
             &lt;/DialogHeader&gt;
             &lt;div className="grid gap-4 py-4"&gt;
               {/* Afficher l'historique en lecture seule si disponible */}
-              {<span class="branch-0 cbranch-no" title="branch not covered" >editingItem &amp;&amp; editingItem[historicalDataConfig.name.replace(/\s+/g, "")] </span>&amp;&amp; (
+                {<span class="branch-0 cbranch-no" title="branch not covered" >editingItem?.[historicalDataConfig.name.replace(/\s+/g, "")] </span>&amp;&amp; (
                   &lt;div className="grid grid-cols-4 items-center gap-4"&gt;
                     &lt;label className="text-right text-sm font-medium col-span-2"&gt;
                       &lt;div className="flex items-center justify-end gap-2"&gt;
@@ -1966,7 +1993,7 @@ export function ForecastProductTimeline({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-16T16:35:53.273Z
+                at 2025-07-18T11:56:08.471Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

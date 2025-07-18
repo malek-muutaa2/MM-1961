@@ -533,7 +533,7 @@ console.log("activeTab", activeTab);
                               <Label>Target Value</Label>
                               <span className="text-sm font-medium">
                                 {thresholds.targetValue}
-                                {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                                {kpi.unit === "percentage" ? "%" : ""} {kpi.unit === "days" ? " days" : ""}
                               </span>
                             </div>
                             <Slider

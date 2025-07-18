@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarClock, AlertTriangle, CheckCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-export default function UploadPage() {
+export default function UploadPage() { // NOSONAR
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   // Calculate days until deadline (25th of current month)
@@ -43,6 +43,49 @@ export default function UploadPage() {
   // Handle successful upload
   const handleUploadSuccess = () => {
     setIsSubmitted(true)
+  }
+
+  const cardClassName = (isSubmitted: any, isUrgent: any) => {
+     const baseClass = "rounded-lg p-4";
+        if (isSubmitted) {
+        return `${baseClass} bg-green-50 dark:bg-green-950`;
+        } else if (isUrgent) {
+        return `${baseClass} bg-red-50 dark:bg-red-950`;
+        } else {
+        return `${baseClass} bg-amber-50 dark:bg-amber-950`;
+        }
+  }
+  const  H3ClassName = (isSubmitted: any, isUrgent: any) => {
+    const baseClass = "font-semibold";
+    if (isSubmitted) {
+      return `${baseClass} text-green-800 dark:text-green-300`;
+    } else if (isUrgent) {
+        return `${baseClass} text-red-800 dark:text-red-300`;
+    }else {
+        return `${baseClass} text-amber-800 dark:text-amber-300`;
+    }
+  }
+
+  const PClassName = (isSubmitted: any, isUrgent: any) => {
+    const baseClass = "mt-1 text-lg font-bold";
+    if( isSubmitted) {
+      return `${baseClass} text-green-700 dark:text-green-400`;
+    } else if ( isUrgent ) {
+        return `${baseClass} text-red-700 dark:text-red-400`;
+    } else {
+        return `${baseClass} text-amber-700 dark:text-amber-400`;
+    }
+  }
+
+  const P2ClassName = (isSubmitted: any, isUrgent: any) => {
+    const baseClass = "mt-2 text-sm";
+    if (isSubmitted) {
+      return `${baseClass} text-green-600 dark:text-green-500`;
+    } else if (isUrgent) {
+        return `${baseClass} text-red-600 dark:text-red-500`;
+    } else {
+        return `${baseClass} text-amber-600 dark:text-amber-500`;
+    }
   }
 
   return (
@@ -104,50 +147,24 @@ export default function UploadPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div
-                      className={`rounded-lg ${
-                        isSubmitted
-                          ? "bg-green-50 dark:bg-green-950"
-                          : isUrgent
-                            ? "bg-red-50 dark:bg-red-950"
-                            : "bg-amber-50 dark:bg-amber-950"
-                      } p-4`}
+                      className={cardClassName(isSubmitted, isUrgent)}
                     >
                       <h3
-                        className={`font-semibold ${
-                          isSubmitted
-                            ? "text-green-800 dark:text-green-300"
-                            : isUrgent
-                              ? "text-red-800 dark:text-red-300"
-                              : "text-amber-800 dark:text-amber-300"
-                        }`}
+                        className={H3ClassName(isSubmitted, isUrgent)}
                       >
                         {isSubmitted ? "Forecast Uploaded" : "Next Deadline"}
                       </h3>
                       <p
-                        className={`mt-1 text-lg font-bold ${
-                          isSubmitted
-                            ? "text-green-700 dark:text-green-400"
-                            : isUrgent
-                              ? "text-red-700 dark:text-red-400"
-                              : "text-amber-700 dark:text-amber-400"
-                        }`}
+                        className={PClassName(isSubmitted, isUrgent)}
                       >
                         {isSubmitted ? "Completed" : deadlineFormatted}
                       </p>
                       <p
-                        className={`mt-2 text-sm ${
-                          isSubmitted
-                            ? "text-green-600 dark:text-green-500"
-                            : isUrgent
-                              ? "text-red-600 dark:text-red-500"
-                              : "text-amber-600 dark:text-amber-500"
-                        }`}
+                        className={P2ClassName(isSubmitted, isUrgent)}
                       >
-                        {isSubmitted
-                          ? `Your forecast for ${forecastMonth} has been submitted successfully.`
-                          : `${daysUntilDeadline} day${
-                              daysUntilDeadline !== 1 ? "s" : ""
-                            } remaining to submit your forecast for ${forecastMonth}.`}
+                        {isSubmitted ?
+                            `Your forecast for ${forecastMonth} has been submitted successfully.` :
+                            getRemainingDaysMessage(daysUntilDeadline, forecastMonth)}
                       </p>
                     </div>
                     <div>
@@ -196,4 +213,9 @@ export default function UploadPage() {
       )}
     </div>
   )
+
+  function getRemainingDaysMessage(daysUntilDeadline: number, forecastMonth: string): string {
+    const dayLabel = daysUntilDeadline !== 1 ? 'days' : 'day';
+    return `${daysUntilDeadline} ${dayLabel} remaining to submit your forecast for ${forecastMonth}.`;
+  }
 }

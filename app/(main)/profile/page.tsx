@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { ProfileSettings } from "@/components/profile/profile-settings"
-import { getServerAuthSession } from "@/lib/auth";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import { UserType } from "@/lib/db/schema";
 import { isTwoFactorEnabled } from "@/lib/user";

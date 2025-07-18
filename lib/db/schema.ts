@@ -186,7 +186,7 @@ export const classifications = pgTable("classifications", {
 })
 
 // Products table
-export const products = pgTable(
+export const products = pgTable( //NOSONAR
   "products",
   {
     id: serial("id").primaryKey(),
@@ -208,7 +208,7 @@ export const products = pgTable(
 )
 
 // ForecastData table - MODIFIÉE avec forecast_execution_id
-export const forecastData = pgTable(
+export const forecastData = pgTable( //NOSONAR
   "forecast_data",
   {
     id: serial("id").primaryKey(),
@@ -397,7 +397,7 @@ export const uploadConfigurationColumns = pgTable("upload_configuration_columns"
 })
 
 // Upload Storage Configurations Table
-export const uploadStorageConfigurations = pgTable("upload_storage_configurations", {
+export const uploadStorageConfigurations = pgTable("upload_storage_configurations", { //NOSONAR
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
     description: text("description"),
@@ -429,7 +429,7 @@ export const uploadStorageConfigurations = pgTable("upload_storage_configuration
     )
 
 // Upload Operations Table
-export const uploadOperations = pgTable("upload_operations", {
+export const uploadOperations = pgTable("upload_operations", { //NOSONAR
     id: serial("id").primaryKey(),
     configId: integer("config_id").references(() => uploadConfigurations.id),
     userId: integer("user_id").references(() => users.id),

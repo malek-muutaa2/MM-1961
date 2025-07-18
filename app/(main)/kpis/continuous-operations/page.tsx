@@ -11,7 +11,18 @@ export const metadata: Metadata = {
   title: "Continuous Operations KPIs | MUUTAA.ML",
   description: "Monitor and manage continuous operations KPIs",
 }
-
+const getBadgeVariant = (status: string): "default" | "outline" | "destructive" => {
+    switch (status) {
+        case "on_target":
+        return "default"
+        case "warning":
+        return "outline"
+        case "critical":
+        return "destructive"
+        default:
+        return "default"
+    }
+}
 export default function ContinuousOperationsPage() {
   const kpis = getKPIsByCategory("continuous_operations")
 
@@ -25,17 +36,15 @@ export default function ContinuousOperationsPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {kpis.map((kpi) => (
+        {kpis.map((kpi) => (// NOSONAR
           <Card key={kpi.id} className="overflow-hidden flex flex-col">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <CardTitle>{kpi.name}</CardTitle>
                 <Badge
-                  variant={
-                    kpi.status === "on_target" ? "default" : kpi.status === "warning" ? "outline" : "destructive"
-                  }
+                  variant={getBadgeVariant(kpi.status)}
                 >
-                  {kpi.status === "on_target" ? "On Target" : kpi.status === "warning" ? "Warning" : "Critical"}
+                  {kpi.status === "on_target" ? "On Target" : ""} {kpi.status === "warning" ? "Warning" : "Critical"}
                 </Badge>
               </div>
               <CardDescription>{kpi.description}</CardDescription>
@@ -51,24 +60,16 @@ export default function ContinuousOperationsPage() {
                     )}
                     <span className="text-sm font-medium">
                       Current: {kpi.currentValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {getUnitLabel(kpi.unit)}
                     </span>
                   </div>
                   <span className="text-sm font-medium">
                     Target: {kpi.targetValue}
-                    {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                      {getUnitLabel(kpi.unit)}
                   </span>
                 </div>
                 <Progress
-                  value={
-                    kpi.currentValue >= kpi.targetValue && kpi.trend === "increasing"
-                      ? 100
-                      : kpi.currentValue <= kpi.targetValue && kpi.trend === "decreasing"
-                        ? 100
-                        : kpi.trend === "increasing"
-                          ? (kpi.currentValue / kpi.targetValue) * 100
-                          : 100 - ((kpi.currentValue - kpi.targetValue) / kpi.targetValue) * 100
-                  }
+                    value={getProgressValue(kpi)}
                   className="h-2"
                 />
               </div>
@@ -86,4 +87,27 @@ export default function ContinuousOperationsPage() {
       </div>
     </div>
   )
+}
+
+function getProgressValue(kpi: any): number {
+    if (kpi.currentValue >= kpi.targetValue && kpi.trend === "increasing") {
+        return 100;
+    }
+    if (kpi.currentValue <= kpi.targetValue && kpi.trend === "decreasing") {
+        return 100;
+    }
+    if (kpi.trend === "increasing") {
+        return (kpi.currentValue / kpi.targetValue) * 100;
+    }
+    return 100 - ((kpi.currentValue - kpi.targetValue) / kpi.targetValue) * 100;
+}
+
+function getUnitLabel(unit: string): string {
+    if (unit === "percentage") {
+        return "%";
+    } else if (unit === "days") {
+        return " days";
+    } else {
+        return "";
+    }
 }

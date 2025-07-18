@@ -204,7 +204,7 @@ export function AlertsList({ filter = "all" }: Readonly<{ filter?: "all" | "crit
               </TableHeader>
               <TableBody>
                 {[...Array(5)].map((_, i) => (
-                    <TableRow key={`skeleton-${i}`}>
+                    <TableRow key={`skeleton-${i+1}`}>
                       <TableCell>
                         <div className="flex items-start space-x-2">
                           <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
@@ -264,7 +264,7 @@ export function AlertsList({ filter = "all" }: Readonly<{ filter?: "all" | "crit
     return severityIconMap[severity] || <Info className="mr-1 h-3 w-3" />
   }
 
-  const getSeverityVariant = (severity: string) => {
+  const getSeverityVariant = (severity: string): any => {
     return severityVariantMap[severity] || "outline"
   }
   return (

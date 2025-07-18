@@ -36,9 +36,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as nextAuth from 'next-auth/react'
 
-import { Login2fa2 } from '../../components/auth/login2fa'
-import { DisabledUserAction } from '../../lib/login'
-import { LoginForm2fa } from '../../components/auth/authlogin'
+import { Login2fa2 } from '@/components/auth/login2fa'
+import { LoginForm2fa } from '@/components/auth/authlogin'
 
 // other mocks
 jest.mock('next/navigation', () => ({
@@ -61,8 +60,9 @@ describe('<LoginForm2fa />', () => {
 
   it('renders email/password inputs and a disabled login button', () => {
     const { container } = render(<LoginForm2fa />)
-    expect(container.querySelector('input[name="email"]')).toBeInTheDocument()
-    expect(container.querySelector('input[name="password"]')).toBeInTheDocument()
+expect(screen.getByTestId('email-input')).toBeInTheDocument();
+expect(screen.getByTestId('password-input')).toBeInTheDocument();
+
   })
 
   it('shows 2FA inputs when Login2fa2 returns twoFactor=true', async () => {

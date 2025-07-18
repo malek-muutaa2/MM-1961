@@ -3,13 +3,13 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useTheme } from '@/components/theme-provider';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { TopNav } from '../../components/top-nav';
-import { SidebarProvider } from '../../components/ui/sidebar';
+import { TopNav } from '@/components/top-nav';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import userEvent from '@testing-library/user-event';
 import { NextRequest } from 'next/server';
-import { POST } from '../../app/api/sendnotification/route';
-import { db } from '../../lib/db/dbpostgres';
-import { notifications} from '../../lib/db/schema';
+import { POST } from '@/app/api/sendnotification/route';
+import { db } from '@/lib/db/dbpostgres';
+import { notifications} from '@/lib/db/schema';
 // Mock dependencies
 import { v4 as uuidv4 } from 'uuid';
 
@@ -51,12 +51,12 @@ jest.mock('@radix-ui/react-dropdown-menu', () => {
   return {
     ...original,
     // Simple mock that removes animations and portal behavior
-    DropdownMenuContent: ({ children, ...props }) => (
+    DropdownMenuContent: ({ children, ...props }: any) => (
       <div {...props} style={{ animation: 'none' }}>
         {children}
       </div>
     ),
-    DropdownMenuPortal: ({ children }) => children,
+    DropdownMenuPortal: ({ children }: any) => children,
   };
 });
 const mockNotificationTypes = [
@@ -69,7 +69,7 @@ describe('notification Component', () => {
     mockUseTheme.mockReturnValue({
       theme: 'light',
       setTheme: jest.fn(),
-    });
+    } as any);
     
     mockUseRouter.mockReturnValue({
       push: jest.fn(),

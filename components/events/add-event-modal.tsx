@@ -122,7 +122,7 @@ export function AddEventModal({ open, onOpenChange }: Readonly<AddEventModalProp
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} initialFocus />
+                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} autoFocus/>
                 </PopoverContent>
               </Popover>
             </div>
