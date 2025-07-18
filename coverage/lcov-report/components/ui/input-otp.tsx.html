@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.01% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>49/71</span>
+                <span class='fraction'>71/71</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.01% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/71</span>
+                <span class='fraction'>71/71</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -170,28 +170,28 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -241,28 +241,28 @@ const InputOTPSlot = React.forwardRef&lt;
   React.ElementRef&lt;"div"&gt;,
   React.ComponentPropsWithoutRef&lt;"div"&gt; &amp; { index: number }
 &gt;(({ index, className, ...props }, ref) =&gt; {
-<span class="cstat-no" title="statement not covered" >  const inputOTPContext = React.useContext(OTPInputContext)</span>
-<span class="cstat-no" title="statement not covered" >  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
-<span class="cstat-no" title="statement not covered" >    &lt;div</span>
-<span class="cstat-no" title="statement not covered" >      ref={ref}</span>
-<span class="cstat-no" title="statement not covered" >      className={cn(</span>
-<span class="cstat-no" title="statement not covered" >        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",</span>
-<span class="cstat-no" title="statement not covered" >        isActive &amp;&amp; "z-10 ring-2 ring-ring ring-offset-background",</span>
-<span class="cstat-no" title="statement not covered" >        className</span>
-<span class="cstat-no" title="statement not covered" >      )}</span>
-<span class="cstat-no" title="statement not covered" >      {...props}</span>
-<span class="cstat-no" title="statement not covered" >    &gt;</span>
-<span class="cstat-no" title="statement not covered" >      {char}</span>
-<span class="cstat-no" title="statement not covered" >      {hasFakeCaret &amp;&amp; (</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className="pointer-events-none absolute inset-0 flex items-center justify-center"&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      )}</span>
-<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >  )</span>
-<span class="cstat-no" title="statement not covered" >})</span>
+  const inputOTPContext = React.useContext(OTPInputContext)
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
+&nbsp;
+  return (
+    &lt;div
+      ref={ref}
+      className={cn(
+        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
+<span class="branch-0 cbranch-no" title="branch not covered" >        isActive &amp;&amp; "z-10 ring-2 ring-ring ring-offset-background",</span>
+        className
+      )}
+      {...props}
+    &gt;
+      {char}
+      {hasFakeCaret &amp;&amp; (
+        &lt;div className="pointer-events-none absolute inset-0 flex items-center justify-center"&gt;
+          &lt;div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" /&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  )
+})
 InputOTPSlot.displayName = "InputOTPSlot"
 &nbsp;
 const InputOTPSeparator = React.forwardRef&lt;
@@ -283,7 +283,7 @@ export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-18T11:56:08.471Z
+                at 2025-07-18T13:35:27.460Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
