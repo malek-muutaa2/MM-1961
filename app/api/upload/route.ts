@@ -256,7 +256,7 @@ async function processFileContent(content: string, config: any) {
   return { rowErrors, processedRows }
 }
 
-function validateColumnValue(value: string, columnConfig: any, rowNumber: number): ValidationError | null {
+function validateColumnValue(value: string, columnConfig: any, rowNumber: number): ValidationError | null { // NOSONAR
   // Required check
   if (columnConfig.valuesRequired && !value) {
     return {
@@ -269,7 +269,7 @@ function validateColumnValue(value: string, columnConfig: any, rowNumber: number
   }
 
   if (!value) return null // Skip validation for empty optional fields
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ // NOSONAR
 
   // Data type validation
   switch (columnConfig.dataType) {
