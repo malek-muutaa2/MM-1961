@@ -220,19 +220,21 @@ export default function ForecastingPage() {
   const router = useRouter()
 
   // Filter products based on selected hospital
-  const filteredForecasts =
-    viewMode === "aggregated"
-      ? forecastData
-      : selectedHospital === "all"
-        ? forecastData
-        : forecastData.filter((product) => product.hospital === selectedHospital)
-
+  let filteredForecasts = forecastData.filter((product) => product.hospital === selectedHospital)
+  if(viewMode === "aggregated" || selectedHospital === "all") {
+    filteredForecasts = forecastData;
+  }
   // Get unique hospitals
   const hospitals = Array.from(new Set(forecastData.map((product) => product.hospital)))
 
   // Handle navigation to product details
   const handleViewDetails = (productId: number) => {
     router.push(`/demand/products/${productId}`)
+  }
+  const getForecastBadgeVariant = (confidence: number) => {
+    if (confidence >= 90) return "bg-green-50 text-green-700 border-green-200"
+    if (confidence >= 80) return "bg-blue-50 text-blue-700 border-blue-200"
+    return "bg-amber-50 text-amber-700 border-amber-200"
   }
 
   return (
@@ -381,13 +383,7 @@ export default function ForecastingPage() {
                     <div className="col-span-2 text-center">
                       <Badge
                         variant="outline"
-                        className={
-                          forecast.confidence >= 90
-                            ? "bg-green-50 text-green-700 border-green-200"
-                            : forecast.confidence >= 80
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
-                        }
+                        className={getForecastBadgeVariant(forecast.confidence)}
                       >
                         {forecast.confidence}%
                       </Badge>

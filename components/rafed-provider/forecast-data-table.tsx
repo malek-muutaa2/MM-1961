@@ -210,9 +210,9 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
 
         acc[key] = {
           productId: item.productId,
-          productName: item.productName || `Product ${item.productId}`,
-          classificationId: item.classificationId || 0,
-          classificationName: item.classificationName || "Unknown",
+          productName: item.productName ?? `Product ${item.productId}`,
+          classificationId: item.classificationId ?? 0,
+          classificationName: item.classificationName ?? "Unknown",
           sku: sku,
           date: formatDateToMonthYear(item.date),
           originalDate: item.date,
@@ -230,7 +230,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
     }, {})
 
     // Convertir en tableau et maintenir l'ordre
-    const result = Object.values(groupedByProductAndDate) as ForecastData[]
+    const result: ForecastData[] = Object.values(groupedByProductAndDate)
 
     // Trier par date originale puis par nom de produit
     return result.sort((a, b) => {
@@ -255,7 +255,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
   const handleEditClick = (item: ForecastData, forecastType: string) => {
     setEditingItem(item)
     setEditingForecastType(forecastType)
-    setNewQuantity(item[forecastType] || 0)
+    setNewQuantity(item[forecastType] ?? 0)
     setEditModalOpen(true)
   }
 
@@ -372,7 +372,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
                   </div>
                 </TableCell>
               </TableRow>
-            ) : forecastData.length > 0 ? (
+            ) : ""} {forecastData.length > 0 ? (
               forecastData.map((item, index) => (
                 <TableRow key={`${item.productId}-${item.originalDate}-${index}`}>
                   <TableCell className="font-medium">{item.sku}</TableCell>
@@ -388,11 +388,11 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
                             onClick={() => handleEditClick(item, typeName)}
                             className="inline-flex items-center text-primary hover:underline focus:outline-none"
                           >
-                            {item[typeName]?.toLocaleString() || 0}
+                            {item[typeName]?.toLocaleString() ?? 0}
                             <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
                           </button>
                         ) : (
-                          item[typeName]?.toLocaleString() || 0
+                          item[typeName]?.toLocaleString() ?? 0
                         )}
                       </TableCell>
                     )
@@ -474,7 +474,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
                 return (
                   <div key={type.id} className="grid grid-cols-4 items-center gap-4">
                     <label className="text-right text-sm font-medium col-span-2">{type.name}:</label>
-                    <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() || 0} Unités</div>
+                    <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() ?? 0} Unités</div>
                   </div>
                 )
               }
@@ -485,7 +485,7 @@ export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProp
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
                   Nouveau{" "}
-                  {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Prévision"}
+                  {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name ?? "Prévision"}
                   :
                 </label>
                 <div className="col-span-2">

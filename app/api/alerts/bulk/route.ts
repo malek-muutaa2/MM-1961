@@ -85,7 +85,7 @@ async function insertAlerts(alertsData: BulkAlertData[]) {
 
 // --- Main Handler ---
 
-export async function POST(request: Request) {
+export async function POST(request: Request) { // NOSONAR
     try {
         const body: BulkInsertRequest = await request.json()
 

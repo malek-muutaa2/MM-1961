@@ -119,7 +119,7 @@ const hospitals = [
 
 export default function HospitalNetworkPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedHospital, setSelectedHospital] = useState(null)
+  const [selectedHospital, setSelectedHospital] = useState<any>(null)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [dataManagementOpen, setDataManagementOpen] = useState(false)
 
@@ -147,17 +147,17 @@ export default function HospitalNetworkPage() {
       h.location.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  const viewDetails = (hospital) => {
+  const viewDetails = (hospital: any) => {
     setSelectedHospital(hospital)
     setDetailsOpen(true)
   }
 
-  const manageData = (hospital) => {
+  const manageData = (hospital: any) => {
     setSelectedHospital(hospital)
     setDataManagementOpen(true)
   }
 
-  const renderHospitalCard = (hospital) => (
+  const renderHospitalCard = (hospital: any) => (
     <Card key={hospital.id}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
@@ -361,8 +361,8 @@ export default function HospitalNetworkPage() {
                 <h3 className="text-lg font-medium mt-6 mb-2">Departments</h3>
                 {selectedHospital.departments ? (
                   <div className="flex flex-wrap gap-2">
-                    {selectedHospital.departments.map((dept, i) => (
-                      <Badge key={i} variant="outline">
+                    {selectedHospital.departments.map((dept: any, i: any) => (
+                      <Badge key={`${i+1}`} variant="outline">
                         {dept}
                       </Badge>
                     ))}

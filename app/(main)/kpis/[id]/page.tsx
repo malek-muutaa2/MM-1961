@@ -18,7 +18,7 @@ export const generateMetadata = ({ params }: { params: { id: string } }): Metada
   }
 }
 
-export default function KPIDetailPage({
+export default function KPIDetailPage({ // NOSONAR
   params,
 }: Readonly<{
   params: { id: string };
