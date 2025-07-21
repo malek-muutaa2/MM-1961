@@ -1,4 +1,4 @@
-import { isMatch } from "date-fns"
+import {isMatch} from "date-fns"
 
 export interface ValidationError {
     code: string
@@ -149,36 +149,33 @@ export class ValidationService {
                         if (columnErrors.length === 0) {
                             rowData[header] = this.convertValue(value, columnConfig.data_type)
                         }
-                    } else {
+                    } else if (rowErrors.some((error) => error.column !== header)) {
                         // uknown column find in configuration
                         // check if the header exists in rowErrors
-                        if (rowErrors.some((error) => error.column !== header)) {
-                            // If the error for this code already exists, update it with the new value
-                            // if(rowErrors.some((error) => error.code === "UNEXPECTED_COLUMN")) {
-                            //     // update the existing error
-                            //     let existingError: any = rowErrors.find((error) => error.code === "UNEXPECTED_COLUMN")
-                            //     existingError = {
-                            //         ...existingError,
-                            //         column: [...existingError.column, header],
-                            //         row: [...existingError.row, rowNumber],
-                            //         line: [...existingError.line, lineNumber],
-                            //         value: [...existingError.value, value],
-                            //     }
-                            //     rowErrors[rowErrors.indexOf(existingError)] = existingError;
-                            //     console.log("relacing done for UNEXPECTED_COLUMN")
-                            // }else {
-                                console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
-                                rowErrors.push({
-                                    code: "UNEXPECTED_COLUMN",
-                                    message: `Column '${header}' is not defined in the configuration`,
-                                    column: header,
-                                    row: rowNumber,
-                                    line: lineNumber,
-                                    value: value,
-                                })
-                            // }
-
-                        }
+                        // If the error for this code already exists, update it with the new value
+                        // if(rowErrors.some((error) => error.code === "UNEXPECTED_COLUMN")) {
+                        //     // update the existing error
+                        //     let existingError: any = rowErrors.find((error) => error.code === "UNEXPECTED_COLUMN")
+                        //     existingError = {
+                        //         ...existingError,
+                        //         column: [...existingError.column, header],
+                        //         row: [...existingError.row, rowNumber],
+                        //         line: [...existingError.line, lineNumber],
+                        //         value: [...existingError.value, value],
+                        //     }
+                        //     rowErrors[rowErrors.indexOf(existingError)] = existingError;
+                        //     console.log("relacing done for UNEXPECTED_COLUMN")
+                        // }else {
+                        console.warn(`Column '${header}' not found in configuration at row ${rowNumber}, line ${lineNumber}`)
+                        rowErrors.push({
+                            code: "UNEXPECTED_COLUMN",
+                            message: `Column '${header}' is not defined in the configuration`,
+                            column: header,
+                            row: rowNumber,
+                            line: lineNumber,
+                            value: value,
+                        })
+                        // }
 
                     }
                 })
@@ -638,9 +635,9 @@ export class ValidationService {
             // Parse the format to determine component positions
             const formatParts = normalizedFormat.split(separator);
             const componentMap = {
-                year: { index: -1, pattern: '' },
-                month: { index: -1, pattern: '' },
-                day: { index: -1, pattern: '' }
+                year: {index: -1, pattern: ''},
+                month: {index: -1, pattern: ''},
+                day: {index: -1, pattern: ''}
             };
 
             // Identify component positions and patterns
@@ -779,7 +776,7 @@ export class ValidationService {
 
             // Parse the format components
             const formatParts = normalizedFormat.split(separator);
-            const componentMap: Record<string, {index: number, pattern: string, type: string}> = {};
+            const componentMap: Record<string, { index: number, pattern: string, type: string }> = {};
 
             formatParts.forEach((part, index) => {
                 if (part.includes('yy')) {
@@ -868,7 +865,7 @@ export class ValidationService {
         // If pattern is specified, validate against it first
         if (columnConfig?.pattern && columnConfig?.pattern.trim() !== "") {
             try {
-                if (!isMatch(value,  columnConfig?.pattern.toLocaleLowerCase())) {
+                if (!isMatch(value, columnConfig?.pattern.toLocaleLowerCase())) {
                     errors.push({
                         code: "DATE_FORMAT_MISMATCH",
                         message: `${columnConfig.display_name} must match the required date format : ${columnConfig.pattern}`,

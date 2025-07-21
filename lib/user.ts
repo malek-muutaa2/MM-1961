@@ -4,10 +4,9 @@ import { db } from "./db/dbpostgres";
 import { twoFactorAuth, users } from "./db/schema";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-
 import { revalidatePath } from "next/cache";
-import { generatePasswordResetToken } from "./reset";
 import { sendInvationResetEmail } from "./mail";
+import {v4 as uuidv4} from "uuid";
 export const TotalUsers = async (search?: string | null) => {
   try {
     const searchWord = `%${search}%`;
@@ -305,6 +304,13 @@ export const updateLock = async (newStatus: boolean, userId: number) => {
     return [];
   }
 };
+export const generatePasswordResetToken = async (email: string) => {
+    const token = uuidv4();
+
+    const passwordResetToken = await UpdateUserToken(token, email);
+
+    return passwordResetToken;
+};
 export const updateUser = async (
   id: number,
   username: string,
@@ -318,7 +324,7 @@ export const updateUser = async (
       .update(users)
       .set({
         name: username,
-        organization: organization || "",
+        organization: organization ?? "",
         role,
         updatedAt: updated,
       })

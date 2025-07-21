@@ -1,8 +1,8 @@
 import { db } from "@/lib/db/dbpostgres";
 import { headers } from "next/headers";
-import { audit_log, users } from "./db/schema";
+import {audit_log, users} from "./db/schema";
 import { eq } from "drizzle-orm";
-import { ResetPassword } from "@/app/login/new-password/new-password-form";
+import {ResetPassword} from "@/lib/type";
 
 export interface AuditLog {
   // auto-generated ID
@@ -33,7 +33,7 @@ export const audit = async (log: AuditLogInput) => {
   const now = new Date();
 
   // Convert the current date to the desired timezone
-  const options = {
+  const options: any = {
     timeZone,
     year: "numeric",
     month: "2-digit",
@@ -50,21 +50,21 @@ export const audit = async (log: AuditLogInput) => {
   // Combine date and time parts into the desired format
   const formattedString = `${date.replace(/\//g, "-")}T${time}`;
   const dateFromString = new Date(formattedString);
-  const auditLog: AuditLog = {
+  const auditLog: any = {
     timestamp: dateFromString,
     ...log,
     actor: log.email ,
     client: {
       ip:
-        headerList.get("x-forwarded-for") ||
-        headerList.get("x-real-ip") ||
-        headerList.get("x-client-ip") ||
-        headerList.get("x-remote-ip") ||
-        headerList.get("remoteip") ||
-        headerList.get("clientip") ||
-        headerList.get("x-real-ip") ||
+        headerList.get("x-forwarded-for") ??
+        headerList.get("x-real-ip") ??
+        headerList.get("x-client-ip") ??
+        headerList.get("x-remote-ip") ??
+        headerList.get("remoteip") ??
+        headerList.get("clientip") ??
+        headerList.get("x-real-ip") ??
         "",
-      userAgent: headerList.get("user-agent") || "unknown",
+      userAgent: headerList.get("user-agent") ?? "unknown",
     },
   };
 
@@ -83,7 +83,7 @@ export const audit = async (log: AuditLogInput) => {
 };
 
 export const exportAuditLogsToCsv = async () => {
-  const logs = await db.select().from(audit_log);
+  const logs: any = await db.select().from(audit_log);
   const csv = logs.map((log: AuditLog) => {
     return (
       `"${log.timestamp.toString().replace(/"/g, '""')}",` +
