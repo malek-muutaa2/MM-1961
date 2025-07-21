@@ -1,10 +1,9 @@
 "use server";
 
 import * as z from "zod";
-import { v4 as uuidv4 } from "uuid";
 
 import { ResetSchema } from "./zodschema";
-import { findUniqueUser, UpdateUserToken } from "./user";
+import { findUniqueUser, generatePasswordResetToken } from "./user";
 import { sendPasswordResetEmail } from "./mail";
 
 
@@ -42,12 +41,3 @@ export const reset = async (
     return { success: "Password reset email sent successfully." };
   }
   }
- 
-
-export const generatePasswordResetToken = async (email: string) => {
-  const token = uuidv4();
-
-  const passwordResetToken = await UpdateUserToken(token, email);
-
-  return passwordResetToken;
-};
