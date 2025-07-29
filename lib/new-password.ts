@@ -3,9 +3,13 @@
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 import { NewPasswordSchema } from "./zodschema";
-import { FormMessages } from "@/app/login/new-password/new-password-form";
 import { findUerbyToken, findUniqueUser, updateLock, UpdateUserPassword } from "./user";
-
+export interface FormMessages {
+  error: string;
+  success: string;
+  userNotFound: string;
+  UpdatePass: string;
+}
 
 const NewPasswordSchemaServer = z.object({
   password: z

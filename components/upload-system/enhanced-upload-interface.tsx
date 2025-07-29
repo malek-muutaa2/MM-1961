@@ -274,13 +274,14 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {/* File Drop Zone */}
-                        <div // ONe
-                            className={dropZoneClass(dragActive, selectedFile)}
-                            onDragEnter={handleDrag}
-                            onDragLeave={handleDrag}
-                            onDragOver={handleDrag}
-                            onDrop={handleDrop}
-                        >
+      <button
+    type="button"
+    className={dropZoneClass(dragActive, selectedFile)}
+    onDragEnter={handleDrag}
+    onDragLeave={handleDrag}
+    onDragOver={handleDrag}
+    onDrop={handleDrop}
+>
                             {selectedFile ? (
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-center gap-2">
@@ -323,7 +324,7 @@ export default function EnhancedUploadInterface({configurations}: Readonly<Enhan
                                     </div>
                                 </div>
                             )}
-                        </div>
+                        </button>
 
                         {/* Upload Progress */}
                         {uploading && (
