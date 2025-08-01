@@ -2,7 +2,7 @@
   "functions": {
     "app/api/**": { "maxDuration": 300 }
   },
-  "cron": [
+  "crons": [
   {
     "path": "/api/cron/delete-users",
     "schedule": "*/10 * * * *"
