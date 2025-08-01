@@ -14,6 +14,7 @@ import { Enable2fa } from "@/lib/user"
 import { useToast } from "../ui/use-toast"
 import type { twofactor } from "@/app/profile/page"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { signOut } from "next-auth/react"
 
 interface SecuritySettings {
   UserInfo: UserType
@@ -29,6 +30,9 @@ export function SecuritySettings({
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(
       istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false,
   )
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+   const [isDeleting, setIsDeleting] = useState(false)
+
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
 
@@ -294,6 +298,52 @@ export function SecuritySettings({
             </div>
           </CardContent>
         </Card>
+        <Card className="border-red-200">
+  <CardHeader>
+    <CardTitle className="text-red-600">Delete Account</CardTitle>
+    <CardDescription>
+      Deleting your account will immediately deactivate your access. 
+      After 30 days, your account will be permanently deleted.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <Button variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
+      Delete My Account
+    </Button>
+  </CardContent>
+</Card>
+{isDeleteModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+      <h2 className="text-lg font-bold text-red-600">Delete Account</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Your account will be immediately deactivated and permanently deleted after 30 days.
+      </p>
+      <div className="flex justify-end space-x-3 mt-6">
+        <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+        <Button 
+          variant="destructive" 
+          onClick={async () => {
+            setIsDeleting(true)
+            try {
+              await fetch("/api/profile/delete", { method: "POST" })
+              // Optional: immediately log the user out after deactivation
+              window.location.href = "/logout"
+            } finally {
+              setIsDeleting(false)
+              signOut({
+                      callbackUrl: "/login",
+                    });
+            }
+          }}
+        >
+          {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
   )
 }
