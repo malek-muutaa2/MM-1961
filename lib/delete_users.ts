@@ -1,4 +1,4 @@
-import { users } from "@/lib/db/schema";
+import { twoFactorAuth, users } from "@/lib/db/schema";
 import { eq, and, lte, isNotNull, isNull } from "drizzle-orm";
 import { subDays } from "date-fns";
 import { db } from "./db/dbpostgres";
@@ -19,10 +19,14 @@ export async function permanentlyDeleteUsers() {
 
   for (const user of oldUsers) {
     console.log(`Permanently deleting user: ${user.email}`);
-    
-    await db.update(users)
-      .set({ deleted_at: new Date() })
-      .where(eq(users.id, user.id));
+await db.transaction(async (tx) => {
+  await tx.delete(twoFactorAuth)
+    .where(eq(twoFactorAuth.userId, user.id));
+
+  await tx.delete(users)
+    .where(eq(users.id, user.id));
+});
+
 
   }
 }
