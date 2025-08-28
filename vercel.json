@@ -5,8 +5,9 @@
   "crons": [
   {
     "path": "/api/cron/delete-users",
-    "schedule": "* * * * 5"
+    "schedule": "5 * * * *"
   }
 ]
+
 
 }
