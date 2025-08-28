@@ -22,11 +22,8 @@
     "release": "standard-version",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:vitest": "vitest",
-     "db:push": "npx drizzle-kit push",
-    "db:pull": "npx drizzle-kit introspect",
-    "db:migrate": "npx drizzle-kit migrate",
-    "db:generate": "npx drizzle-kit generate"
+    "test:vitest": "vitest"
+
   },
   "dependencies": {
     "@auth/core": "latest",
