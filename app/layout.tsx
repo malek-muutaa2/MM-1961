@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "MUUTAA.ML - Intelligent KPI Agent",
   description: "AI-powered KPI monitoring and optimization platform",
-  generator: "v0.dev",
+    generator: 'v0.dev'
 }
 
 
