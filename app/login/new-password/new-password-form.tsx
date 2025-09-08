@@ -17,35 +17,7 @@ import { newPassword } from "@/lib/new-password";
 import { useTheme } from "next-themes";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ResetPasswordProps } from "@/lib/audit";
-interface Form {
-  passwordLabel: string;
-  passwordPlaceholder: string;
-  resetButton: string;
-}
 
-export interface FormMessages {
-  error: string;
-  success: string;
-  userNotFound: string;
-  UpdatePass: string;
-}
-
-interface PasswordValidation {
-  minLength: string;
-  mustIncludeLetters: string;
-  mustIncludeUppercase: string;
-  mustIncludeNumbers: string;
-  mustIncludeSpecialChar: string;
-}
-
-export interface ResetPassword {
-  title: string;
-  description: string;
-  renew: string;
-  form: Form;
-  formMessages: FormMessages;
-  passwordValidation: PasswordValidation;
-}
 function redirectToLogin() {
   window.location.href = "/login";
 }

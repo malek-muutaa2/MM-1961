@@ -12,6 +12,16 @@ export const metadata: Metadata = {
   description: "Monitor and manage financial optimization KPIs",
 }
 
+function getBadgeVariant(status: string): string {
+    if (status === "on_target") {
+        return "default";
+    } else if (status === "warning") {
+        return "outline";
+    } else {
+        return "destructive";
+    }
+}
+
 export default function FinancialOptimizationPage() {
   const kpis = getKPIsByCategory("financial_optimization")
 
@@ -74,12 +84,12 @@ export default function FinancialOptimizationPage() {
                     )}
                     <span className="text-sm font-medium">
                       Current: {kpi.currentValue}
-                      {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                        {kpi.unit === "percentage" ? "%" : ""} {kpi.unit === "days" ? " days" : ""}
                     </span>
                   </div>
                   <span className="text-sm font-medium">
                     Target: {kpi.targetValue}
-                    {kpi.unit === "percentage" ? "%" : kpi.unit === "days" ? " days" : ""}
+                    {kpi.unit === "percentage" ? "%" : ""} {kpi.unit === "days" ? " days" : ""}
                   </span>
                 </div>
                 <Progress

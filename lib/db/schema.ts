@@ -15,7 +15,7 @@ import {
 import { relations, sql } from "drizzle-orm"
 
 // Users table
-export const user_enum_role = pgEnum("role", ["Admin", "User"])
+export const user_enum_role = pgEnum("role", ["Admin", "User", "Provider", "Supplier", "Viewer"])
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -514,6 +514,7 @@ export const uploadOperationErrorsRelations = relations(uploadOperationErrors, (
 export type UploadConfigurationType = typeof uploadConfigurations.$inferSelect
 export type NewUploadConfiguration = typeof uploadConfigurations.$inferInsert
 export type UploadConfigurationColumnType = typeof uploadConfigurationColumns.$inferSelect
+export type AuditLog2 = typeof audit_log.$inferSelect
 export type NewUploadConfigurationColumn = typeof uploadConfigurationColumns.$inferInsert
 export type UploadStorageConfigurationType = typeof uploadStorageConfigurations.$inferSelect
 export type NewUploadStorageConfiguration = typeof uploadStorageConfigurations.$inferInsert

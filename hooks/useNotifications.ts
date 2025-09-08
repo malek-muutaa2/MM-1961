@@ -48,7 +48,7 @@ function countUnreadNotifications(notifications: { read_at: Date | null | undefi
 
 export function useNotifications(userId: number) { // NOSONAR
   const [notifications, setNotifications] = useState<notificationTypes[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
   const [isConnected, setIsConnected] = useState(false);
   const router = useRouter();
   const markAsRead = useCallback(async (notificationId: number) => {
@@ -108,7 +108,10 @@ useEffect(() => {
   const filtered: any = filterByUser(all, userId);
 
 setNotifications(prev => prependNotifications(prev, filtered)); //NOSONAR
-setUnreadCount(prev => incrementUnreadCount(prev, filtered));
+setUnreadCount((prev: any) => {//NOSONAR
+    incrementUnreadCount(prev, filtered)
+    return prev;
+});
   refreshTimer = setTimeout(setup, 4 * 60 * 1000);
 });
 
