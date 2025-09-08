@@ -565,13 +565,7 @@ useEffect(() => {
                   <DropdownMenuItem>Preferences</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                 onClick={() =>
-                  signOut({
-                    callbackUrl: "/login",       // where to redirect after sign out
-                  })
-                }
-                >Log out</DropdownMenuItem>
+                <DropdownMenuItem>Log out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

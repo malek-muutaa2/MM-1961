@@ -2355,7 +2355,7 @@
   resolved "https://registry.npmjs.org/@kurkle/color/-/color-0.3.4.tgz"
   integrity sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==
 
-"@libsql/client-wasm@>=0.10.0", "@libsql/client-wasm@latest":
+"@libsql/client-wasm@>=0.10.0":
   version "0.15.9"
   resolved "https://registry.npmjs.org/@libsql/client-wasm/-/client-wasm-0.15.9.tgz"
   integrity sha512-6Gv1C+4ObfFAk2hPnlmXCYG+9oMB966qSvl0pkX20e0FiQ1RUNFyW2/8kJVs9tFSW+Ec258M95jP2t3997ii2w==
@@ -2364,7 +2364,7 @@
     "@libsql/libsql-wasm-experimental" "^0.0.2"
     js-base64 "^3.7.5"
 
-"@libsql/client@>=0.10.0", "@libsql/client@latest":
+"@libsql/client@>=0.10.0":
   version "0.15.9"
   resolved "https://registry.npmjs.org/@libsql/client/-/client-0.15.9.tgz"
   integrity sha512-VT3do0a0vwYVaNcp/y05ikkKS3OrFR5UeEf5SUuYZVgKVl1Nc1k9ajoYSsOid8AD/vlhLDB5yFQaV4HmT/OB9w==
@@ -2422,7 +2422,7 @@
   dependencies:
     "@types/pg" "8.11.6"
 
-"@neondatabase/serverless@>=0.10.0", "@neondatabase/serverless@latest":
+"@neondatabase/serverless@>=0.10.0":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@neondatabase/serverless/-/serverless-1.0.1.tgz"
   integrity sha512-O6yC5TT0jbw86VZVkmnzCZJB0hfxBl0JJz6f+3KHoZabjb/X08r9eFA+vuY06z1/qaovykvdkrXYq3SPUuvogA==
@@ -2477,12 +2477,12 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@op-engineering/op-sqlite@>=2", "@op-engineering/op-sqlite@latest":
+"@op-engineering/op-sqlite@>=2":
   version "14.1.2"
   resolved "https://registry.npmjs.org/@op-engineering/op-sqlite/-/op-sqlite-14.1.2.tgz"
   integrity sha512-QE9pD5zwdDeCPWjxveG1JNvktYqt3TkzN2FPeBvRQepoGlQTEY3S0ww4EIzoITV7HHoB2llZgEUOtfoHYDS57w==
 
-"@opentelemetry/api@^1.1.0", "@opentelemetry/api@^1.4.1", "@opentelemetry/api@latest":
+"@opentelemetry/api@^1.1.0", "@opentelemetry/api@^1.4.1":
   version "1.9.0"
   resolved "https://registry.npmjs.org/@opentelemetry/api/-/api-1.9.0.tgz"
   integrity sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==
@@ -2502,12 +2502,12 @@
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@planetscale/database@>=1.13", "@planetscale/database@latest":
+"@planetscale/database@>=1.13":
   version "1.19.0"
   resolved "https://registry.npmjs.org/@planetscale/database/-/database-1.19.0.tgz"
   integrity sha512-Tv4jcFUFAFjOWrGSio49H6R2ijALv0ZzVBfJKIdm+kl9X046Fh4LLawrF9OMsglVbK6ukqMJsUCeucGAFTBcMA==
 
-"@prisma/client@*", "@prisma/client@latest":
+"@prisma/client@*":
   version "6.11.1"
   resolved "https://registry.npmjs.org/@prisma/client/-/client-6.11.1.tgz"
   integrity sha512-5CLFh8QP6KxRm83pJ84jaVCeSVPQr8k0L2SEtOJHwdkS57/VQDcI/wQpGmdyOZi+D9gdNabdo8tj1Uk+w+upsQ==
@@ -2960,7 +2960,7 @@
   dependencies:
     "@radix-ui/react-slot" "1.1.1"
 
-"@radix-ui/react-progress@1.1.1":
+"@radix-ui/react-progress@latest":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@radix-ui/react-progress/-/react-progress-1.1.1.tgz"
   integrity sha512-6diOawA84f/eMxFHcWut0aE1C2kyE9dOyCTQOMRR2C/qPiXz/X0SaiA/RLbapQaXUCmy0/hLMf9meSccD1N0pA==
@@ -6513,7 +6513,7 @@ expo-modules-core@2.4.2:
   dependencies:
     invariant "^2.2.4"
 
-expo-sqlite@>=14.0.0, expo-sqlite@latest:
+expo-sqlite@>=14.0.0:
   version "15.2.14"
   resolved "https://registry.npmjs.org/expo-sqlite/-/expo-sqlite-15.2.14.tgz"
   integrity sha512-6tWnEE0fcir30/e7eVwjeC7eKdncfVnIgo2JvnKpRndedyiFMXLMyOQWNVGnuhnSrPV2BHvGGjLByS/j5VgH4w==
@@ -6740,7 +6740,7 @@ gauge@^4.0.3:
     strip-ansi "^6.0.1"
     wide-align "^1.1.5"
 
-gel@>=2, gel@latest:
+gel@>=2:
   version "2.1.1"
   resolved "https://registry.npmjs.org/gel/-/gel-2.1.1.tgz"
   integrity sha512-Newg9X7mRYskoBjSw70l1YnJ/ZGbq64VPyR821H5WVkTGpHG2O0mQILxCeUhxdYERLFY9B4tUyKLyf3uMTjtKw==
@@ -7896,7 +7896,7 @@ kleur@^3.0.3:
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex@*, knex@latest:
+knex@*:
   version "3.1.0"
   resolved "https://registry.npmjs.org/knex/-/knex-3.1.0.tgz"
   integrity sha512-GLoII6hR0c4ti243gMs5/1Rb3B+AjwMOfjYm97pu0FOQa7JH56hgBxYf5WK2525ceSbBY1cjeZ9yk99GPMB6Kw==
@@ -7916,7 +7916,7 @@ knex@*, knex@latest:
     tarn "^3.0.2"
     tildify "2.0.0"
 
-kysely@*, kysely@latest:
+kysely@*:
   version "0.28.2"
   resolved "https://registry.npmjs.org/kysely/-/kysely-0.28.2.tgz"
   integrity sha512-4YAVLoF0Sf0UTqlhgQMFU9iQECdah7n+13ANkiuVfRvlK+uI0Etbgd7bVP36dKlG+NXWbhGua8vnGt+sdhvT7A==
@@ -8570,7 +8570,7 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-mysql2@>=2, mysql2@latest:
+mysql2@>=2:
   version "3.14.1"
   resolved "https://registry.npmjs.org/mysql2/-/mysql2-3.14.1.tgz"
   integrity sha512-7ytuPQJjQB8TNAYX/H2yhL+iQOnIBjAMam361R7UAL0lOVXWjtdrmoL9HYKqKoLp/8UUTRcvo1QPvK9KL7wA8w==
@@ -8631,7 +8631,7 @@ nested-error-stacks@~2.0.1:
   resolved "https://registry.npmjs.org/nested-error-stacks/-/nested-error-stacks-2.0.1.tgz"
   integrity sha512-SrQrok4CATudVzBS7coSz26QRSmlK9TzzoFbeKfcPBUFPjcQM9Rqvr/DlJkOrwI/0KcgvMub1n1g5Jt9EgRn4A==
 
-next-auth@latest:
+next-auth@^4.24.11:
   version "4.24.11"
   resolved "https://registry.npmjs.org/next-auth/-/next-auth-4.24.11.tgz"
   integrity sha512-pCFXzIDQX7xmHFs4KVH4luCjaCbuPRtZ9oBUjUhOk84mZ9WVPf94n87TxYI4rSRf9HmfHEF8Yep3JrYDVOo3Cw==

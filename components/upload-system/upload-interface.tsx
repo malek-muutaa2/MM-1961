@@ -280,7 +280,9 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
                     )}
 
                     {/* File Drop Zone */}
-                    <div
+                    <button
+                        type="button"
+
                         className={getDragClass()}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
@@ -333,7 +335,7 @@ export default function UploadInterface({configurations}: Readonly<UploadInterfa
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </button>
 
                     {/* Upload Progress */}
                     {uploading && (

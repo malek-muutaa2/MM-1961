@@ -36,7 +36,8 @@ export const users = pgTable("users", {
   passwordresettokenexpiry: timestamp("passwordresettokenexpiry"),
   passwordupdatedat: timestamp("passwordupdatedat"),
   isDisabled: boolean("isDisabled"),
-  last_login : timestamp("last_login")
+  last_login : timestamp("last_login"),
+  deactivated_at : timestamp("deactivated_at"),
 
 })
 

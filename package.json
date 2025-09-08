@@ -2,11 +2,11 @@
   "name": "my-v0-project",
   "version": "0.3.0",
   "private": true,
-   "browser": {
+  "browser": {
     "fs": false,
     "os": false,
     "path": false,
-    "stream" : false
+    "stream": false
   },
   "scripts": {
     "dev": "next dev",
@@ -22,11 +22,7 @@
     "release": "standard-version",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:vitest": "vitest",
-     "db:push": "npx drizzle-kit push",
-    "db:pull": "npx drizzle-kit introspect",
-    "db:migrate": "npx drizzle-kit migrate",
-    "db:generate": "npx drizzle-kit generate"
+    "test:vitest": "vitest"
   },
   "dependencies": {
     "@auth/core": "latest",
@@ -36,13 +32,6 @@
     "@cloudflare/workers-types": "latest",
     "@electric-sql/pglite": "latest",
     "@hookform/resolvers": "^3.9.1",
-    "@libsql/client": "latest",
-    "@libsql/client-wasm": "latest",
-    "@neondatabase/serverless": "latest",
-    "@op-engineering/op-sqlite": "latest",
-    "@opentelemetry/api": "latest",
-    "@planetscale/database": "latest",
-    "@prisma/client": "latest",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",
@@ -58,7 +47,7 @@
     "@radix-ui/react-menubar": "1.1.4",
     "@radix-ui/react-navigation-menu": "1.2.3",
     "@radix-ui/react-popover": "1.1.4",
-    "@radix-ui/react-progress": "1.1.1",
+    "@radix-ui/react-progress": "latest",
     "@radix-ui/react-radio-group": "1.2.2",
     "@radix-ui/react-scroll-area": "1.2.2",
     "@radix-ui/react-select": "2.1.4",
@@ -94,15 +83,10 @@
     "drizzle-kit": "latest",
     "drizzle-orm": "latest",
     "embla-carousel-react": "8.5.1",
-    "expo-sqlite": "latest",
-    "gel": "latest",
     "input-otp": "1.4.1",
-    "knex": "latest",
-    "kysely": "latest",
     "lucide-react": "^0.454.0",
-    "mysql2": "latest",
     "next": "15.2.4",
-    "next-auth": "latest",
+    "next-auth": "^4.24.11",
     "next-themes": "latest",
     "nodemailer": "latest",
     "pg": "latest",
