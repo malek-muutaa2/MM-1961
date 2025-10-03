@@ -199,7 +199,7 @@ export function KPIDependencySimulator() {
     // Choose a target that's at least 20% away from current value
     let targetValue
     do {
-      targetValue = sliderMin + Math.random() * range
+      targetValue = sliderMin + Math.random() * range //NOSONAR
     } while (Math.abs(targetValue - currentValue) < range * 0.2)
 
     simulationTargetRef.current = targetValue
@@ -227,7 +227,7 @@ export function KPIDependencySimulator() {
 
           // Generate a new target value
           const range = sliderMax - sliderMin
-          const newTarget = sliderMin + Math.random() * range
+          const newTarget = sliderMin + Math.random() * range //NOSONAR
           simulationTargetRef.current = newTarget
           simulationProgressRef.current = 0
         }
@@ -306,7 +306,7 @@ export function KPIDependencySimulator() {
       date: formattedDate,
       sourceKPI: currentKPI.name,
       sourceKPIValue: sliderValue[0],
-      impactedKPIs: impactSummary.map((impact) => ({
+      impactedKPIs: impactSummary.map((impact: any) => ({
         id: impact.id,
         name: impact.name,
         originalValue: impact.originalValue,
@@ -366,6 +366,9 @@ Based on this simulation, the following actions are recommended:
 
     // Create a blob and download link
     const blob = new Blob([reportContent], { type: "text/plain" })
+    if(!blob){
+      return;
+    }
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
@@ -525,7 +528,7 @@ Based on this simulation, the following actions are recommended:
               <h3 className="text-lg font-medium mb-2">Impact Summary</h3>
               {impactSummary.length > 0 ? (
                 <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-                  {impactSummary.map((impact) => (
+                  {impactSummary.map((impact: any) => (
                     <Card key={impact.id} className="overflow-hidden">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">

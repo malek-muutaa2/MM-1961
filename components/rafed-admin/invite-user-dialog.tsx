@@ -24,9 +24,9 @@ interface InviteUserDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function InviteUserDialog({ open, onOpenChange }: InviteUserDialogProps) {
+export function InviteUserDialog({ open, onOpenChange }: Readonly<InviteUserDialogProps>) {
   const [email, setEmail] = useState("")
-  const [role, setRole] = useState<UserRole>("provider")
+  const [role, setRole] = useState<UserRole>("Provider")
   const [organization, setOrganization] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -41,7 +41,7 @@ export function InviteUserDialog({ open, onOpenChange }: InviteUserDialogProps) 
 
     // Reset form and close dialog
     setEmail("")
-    setRole("provider")
+    setRole("Provider")
     setOrganization("")
     setIsSubmitting(false)
     onOpenChange(false)

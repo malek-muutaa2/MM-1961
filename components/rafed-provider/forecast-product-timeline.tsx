@@ -17,352 +17,626 @@ import {
 import { Edit2 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { Separator } from "@/components/ui/separator"
+import { randomInt } from "crypto"
 
 interface ForecastProductTimelineProps {
-  forecastId: string
+  forecastExecutionId: number
 }
 
 interface Product {
+  id: number
+  name: string
+  description?: string
+  classificationId?: number
+}
+
+interface ForecastType {
+  id: number
+  name: string
+  description?: string
+  isEditable: boolean
+  color?: string
+  lineType?: string
+}
+
+// Type spécial pour les données historiques (pas dans la DB)
+interface HistoricalDataType {
   id: string
   name: string
-  sku: string
-  category: string
-  unit: string
+  description: string
+  isEditable: boolean
+  color: string
+  lineType: string
 }
 
 interface TimelineDataPoint {
   month: string
-  actual: number | null
-  forecast: number | null
-  adjustedForecast: number | null
   date: string
+  sortDate: Date
+  [key: string]: any
 }
 
-export function ForecastProductTimeline({ forecastId }: ForecastProductTimelineProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string>("product1")
+export function ForecastProductTimeline({
+  forecastExecutionId,
+}: Readonly<ForecastProductTimelineProps>) {
+  const [selectedProduct, setSelectedProduct] = useState<string>("")
   const [products, setProducts] = useState<Product[]>([])
+  const [forecastTypes, setForecastTypes] = useState<ForecastType[]>([])
   const [timelineData, setTimelineData] = useState<TimelineDataPoint[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingProducts, setLoadingProducts] = useState(true)
+  const [loadingForecastTypes, setLoadingForecastTypes] = useState(true)
 
   // State for edit modal
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<TimelineDataPoint | null>(null)
+  const [editingForecastType, setEditingForecastType] = useState<string>("")
   const [newQuantity, setNewQuantity] = useState<number | "">("")
 
+  // Configuration hardcodée pour les données historiques
+  const historicalDataConfig: HistoricalDataType = {
+    id: "historical",
+    name: "Historical Data",
+    description: "Données historiques réelles",
+    isEditable: false,
+    color: "#ff7300",
+    lineType: "",
+  }
+
+  // Fetch forecast types from the database (sans Historical Data)
   useEffect(() => {
-    // Simulate API call to fetch product list
-    setTimeout(() => {
-      const mockProducts = [
-        { id: "product1", name: "Paracetamol", sku: "PHARM-1001", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product2", name: "Amoxicillin", sku: "PHARM-1002", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product3", name: "Ibuprofen", sku: "PHARM-1003", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product4", name: "Omeprazole", sku: "PHARM-1004", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product5", name: "Metformin", sku: "PHARM-1005", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product6", name: "Atorvastatin", sku: "PHARM-1006", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product7", name: "Salbutamol", sku: "PHARM-1007", category: "Pharmaceuticals", unit: "Box" },
-        { id: "product8", name: "Fluoxetine", sku: "PHARM-1008", category: "Pharmaceuticals", unit: "Box" },
-      ]
-      setProducts(mockProducts)
-    }, 500)
-  }, [forecastId])
-
-  useEffect(() => {
-    // Simulate API call to fetch timeline data for selected product
-    if (selectedProduct) {
-      setLoading(true)
-      setTimeout(() => {
-        // Generate timeline data from Nov 2024 to April 2026
-        const mockTimelineData: TimelineDataPoint[] = []
-
-        // Start date: November 2024
-        const startMonth = 10 // 0-based, so 10 = November
-        const startYear = 2024
-
-        // End date: April 2026
-        const endMonth = 3 // 0-based, so 3 = April
-        const endYear = 2026
-
-        // Calculate total months
-        const totalMonths = (endYear - startYear) * 12 + (endMonth - startMonth) + 1
-
-        for (let i = 0; i < totalMonths; i++) {
-          let month = startMonth + i
-          let year = startYear
-
-          while (month > 11) {
-            month -= 12
-            year += 1
-          }
-
-          const monthName = new Date(year, month, 1).toLocaleString("default", { month: "short" })
-          const date = `${monthName} ${year}`
-
-          // First 6 months are historical data
-          if (i < 6) {
-            mockTimelineData.push({
-              month: date,
-              actual: Math.floor(Math.random() * 1000) + 500,
-              forecast: null,
-              adjustedForecast: null,
-              date: `${monthName} ${year}`,
-            })
-          }
-          // Current month has both actual and forecast
-          else if (i === 6) {
-            mockTimelineData.push({
-              month: date,
-              actual: Math.floor(Math.random() * 1000) + 500,
-              forecast: Math.floor(Math.random() * 1000) + 500,
-              adjustedForecast: Math.floor(Math.random() * 1000) + 500,
-              date: `${monthName} ${year}`,
-            })
-          }
-          // Future months only have forecast data
-          else {
-            const forecastValue = Math.floor(Math.random() * 1000) + 500
-            const adjustedValue = forecastValue + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 200)
-
-            mockTimelineData.push({
-              month: date,
-              actual: null,
-              forecast: forecastValue,
-              adjustedForecast: adjustedValue,
-              date: `${monthName} ${year}`,
-            })
-          }
+    const fetchForecastTypes = async () => {
+      try {
+        const response = await fetch("/api/forecast-types")
+        if (!response.ok) {
+          throw new Error("Failed to fetch forecast types")
         }
-
-        setTimelineData(mockTimelineData)
-        setLoading(false)
-      }, 1000)
+        const data = await response.json()
+        // Les données ne contiennent plus "Historical Data"
+        setForecastTypes(data)
+      } catch (error) {
+        console.error("Error fetching forecast types:", error)
+        // Fallback sans Historical Data
+        setForecastTypes([
+          {
+            id: 1,
+            name: "Rafed Forecast",
+            description: "Forecast generated by Rafed",
+            isEditable: false,
+            color: "#8884d8",
+            lineType: "5 5",
+          },
+          {
+            id: 2,
+            name: "Provider Forecast",
+            description: "Forecast provided by healthcare provider",
+            isEditable: true,
+            color: "#82ca9d",
+            lineType: "3 3",
+          },
+        ])
+      } finally {
+        setLoadingForecastTypes(false)
+      }
     }
-  }, [selectedProduct, forecastId])
+
+    fetchForecastTypes()
+  }, [])
+
+  // Fetch products from the database
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/products")
+        if (!response.ok) {
+          throw new Error("Failed to fetch products")
+        }
+        const data = await response.json()
+        const sortedProducts = data.sort((a: Product, b: Product) =>
+            a.name.localeCompare(b.name, "fr", { sensitivity: "base" }),
+        )
+
+        setProducts(sortedProducts)
+        if (sortedProducts.length > 0) {
+          setSelectedProduct(sortedProducts[0].id.toString())
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error)
+        const mockProducts = [
+          { id: 1, name: "Paracétamol 500mg", description: "Analgésique et antipyrétique courant" },
+          { id: 2, name: "Amoxicilline 250mg", description: "Antibiotique à large spectre" },
+          { id: 3, name: "Insuline Lantus", description: "Insuline à action prolongée" },
+          { id: 4, name: "Moniteur cardiaque", description: "Appareil de surveillance des fonctions cardiaques" },
+          { id: 5, name: "Ventilateur médical", description: "Appareil d'assistance respiratoire" },
+        ]
+        setProducts(mockProducts)
+        setSelectedProduct(mockProducts[0].id.toString())
+      } finally {
+        setLoadingProducts(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  // Fetch timeline data for selected product and forecast execution
+  useEffect(() => {
+    if (selectedProduct && forecastTypes.length > 0 && forecastExecutionId) {
+      setLoading(true)
+
+      const fetchForecastData = async () => {
+        try {
+          const response = await fetch(
+              `/api/forecast-data?productId=${selectedProduct}&forecastExecutionId=${forecastExecutionId}`,
+          )
+          if (!response.ok) {
+            throw new Error("Failed to fetch forecast data")
+          }
+          const data = await response.json()
+
+          const processedData = processTimelineData(data, forecastTypes)
+          setTimelineData(processedData)
+        } catch (error) {
+          console.error("Error fetching forecast data:", error)
+          generateMockTimelineData()
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      fetchForecastData()
+    }
+  }, [selectedProduct, forecastTypes, forecastExecutionId])
+
+  // Process timeline data from API response with improved ordering
+  const processTimelineData = (data: any[], forecastTypes: ForecastType[]) => {
+    const groupedByDate = data.reduce((acc: any, item: any) => {
+      const date = new Date(item.date)
+      const monthYear = date.toLocaleString("default", { month: "short" }) + " " + date.getFullYear()
+
+      if (!acc[monthYear]) {
+        acc[monthYear] = {
+          month: monthYear,
+          date: monthYear,
+          sortDate: date,
+        }
+      }
+
+      // Traitement spécial pour les données historiques (type = "actual")
+      if (item.type === "actual") {
+        const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
+        acc[monthYear][historicalTypeName] = Number(item.value)
+      } else {
+        // Traitement normal pour les prévisions avec forecastTypeId
+        const forecastType = forecastTypes.find((ft) => ft.id === item.forecastTypeId)
+        if (forecastType) {
+          const typeName = forecastType.name.replace(/\s+/g, "")
+          acc[monthYear][typeName] = Number(item.value)
+        }
+      }
+
+      return acc
+    }, {})
+
+    return Object.values(groupedByDate)
+        .sort((a: any, b: any) => a.sortDate.getTime() - b.sortDate.getTime())
+        .map((item: any) => {
+          const date = item.sortDate
+          const monthName = date.toLocaleString("default", { month: "short" })
+          const year = date.getFullYear()
+
+          return {
+            ...item,
+            month: `${monthName} ${year}`,
+            date: `${monthName} ${year}`,
+          }
+        })
+  }
+
+  // Generate mock timeline data with historical data included
+  const generateMockTimelineData = () => {
+    const mockTimelineData: TimelineDataPoint[] = []
+    const today = new Date()
+    const startDate = new Date(today.getFullYear() - 1, today.getMonth(), 1)
+
+    for (let i = 0; i < 24; i++) {
+      const currentDate = new Date(startDate)
+      currentDate.setMonth(startDate.getMonth() + i)
+
+      const monthName = currentDate.toLocaleString("default", { month: "short" })
+      const year = currentDate.getFullYear()
+      const monthYear = `${monthName} ${year}`
+
+      const dataPoint: TimelineDataPoint = {
+        month: monthYear,
+        date: monthYear,
+        sortDate: new Date(currentDate),
+      }
+
+      // Ajouter les données historiques pour les 12 premiers mois
+      if (i < 12) {
+        const historicalTypeName = historicalDataConfig.name.replace(/\s+/g, "")
+        // NOSONAR: Using Math.random is safe here for non-secure test data
+        dataPoint[historicalTypeName] = randomInt(500, 1500);
+
+      }
+
+      // Ajouter les prévisions pour les mois actuels et futurs (à partir du mois 12)
+      if (i >= 12) {
+        forecastTypes.forEach((type) => {
+          const typeName = type.name.replace(/\s+/g, "")
+
+          // NOSONAR: Using Math.random is safe here for non-secure test data
+          dataPoint[typeName] = randomInt(500, 1500);
+        })
+      }
+
+      mockTimelineData.push(dataPoint)
+    }
+
+    setTimelineData(mockTimelineData)
+  }
 
   const handleProductChange = (value: string) => {
     setSelectedProduct(value)
   }
 
-  const handleEditClick = (item: TimelineDataPoint) => {
+  const handleEditClick = (item: TimelineDataPoint, forecastType: string) => {
     setEditingItem(item)
-    setNewQuantity(item.forecast || 0)
+    setEditingForecastType(forecastType)
+    setNewQuantity(item[forecastType] || 0)
     setEditModalOpen(true)
   }
 
-  const handleSaveEdit = () => {
-    if (editingItem && newQuantity !== "") {
-      // Update the data
-      const updatedData = timelineData.map((item) => {
-        if (item.month === editingItem.month) {
-          return {
-            ...item,
-            forecast: Number(newQuantity),
-          }
+  const handleSaveEdit = async () => {
+    if (editingItem && editingForecastType && newQuantity !== "") {
+      try {
+        const forecastType = forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)
+
+        if (!forecastType) {
+          throw new Error("Forecast type not found")
         }
-        return item
-      })
 
-      setTimelineData(updatedData)
+        const dateToUse = editingItem.sortDate || new Date(editingItem.date)
 
-      // Show success toast
-      toast({
-        title: "Forecast updated",
-        description: `Updated forecast quantity for ${editingItem.month} to ${newQuantity}`,
-      })
+        const updateData = {
+          productId: selectedProduct,
+          forecastTypeId: forecastType.id,
+          forecastExecutionId: forecastExecutionId,
+          date: dateToUse.toISOString(),
+          value: Number(newQuantity),
+        }
 
-      // Close the modal
-      setEditModalOpen(false)
-      setEditingItem(null)
-      setNewQuantity("")
+        const response = await fetch("/api/forecast-data", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to update forecast data")
+        }
+
+        const updatedData = timelineData.map((item) => {
+          if (item.month === editingItem.month) {
+            return {
+              ...item,
+              [editingForecastType]: Number(newQuantity),
+            }
+          }
+          return item
+        })
+
+        setTimelineData(updatedData)
+
+        toast({
+          title: "Forecast updated",
+          description: `Updated ${forecastType.name} for ${editingItem.month} to ${newQuantity}`,
+        })
+      } catch (error) {
+        console.error("Error updating forecast:", error)
+        toast({
+          title: "Update failed",
+          description: "Failed to update forecast data. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
+        setEditModalOpen(false)
+        setEditingItem(null)
+        setEditingForecastType("")
+        setNewQuantity("")
+      }
     }
   }
 
-  // Get the selected product details
-  const selectedProductDetails = products.find((p) => p.id === selectedProduct) || {
+  const selectedProductDetails = products.find((p) => p.id.toString() === selectedProduct) || {
     name: "",
-    sku: "",
-    category: "",
-    unit: "",
+    description: "",
   }
 
-  if (loading && !products.length) {
+  if ((loadingProducts || loadingForecastTypes) && !products.length) {
     return (
-      <div className="flex h-[400px] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-      </div>
+        <div className="flex h-[400px] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        </div>
     )
   }
 
-  // Filter timeline data to only include future forecasts (where forecast is not null)
-  const forecastTableData = timelineData.filter((item) => item.forecast !== null)
+  const getForecastTypeColor = (type: ForecastType | HistoricalDataType, fallbackIndex: number) => {
+    if (type.color && type.color.trim() !== "") {
+      return type.color
+    }
+
+    const fallbackColors = ["#8884d8", "#82ca9d", "#ff7300", "#0088FE", "#00C49F", "#FFBB28"]
+    return fallbackColors[fallbackIndex % fallbackColors.length]
+  }
+
+  const getForecastTypeLineType = (type: ForecastType | HistoricalDataType) => {
+    if (type.lineType !== undefined) {
+      return type.lineType
+    }
+    return "5 5"
+  }
+
+  // Combiner les types de prévision avec les données historiques pour l'affichage
+  const allDisplayTypes = [historicalDataConfig, ...forecastTypes]
+
+  // Pour la table, on garde seulement les types de prévision (pas l'historique)
+  const forecastOnlyTypes = forecastTypes
+
+  const renderLineSample = (type: ForecastType | HistoricalDataType, index: number) => {
+    const color = getForecastTypeColor(type, index)
+    const lineType = getForecastTypeLineType(type)
+
+    let borderStyle = "solid"
+    let borderWidth = "2px"
+
+    if (lineType === "5 5") {
+      borderStyle = "dashed"
+    } else if (lineType === "3 3") {
+      borderStyle = "dotted"
+    } else if (lineType === "10 5") {
+      borderStyle = "dashed"
+      borderWidth = "3px"
+    }
+
+    return (
+        <div
+            className="w-6 h-0 inline-block align-middle"
+            style={{
+              borderBottom: `${borderWidth} ${borderStyle} ${color}`,
+              marginRight: "6px",
+            }}
+        />
+    )
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="w-full max-w-xs">
-        <Select value={selectedProduct} onValueChange={handleProductChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a product" />
-          </SelectTrigger>
-          <SelectContent>
-            {products.map((product) => (
-              <SelectItem key={product.id} value={product.id}>
-                {product.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {loading ? (
-        <div className="flex h-[300px] items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+      <div className="space-y-6">
+        <div className="w-full max-w-xs">
+          <Select value={selectedProduct} onValueChange={handleProductChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a product" />
+            </SelectTrigger>
+            <SelectContent>
+              {products.map((product) => (
+                  <SelectItem key={product.id} value={product.id.toString()}>
+                    {product.name}
+                  </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={timelineData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="actual"
-              name="Historical Data"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-              connectNulls
-            />
-            <Line
-              type="monotone"
-              dataKey="forecast"
-              name="Provider Forecast"
-              stroke="#82ca9d"
-              strokeDasharray="5 5"
-              connectNulls
-            />
-            <Line
-              type="monotone"
-              dataKey="adjustedForecast"
-              name="Rafed Forecast"
-              stroke="#ff7300"
-              strokeDasharray="3 3"
-              connectNulls
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
 
-      <div className="rounded-md bg-muted/50 p-3 text-sm">
-        <p>
-          <span className="font-medium">Note:</span> This chart shows historical data (solid purple line), provider
-          forecast data (green dashed line), and Rafed forecast (orange dashed line) for the selected product over time.
-        </p>
-      </div>
+        {loading ? (
+            <div className="flex h-[300px] items-center justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+            </div>
+        ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={timelineData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {/* Afficher toutes les lignes : historique + prévisions */}
+                {allDisplayTypes.map((type, index) => {
+                  const typeName = type.name.replace(/\s+/g, "")
+                  const hasData = timelineData.some((item) => item[typeName] !== undefined)
 
-      {/* Separator between chart and table */}
-      <Separator className="my-6" />
+                  if (!hasData) return null
 
-      {/* Forecast Data Table */}
-      <div>
-        <h3 className="text-lg font-medium mb-3">Forecast Data for {selectedProductDetails.name}</h3>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>SKU</TableHead>
-                <TableHead>Product Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-right">Forecast Quantity</TableHead>
-                <TableHead className="text-right">Rafed Forecast</TableHead>
-                <TableHead>Unit</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {forecastTableData.length > 0 ? (
-                forecastTableData.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{selectedProductDetails.sku}</TableCell>
-                    <TableCell>{selectedProductDetails.name}</TableCell>
-                    <TableCell>{selectedProductDetails.category}</TableCell>
-                    <TableCell>{item.date}</TableCell>
-                    <TableCell className="text-right">
-                      <button
-                        onClick={() => handleEditClick(item)}
-                        className="inline-flex items-center text-primary hover:underline focus:outline-none"
-                      >
-                        {item.forecast?.toLocaleString() || 0}
-                        <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
-                      </button>
-                    </TableCell>
-                    <TableCell className="text-right">{item.adjustedForecast?.toLocaleString() || 0}</TableCell>
-                    <TableCell>{selectedProductDetails.unit}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
+                  return (
+                      <Line
+                          key={type.id}
+                          type="monotone"
+                          dataKey={typeName}
+                          name={type.name}
+                          stroke={getForecastTypeColor(type, index)}
+                          strokeDasharray={getForecastTypeLineType(type)}
+                          connectNulls
+                      />
+                  )
+                })}
+              </LineChart>
+            </ResponsiveContainer>
+        )}
+
+        <div className="rounded-md bg-muted/50 p-3 text-sm">
+          <p>
+            <span className="font-medium">Note:</span> This chart shows historical data and forecasts for the selected
+            product over time.
+          </p>
+        </div>
+
+        <Separator className="my-6" />
+
+        <div>
+          <h3 className="text-lg font-medium mb-3">Forecast Data for {selectedProductDetails.name}</h3>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
-                    No forecast data available.
-                  </TableCell>
+                  <TableHead>SKU</TableHead>
+                  <TableHead>Product Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Date</TableHead>
+                  {/* Table affiche seulement les types de prévision (pas l'historique) */}
+                  {forecastOnlyTypes.map((type, index) => (
+                      <TableHead key={type.id} className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div
+                              className="w-3 h-3 rounded-full border border-gray-300"
+                              style={{ backgroundColor: getForecastTypeColor(type, index + 1) }}
+                          />
+                          {type.name}
+                        </div>
+                      </TableHead>
+                  ))}
+                  <TableHead>Unit</TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {timelineData.length > 0 ? (
+                    timelineData
+                        .filter((item) => {
+                          const hasForecastData = forecastOnlyTypes.some((type) => {
+                            const typeName = type.name.replace(/\s+/g, "")
+                            return item[typeName] !== undefined && item[typeName] > 0
+                          })
 
-      {/* Edit Forecast Modal */}
-      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Forecast Quantity</DialogTitle>
-            <DialogDescription>
-              Update the forecast quantity for {selectedProductDetails.name} ({editingItem?.month})
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="rafed-forecast" className="text-right text-sm font-medium col-span-2">
-                Rafed Forecast:
-              </label>
-              <div className="col-span-2 font-medium">
-                {editingItem?.adjustedForecast?.toLocaleString() || 0} {selectedProductDetails.unit}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="current-forecast" className="text-right text-sm font-medium col-span-2">
-                Current Forecast:
-              </label>
-              <div className="col-span-2 font-medium">
-                {editingItem?.forecast?.toLocaleString() || 0} {selectedProductDetails.unit}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
-                New Forecast:
-              </label>
-              <div className="col-span-2">
-                <Input
-                  id="new-forecast"
-                  type="number"
-                  value={newQuantity}
-                  onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
-                  min={0}
-                  className="w-full"
-                />
-              </div>
-            </div>
+                          return hasForecastData
+                        })
+                        .map((item, index) => {
+                          return (
+                                <TableRow key={item.month + "-" + selectedProduct}>
+                                <TableCell className="font-medium">
+                                  {selectedProductDetails.name?.substring(0, 4).toUpperCase() +
+                                      "-" +
+                                      selectedProduct.padStart(4, "0")}
+                                </TableCell>
+                                <TableCell>{selectedProductDetails.name}</TableCell>
+                                <TableCell>
+                                    {(() => {
+                                    let category = "Other";
+                                    if (selectedProductDetails.classificationId === 1) {
+                                      category = "Pharmaceuticals";
+                                    } else if (selectedProductDetails.classificationId === 2) {
+                                      category = "Medical Devices";
+                                    }
+                                    return category;
+                                    })()}
+                                </TableCell>
+                                <TableCell>{item.date}</TableCell>
+                                {forecastOnlyTypes.map((type, typeIndex) => {
+                                  const typeName = type.name.replace(/\s+/g, "")
+                                  return (
+                                      <TableCell key={type.id} className="text-right">
+                                        {type.isEditable ? (
+                                            <button
+                                                onClick={() => handleEditClick(item, typeName)}
+                                                className="inline-flex items-center text-primary hover:underline focus:outline-none"
+                                            >
+                                              {item[typeName]?.toLocaleString() || 0}
+                                              <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
+                                            </button>
+                                        ) : (
+                                            item[typeName]?.toLocaleString() || 0
+                                        )}
+                                      </TableCell>
+                                  )
+                                })}
+                                <TableCell>Units</TableCell>
+                              </TableRow>
+                          )
+                        })
+                ) : (
+                    <TableRow>
+                      <TableCell colSpan={6 + forecastOnlyTypes.length} className="h-24 text-center">
+                        No forecast data available.
+                      </TableCell>
+                    </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </div>
+
+        <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Forecast Quantity</DialogTitle>
+              <DialogDescription>
+                Update the forecast quantity for {selectedProductDetails.name} ({editingItem?.month})
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {/* Afficher l'historique en lecture seule si disponible */}
+                {editingItem?.[historicalDataConfig.name.replace(/\s+/g, "")] && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label className="text-right text-sm font-medium col-span-2">
+                      <div className="flex items-center justify-end gap-2">
+                        {renderLineSample(historicalDataConfig, 0)}
+                        {historicalDataConfig.name}:
+                      </div>
+                    </label>
+                    <div className="col-span-2 font-medium">
+                      {editingItem[historicalDataConfig.name.replace(/\s+/g, "")]?.toLocaleString() || 0} Units
+                    </div>
+                  </div>
+              )}
+
+              {/* Afficher les autres prévisions */}
+              {forecastTypes.map((type, index) => {
+                const typeName = type.name.replace(/\s+/g, "")
+                if (editingItem && editingItem[typeName] !== undefined && typeName !== editingForecastType) {
+                  return (
+                      <div key={type.id} className="grid grid-cols-4 items-center gap-4">
+                        <label className="text-right text-sm font-medium col-span-2">
+                          <div className="flex items-center justify-end gap-2">
+                            {renderLineSample(type, index + 1)}
+                            {type.name}:
+                          </div>
+                        </label>
+                        <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() || 0} Units</div>
+                      </div>
+                  )
+                }
+                return null
+              })}
+
+              {editingForecastType && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
+                      New{" "}
+                      {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name || "Forecast"}:
+                    </label>
+                    <div className="col-span-2">
+                      <Input
+                          id="new-forecast"
+                          type="number"
+                          value={newQuantity}
+                          onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+                          min={0}
+                          className="w-full"
+                      />
+                    </div>
+                  </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
   )
 }

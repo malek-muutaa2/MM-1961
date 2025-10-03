@@ -27,7 +27,7 @@ type AddEventModalProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function AddEventModal({ open, onOpenChange }: AddEventModalProps) {
+export function AddEventModal({ open, onOpenChange }: Readonly<AddEventModalProps>) {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [eventType, setEventType] = useState("internal")
@@ -122,7 +122,7 @@ export function AddEventModal({ open, onOpenChange }: AddEventModalProps) {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} initialFocus />
+                  <Calendar mode="single" selected={startDate} onSelect={setStartDate} autoFocus/>
                 </PopoverContent>
               </Popover>
             </div>
@@ -144,7 +144,7 @@ export function AddEventModal({ open, onOpenChange }: AddEventModalProps) {
                     mode="single"
                     selected={endDate}
                     onSelect={setEndDate}
-                    initialFocus
+                    autoFocus
                     disabled={(date) => (startDate ? date < startDate : false)}
                   />
                 </PopoverContent>

@@ -66,7 +66,7 @@ export function ForecastUploader({ onUploadSuccess, isSubmitted = false }: Forec
         setValidating(false)
 
         // Randomly decide if there are validation issues
-        const hasIssues = Math.random() > 0.7
+        const hasIssues = Math.random() > 0.7 //NOSONAR
 
         if (hasIssues) {
           setValidationIssues([

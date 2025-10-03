@@ -16,95 +16,96 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { User, UserRole, UserStatus } from "@/types/rafed-types"
 import { EditUserDialog } from "./edit-user-dialog"
+import { UserType } from "@/lib/db/schema"
 
 // Sample data - in a real app, this would come from an API
-const users: User[] = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "admin",
-    status: "active",
-    organization: "Rafed Admin",
-    createdAt: "2023-01-15T10:30:00Z",
-    lastLogin: "2023-06-10T08:45:00Z",
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane.smith@provider.com",
-    role: "provider",
-    status: "active",
-    organization: "Medical Supplies Inc.",
-    createdAt: "2023-02-20T14:15:00Z",
-    lastLogin: "2023-06-09T16:30:00Z",
-  },
-  {
-    id: "3",
-    name: "Robert Johnson",
-    email: "robert@supplier.com",
-    role: "supplier",
-    status: "active",
-    organization: "Johnson Medical Equipment",
-    createdAt: "2023-03-05T09:45:00Z",
-    lastLogin: "2023-06-08T11:20:00Z",
-  },
-  {
-    id: "4",
-    name: "Sarah Williams",
-    email: "sarah@provider.com",
-    role: "provider",
-    status: "pending",
-    organization: "City Hospital",
-    createdAt: "2023-05-12T13:10:00Z",
-  },
-  {
-    id: "5",
-    name: "Michael Brown",
-    email: "michael@admin.com",
-    role: "admin",
-    status: "active",
-    organization: "Rafed Admin",
-    createdAt: "2023-04-18T11:30:00Z",
-    lastLogin: "2023-06-07T09:15:00Z",
-  },
-  {
-    id: "6",
-    name: "Emily Davis",
-    email: "emily@supplier.com",
-    role: "supplier",
-    status: "inactive",
-    organization: "Davis Medical Supplies",
-    createdAt: "2023-02-28T10:20:00Z",
-    lastLogin: "2023-05-15T14:40:00Z",
-  },
-]
+// const users: User[] = [
+//   {
+//     id: "1",
+//     name: "John Doe",
+//     email: "john.doe@example.com",
+//     role: "admin",
+//     status: "active",
+//     organization: "Rafed Admin",
+//     createdAt: "2023-01-15T10:30:00Z",
+//     lastLogin: "2023-06-10T08:45:00Z",
+//   },
+//   {
+//     id: "2",
+//     name: "Jane Smith",
+//     email: "jane.smith@provider.com",
+//     role: "provider",
+//     status: "active",
+//     organization: "Medical Supplies Inc.",
+//     createdAt: "2023-02-20T14:15:00Z",
+//     lastLogin: "2023-06-09T16:30:00Z",
+//   },
+//   {
+//     id: "3",
+//     name: "Robert Johnson",
+//     email: "robert@supplier.com",
+//     role: "supplier",
+//     status: "active",
+//     organization: "Johnson Medical Equipment",
+//     createdAt: "2023-03-05T09:45:00Z",
+//     lastLogin: "2023-06-08T11:20:00Z",
+//   },
+//   {
+//     id: "4",
+//     name: "Sarah Williams",
+//     email: "sarah@provider.com",
+//     role: "provider",
+//     status: "pending",
+//     organization: "City Hospital",
+//     createdAt: "2023-05-12T13:10:00Z",
+//   },
+//   {
+//     id: "5",
+//     name: "Michael Brown",
+//     email: "michael@admin.com",
+//     role: "admin",
+//     status: "active",
+//     organization: "Rafed Admin",
+//     createdAt: "2023-04-18T11:30:00Z",
+//     lastLogin: "2023-06-07T09:15:00Z",
+//   },
+//   {
+//     id: "6",
+//     name: "Emily Davis",
+//     email: "emily@supplier.com",
+//     role: "supplier",
+//     status: "inactive",
+//     organization: "Davis Medical Supplies",
+//     createdAt: "2023-02-28T10:20:00Z",
+//     lastLogin: "2023-05-15T14:40:00Z",
+//   },
+// ]
 
 interface UsersListProps {
   searchQuery: string
+  users : UserType[]
 }
 
-export function UsersList({ searchQuery }: UsersListProps) {
-  const [editingUser, setEditingUser] = useState<User | null>(null)
+export function UsersList({
+  searchQuery,
+  users,
+}: Readonly<UsersListProps>) {
+    const [editingUser, setEditingUser] = useState<User | null>(null)
 
   // Filter users based on search query
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.organization.toLowerCase().includes(searchQuery.toLowerCase()),
+      user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const getRoleBadgeVariant = (role: UserRole) => {
     switch (role) {
-      case "admin":
+      case "Admin":
         return "default"
-      case "provider":
+      case "User":
         return "secondary"
-      case "supplier":
-        return "outline"
-      case "viewer":
-        return "destructive"
+      
       default:
         return "default"
     }
@@ -118,8 +119,7 @@ export function UsersList({ searchQuery }: UsersListProps) {
         return "warning"
       case "inactive":
         return "destructive"
-      default:
-        return "default"
+
     }
   }
 
@@ -135,7 +135,7 @@ export function UsersList({ searchQuery }: UsersListProps) {
               <TableHead>Status</TableHead>
               <TableHead>Organization</TableHead>
               <TableHead>Created</TableHead>
-              <TableHead>Last Login</TableHead>
+              {/* <TableHead>Last Login</TableHead> */}
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -157,13 +157,13 @@ export function UsersList({ searchQuery }: UsersListProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusBadgeVariant(user.status) as any}>
-                      {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                    <Badge variant={getStatusBadgeVariant(user.isDisabled === true ? "inactive" : "active") as any}>
+                     {user.isDisabled === true ? "Inactive" : "Active"}
                     </Badge>
                   </TableCell>
                   <TableCell>{user.organization}</TableCell>
                   <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>{user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : "Never"}</TableCell>
+                  {/* <TableCell>{user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : "Never"}</TableCell> */}
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -180,13 +180,13 @@ export function UsersList({ searchQuery }: UsersListProps) {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          disabled={user.status === "active"}
+                          disabled={user.isDisabled === false}
                           onClick={() => console.log("Activate user", user.id)}
                         >
                           Activate
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          disabled={user.status === "inactive"}
+                          disabled={user.isDisabled === true}
                           onClick={() => console.log("Deactivate user", user.id)}
                         >
                           Deactivate

@@ -1,126 +1,312 @@
 "use client"
 
+import type React from "react"
 import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search } from "lucide-react"
-import type { ForecastDataPoint } from "@/types/rafed-types"
+import { Edit2, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { toast } from "@/components/ui/use-toast"
 
-interface ForecastDataTableProps {
-  forecastId: string
+interface Product {
+  id: number
+  name: string
+  description?: string
+  classificationId?: number
 }
 
-export function ForecastDataTable({ forecastId }: ForecastDataTableProps) {
-  const [data, setData] = useState<(ForecastDataPoint & { adjustedQuantity?: number })[]>([])
+interface Classification {
+  id: number
+  name: string
+  description?: string
+}
+
+interface ForecastType {
+  id: number
+  name: string
+  description?: string
+  isEditable: boolean
+}
+
+interface ForecastData {
+  productId: number
+  productName: string
+  classificationId: number
+  classificationName: string
+  sku: string
+  date: string
+  originalDate: string
+  [key: string]: any
+}
+
+interface PaginationInfo {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNext: boolean
+  hasPrev: boolean
+}
+
+interface ForecastDataTableProps {
+  forecastExecutionId?: number
+}
+
+export function ForecastDataTable({ forecastExecutionId }: ForecastDataTableProps = {}) {
+  const [classifications, setClassifications] = useState<Classification[]>([])
+  const [forecastTypes, setForecastTypes] = useState<ForecastType[]>([])
+  const [forecastData, setForecastData] = useState<ForecastData[]>([])
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
+  })
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("all")
-  const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const itemsPerPage = 10
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+
+  // State for edit modal
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<ForecastData | null>(null)
+  const [editingForecastType, setEditingForecastType] = useState<string>("")
+  const [newQuantity, setNewQuantity] = useState<number | "">("")
+
+  // Debounce search
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
 
   useEffect(() => {
-    // Simulate API call to fetch forecast data
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
+  // Function to format date to "Month YYYY" format
+  const formatDateToMonthYear = (dateString: string) => {
+    const date = new Date(dateString)
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+    }
+    return date.toLocaleDateString("en-US", options)
+  }
+
+  // Fetch classifications
+  useEffect(() => {
+    const fetchClassifications = async () => {
+      try {
+        const response = await fetch("/api/classifications")
+        if (!response.ok) throw new Error("Failed to fetch classifications")
+        const data = await response.json()
+        setClassifications(data)
+      } catch (error) {
+        console.error("Error fetching classifications:", error)
+        setClassifications([
+          { id: 1, name: "Pharmaceuticals", description: "Pharmaceutical products" },
+          { id: 2, name: "Medical Devices", description: "Medical equipment and devices" },
+          { id: 3, name: "Consumables", description: "Medical consumables and supplies" },
+        ])
+      }
+    }
+    fetchClassifications()
+  }, [])
+
+  // Fetch forecast types
+  useEffect(() => {
+    const fetchForecastTypes = async () => {
+      try {
+        const response = await fetch("/api/forecast-types")
+        if (!response.ok) throw new Error("Failed to fetch forecast types")
+        const data = await response.json()
+        const filteredTypes = data.filter((type: ForecastType) => type.name !== "Historical Data")
+        setForecastTypes(filteredTypes)
+      } catch (error) {
+        console.error("Error fetching forecast types:", error)
+        setForecastTypes([
+          { id: 1, name: "Rafed Forecast", description: "Forecast generated by Rafed", isEditable: false },
+          {
+            id: 2,
+            name: "Provider Forecast",
+            description: "Forecast provided by healthcare provider",
+            isEditable: true,
+          },
+        ])
+      }
+    }
+    fetchForecastTypes()
+  }, [])
+
+  // Fetch paginated data
+  const fetchPaginatedData = async (page = 1) => {
+    if (forecastTypes.length === 0) return
+
     setLoading(true)
-    setTimeout(() => {
-      // Mock data for the table
-      const mockData: (ForecastDataPoint & { adjustedQuantity: number })[] = Array.from({ length: 50 }, (_, i) => {
-        const categories = [
-          "Surgical Supplies",
-          "Pharmaceuticals",
-          "Diagnostic Equipment",
-          "Personal Protective Equipment",
-          "Laboratory Supplies",
-        ]
-        const category = categories[Math.floor(Math.random() * categories.length)]
-
-        let productName = ""
-        let sku = ""
-
-        switch (category) {
-          case "Surgical Supplies":
-            productName = ["Surgical Gloves", "Syringes", "Bandages", "Catheters", "Surgical Masks"][
-              Math.floor(Math.random() * 5)
-            ]
-            sku = `SRG-${1000 + i}`
-            break
-          case "Pharmaceuticals":
-            productName = [
-              "Paracetamol",
-              "Amoxicillin",
-              "Ibuprofen",
-              "Omeprazole",
-              "Metformin",
-              "Atorvastatin",
-              "Salbutamol",
-              "Fluoxetine",
-            ][Math.floor(Math.random() * 8)]
-            sku = `PHARM-${2000 + i}`
-            break
-          case "Diagnostic Equipment":
-            productName = ["Test Kits", "Blood Pressure Monitors", "Thermometers", "Stethoscopes", "Glucose Meters"][
-              Math.floor(Math.random() * 5)
-            ]
-            sku = `DIAG-${3000 + i}`
-            break
-          case "Personal Protective Equipment":
-            productName = ["Face Masks", "Face Shields", "Isolation Gowns", "Shoe Covers", "Protective Eyewear"][
-              Math.floor(Math.random() * 5)
-            ]
-            sku = `PPE-${4000 + i}`
-            break
-          case "Laboratory Supplies":
-            productName = ["Test Tubes", "Petri Dishes", "Microscope Slides", "Pipettes", "Disinfectants"][
-              Math.floor(Math.random() * 5)
-            ]
-            sku = `LAB-${5000 + i}`
-            break
-        }
-
-        const forecastQuantity = Math.floor(Math.random() * 1000) + 100
-        // Adjusted quantity is slightly different from the provider's forecast
-        const adjustedQuantity = forecastQuantity + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 200)
-
-        return {
-          productId: `prod-${i + 1}`,
-          productName,
-          sku,
-          category,
-          forecastQuantity,
-          adjustedQuantity,
-          unit: ["Each", "Box", "Case", "Pack"][Math.floor(Math.random() * 4)],
-          month: "May",
-          year: 2025,
-        }
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: "10",
+        search: debouncedSearchTerm,
+        category: selectedCategory,
       })
 
-      setData(mockData)
-      setTotalPages(Math.ceil(mockData.length / itemsPerPage))
+      // Ajouter forecastExecutionId si fourni
+      if (forecastExecutionId) {
+        params.append("forecastExecutionId", forecastExecutionId.toString())
+      }
+
+      const response = await fetch(`/api/forecast-data-complete?${params}`)
+      if (!response.ok) throw new Error("Failed to fetch forecast data")
+
+      const result = await response.json()
+      console.log("API Response:", result) // Debug log
+
+      // Process the data
+      const processedData = processCompleteForecastData(result.data)
+      console.log("Processed data length:", processedData.length) // Debug log
+
+      setForecastData(processedData)
+      setPagination(result.pagination)
+    } catch (error) {
+      console.error("Error fetching paginated data:", error)
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les données de prévision",
+        variant: "destructive",
+      })
+    } finally {
       setLoading(false)
-    }, 1000)
-  }, [forecastId])
+    }
+  }
 
-  // Get unique categories for the filter
-  const categories = ["all", ...new Set(data.map((item) => item.category))]
+  // Fetch data when filters change
+  useEffect(() => {
+    if (forecastTypes.length > 0) {
+      fetchPaginatedData(1) // Reset to page 1 when filters change
+    }
+  }, [forecastTypes, debouncedSearchTerm, selectedCategory, forecastExecutionId])
 
-  // Filter and paginate data
-  const filteredData = data.filter((item) => {
-    const matchesSearch =
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.sku.toLowerCase().includes(searchQuery.toLowerCase())
+  const processCompleteForecastData = (data: any[]) => {
+    const processedData: ForecastData[] = []
 
-    const matchesCategory = categoryFilter === "all" || item.category === categoryFilter
+    // Grouper par product_id et date
+    const groupedByProductAndDate = data.reduce((acc: any, item: any) => {
+      const key = `${item.productId}-${item.date}`
 
-    return matchesSearch && matchesCategory
-  })
+      if (!acc[key]) {
+        const sku = item.productName?.substring(0, 4).toUpperCase() + "-" + item.productId.toString().padStart(4, "0")
 
-  const paginatedData = filteredData.slice((page - 1) * itemsPerPage, page * itemsPerPage)
-  const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage)
+        acc[key] = {
+          productId: item.productId,
+          productName: item.productName ?? `Product ${item.productId}`,
+          classificationId: item.classificationId ?? 0,
+          classificationName: item.classificationName ?? "Unknown",
+          sku: sku,
+          date: formatDateToMonthYear(item.date),
+          originalDate: item.date,
+        }
+      }
 
-  if (loading) {
+      // Ajouter les valeurs pour chaque type de prévision
+      const forecastType = forecastTypes.find((ft) => ft.id === item.forecastTypeId)
+      if (forecastType) {
+        const typeName = forecastType.name.replace(/\s+/g, "")
+        acc[key][typeName] = Number(item.value)
+      }
+
+      return acc
+    }, {})
+
+    // Convertir en tableau et maintenir l'ordre
+    const result: ForecastData[] = Object.values(groupedByProductAndDate)
+
+    // Trier par date originale puis par nom de produit
+    return result.sort((a, b) => {
+      const dateComparison = new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
+      if (dateComparison !== 0) return dateComparison
+      return a.productName.localeCompare(b.productName, "fr", { sensitivity: "base" })
+    })
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    fetchPaginatedData(newPage)
+  }
+
+  const handleEditClick = (item: ForecastData, forecastType: string) => {
+    setEditingItem(item)
+    setEditingForecastType(forecastType)
+    setNewQuantity(item[forecastType] ?? 0)
+    setEditModalOpen(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (editingItem && editingForecastType && newQuantity !== "") {
+      try {
+        const forecastType = forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)
+        if (!forecastType) throw new Error("Forecast type not found")
+
+        const dateObj = new Date(editingItem.originalDate)
+        const updateData = {
+          productId: editingItem.productId,
+          forecastTypeId: forecastType.id,
+          date: dateObj.toISOString(),
+          value: Number(newQuantity),
+        }
+
+        const response = await fetch("/api/forecast-data", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updateData),
+        })
+
+        if (!response.ok) throw new Error("Failed to update forecast data")
+
+        // Refresh current page
+        fetchPaginatedData(pagination.page)
+
+        toast({
+          title: "Prévision mise à jour",
+          description: `${forecastType.name} pour ${editingItem.productName} (${editingItem.date}) mis à jour à ${newQuantity}`,
+        })
+      } catch (error) {
+        console.error("Error updating forecast:", error)
+        toast({
+          title: "Échec de la mise à jour",
+          description: "Impossible de mettre à jour les données de prévision. Veuillez réessayer.",
+          variant: "destructive",
+        })
+      } finally {
+        setEditModalOpen(false)
+        setEditingItem(null)
+        setEditingForecastType("")
+        setNewQuantity("")
+      }
+    }
+  }
+
+  if (loading && pagination.page === 1) {
     return (
-      <div className="flex justify-center p-8">
+      <div className="flex h-[400px] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
       </div>
     )
@@ -128,35 +314,29 @@ export function ForecastDataTable({ forecastId }: ForecastDataTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
+      {/* Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                setPage(1) // Reset to first page on search
-              }}
+              placeholder="Rechercher des produits..."
+              value={searchTerm}
+              onChange={handleSearchChange}
               className="pl-8"
             />
           </div>
-          <div className="w-full sm:w-48">
-            <Select
-              value={categoryFilter}
-              onValueChange={(value) => {
-                setCategoryFilter(value)
-                setPage(1) // Reset to first page on filter change
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Category" />
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Toutes les catégories" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category === "all" ? "All Categories" : category}
+                <SelectItem value="all">Toutes les catégories</SelectItem>
+                {classifications.map((classification) => (
+                  <SelectItem key={classification.id} value={classification.name}>
+                    {classification.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -165,36 +345,65 @@ export function ForecastDataTable({ forecastId }: ForecastDataTableProps) {
         </div>
       </div>
 
+      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>SKU</TableHead>
-              <TableHead>Product Name</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead>Nom du produit</TableHead>
+              <TableHead>Catégorie</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead className="text-right">Forecast Quantity</TableHead>
-              <TableHead className="text-right">Rafed Forecast</TableHead>
-              <TableHead>Unit</TableHead>
+              {forecastTypes.map((type) => (
+                <TableHead key={type.id} className="text-right">
+                  {type.name}
+                </TableHead>
+              ))}
+              <TableHead>Unité</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedData.length > 0 ? (
-              paginatedData.map((item) => (
-                <TableRow key={item.productId}>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
+                  <div className="flex items-center justify-center">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                    <span className="ml-2">Chargement...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : ""} {forecastData.length > 0 ? (
+              forecastData.map((item, index) => (
+                <TableRow key={`${item.productId}-${item.originalDate}-${index}`}>
                   <TableCell className="font-medium">{item.sku}</TableCell>
                   <TableCell>{item.productName}</TableCell>
-                  <TableCell>{item.category}</TableCell>
-                  <TableCell>{`${item.month} ${item.year}`}</TableCell>
-                  <TableCell className="text-right">{item.forecastQuantity.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{item.adjustedQuantity?.toLocaleString()}</TableCell>
-                  <TableCell>{item.unit}</TableCell>
+                  <TableCell>{item.classificationName}</TableCell>
+                  <TableCell>{item.date}</TableCell>
+                  {forecastTypes.map((type) => {
+                    const typeName = type.name.replace(/\s+/g, "")
+                    return (
+                      <TableCell key={type.id} className="text-right">
+                        {type.isEditable ? (
+                          <button
+                            onClick={() => handleEditClick(item, typeName)}
+                            className="inline-flex items-center text-primary hover:underline focus:outline-none"
+                          >
+                            {item[typeName]?.toLocaleString() ?? 0}
+                            <Edit2 className="ml-1 h-3 w-3 text-muted-foreground" />
+                          </button>
+                        ) : (
+                          item[typeName]?.toLocaleString() ?? 0
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                  <TableCell>Unités</TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  No results found.
+                <TableCell colSpan={5 + forecastTypes.length} className="h-24 text-center">
+                  Aucune donnée de prévision disponible.
                 </TableCell>
               </TableRow>
             )}
@@ -202,33 +411,106 @@ export function ForecastDataTable({ forecastId }: ForecastDataTableProps) {
         </Table>
       </div>
 
-      {calculatedTotalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Showing {(page - 1) * itemsPerPage + 1}-{Math.min(page * itemsPerPage, filteredData.length)} of{" "}
-            {filteredData.length} items
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              className="rounded-md border px-2 py-1 text-sm disabled:opacity-50"
-              onClick={() => setPage(page - 1)}
-              disabled={page === 1}
-            >
-              Previous
-            </button>
-            <div className="text-sm">
-              Page {page} of {calculatedTotalPages}
-            </div>
-            <button
-              className="rounded-md border px-2 py-1 text-sm disabled:opacity-50"
-              onClick={() => setPage(page + 1)}
-              disabled={page === calculatedTotalPages}
-            >
-              Next
-            </button>
-          </div>
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Affichage de {(pagination.page - 1) * pagination.limit + 1} à{" "}
+          {Math.min(pagination.page * pagination.limit, pagination.total)} sur {pagination.total} résultats
         </div>
-      )}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(pagination.page - 1)}
+            disabled={!pagination.hasPrev || loading}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Précédent
+          </Button>
+          <div className="flex items-center space-x-1">
+            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+              const pageNumber = Math.max(1, pagination.page - 2) + i
+              if (pageNumber > pagination.totalPages) return null
+
+              return (
+                <Button
+                  key={pageNumber}
+                  variant={pageNumber === pagination.page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(pageNumber)}
+                  disabled={loading}
+                  className="w-8 h-8 p-0"
+                >
+                  {pageNumber}
+                </Button>
+              )
+            })}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(pagination.page + 1)}
+            disabled={!pagination.hasNext || loading}
+          >
+            Suivant
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Edit Modal */}
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Modifier la quantité de prévision</DialogTitle>
+            <DialogDescription>
+              Mettre à jour la quantité de prévision pour {editingItem?.productName} ({editingItem?.date})
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {forecastTypes.map((type) => {
+              const typeName = type.name.replace(/\s+/g, "")
+              if (editingItem && editingItem[typeName] !== undefined && typeName !== editingForecastType) {
+                return (
+                  <div key={type.id} className="grid grid-cols-4 items-center gap-4">
+                    <label className="text-right text-sm font-medium col-span-2">{type.name}:</label>
+                    <div className="col-span-2 font-medium">{editingItem[typeName]?.toLocaleString() ?? 0} Unités</div>
+                  </div>
+                )
+              }
+              return null
+            })}
+
+            {editingForecastType && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="new-forecast" className="text-right text-sm font-medium col-span-2">
+                  Nouveau{" "}
+                  {forecastTypes.find((ft) => ft.name.replace(/\s+/g, "") === editingForecastType)?.name ?? "Prévision"}
+                  :
+                </label>
+                <div className="col-span-2">
+                  <Input
+                    id="new-forecast"
+                    type="number"
+                    value={newQuantity}
+                    onChange={(e) => setNewQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+                    min={0}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleSaveEdit} disabled={newQuantity === ""}>
+              Sauvegarder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

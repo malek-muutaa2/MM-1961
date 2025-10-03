@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
 
-import { useState } from "react"
 import { Save } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -17,36 +15,89 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { User, UserRole, UserStatus } from "@/types/rafed-types"
+import type {  UserRole, UserStatus } from "@/types/rafed-types"
+import { UserType } from "@/lib/db/schema"
+import { useToast } from "@/hooks/use-toast"
+import { updateUser } from "@/lib/user"
+import { useState } from "react"
 
 interface EditUserDialogProps {
-  user: User
+  user: UserType
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps) {
-  const [name, setName] = useState(user.name)
+export function EditUserDialog({
+  user,
+  open,
+  onOpenChange,
+}: Readonly<EditUserDialogProps>) {
+    const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   const [role, setRole] = useState<UserRole>(user.role)
   const [status, setStatus] = useState<UserStatus>(user.status)
-  const [organization, setOrganization] = useState(user.organization)
+  const [organization, setOrganization] = useState<any>(user.organization)
   const [isSubmitting, setIsSubmitting] = useState(false)
+ let [isPending, startTransition] = React.useTransition();
+  const { toast } = useToast();
 
+  React.useEffect(() => {
+    if (isPending) return;
+
+   
+  }, [isPending]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     console.log("Updating user:", { id: user.id, name, email, role, status, organization })
-
+     startTransition(async () => {
+      setStatus("active") // Ensure status is set to active before submission
+         try {
+           
+           // Add your submit logic here, including the number of potential matches
+           await updateUser(
+             user.id,
+             name,
+             role,
+              organization,
+            
+           ).then((data) => {
+             console.log("Form submitted!", data);
+             if (data?.message) {
+               toast({
+                 title: "user",
+   
+                 variant: "default",
+                 description: data?.message,
+               });
+             } else if (data?.error) {
+               toast({
+                 title: "user",
+   
+                 variant: "destructive",
+                 description: data?.error,
+               });
+             }
+           });
+         } catch (error) {
+           // Handle submission error, if any
+           toast({
+             title: "user",
+   
+             variant: "destructive",
+             description: "error occurred while adding user",
+           });
+           console.error("Submission error:", error);
+         }
+       });
     // Close dialog
     setIsSubmitting(false)
     onOpenChange(false)
   }
-
+ 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -68,7 +119,7 @@ export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps
                 placeholder="user@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+                disabled
               />
             </div>
             <div className="grid gap-2">
@@ -78,15 +129,14 @@ export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Administrator</SelectItem>
-                  <SelectItem value="provider">Provider</SelectItem>
-                  <SelectItem value="supplier">Supplier</SelectItem>
-                  <SelectItem value="viewer">Viewer</SelectItem>
+                  <SelectItem value="Admin">Admin</SelectItem>
+                  <SelectItem value="User">User</SelectItem>
+                 
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
+              {/* <Label htmlFor="status">Status</Label>
               <Select value={status} onValueChange={(value) => setStatus(value as UserStatus)} required>
                 <SelectTrigger id="status">
                   <SelectValue placeholder="Select a status" />
@@ -96,7 +146,7 @@ export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="organization">Organization</Label>
@@ -105,7 +155,7 @@ export function EditUserDialog({ user, open, onOpenChange }: EditUserDialogProps
                 placeholder="Organization name"
                 value={organization}
                 onChange={(e) => setOrganization(e.target.value)}
-                required
+                
               />
             </div>
           </div>

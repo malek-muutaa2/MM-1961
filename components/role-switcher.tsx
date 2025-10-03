@@ -22,6 +22,7 @@ export function RoleSwitcher() {
   const { role, setRole } = useRole()
 
   const handleRoleChange = (newRole: UserRole) => {
+    localStorage.setItem("userRole", newRole)
     setRole(newRole)
     setIsOpen(false)
 

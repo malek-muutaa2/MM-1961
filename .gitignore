@@ -16,6 +16,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# idea
+/.idea/
+
+# swc
+/.swc
+
+# sonarlint
+/.sonarlint
+
 # env files
 .env*
 
@@ -25,3 +34,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+./sql

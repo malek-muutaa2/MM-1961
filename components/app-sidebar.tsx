@@ -1,5 +1,6 @@
 "use client"
 
+
 import {
   Database,
   Settings,
@@ -41,20 +42,29 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { usePathname } from "next/navigation"
 import { useRole } from "@/contexts/role-context"
 
-export function AppSidebar() {
+export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
-  const pathname = usePathname()
   const { role } = useRole()
+  if(!userinfo) {
+    return null
+  }
+  let roleLabel = "";
+
+if (role === "rafed-admin") {
+  roleLabel = "Rafed Administrator";
+} else if (role === "rafed-provider") {
+  roleLabel = "Rafed Provider";
+} else {
+  roleLabel = "Supply Chain Manager";
+}
 
   return (
     <Sidebar collapsible="icon">
@@ -77,6 +87,7 @@ export function AppSidebar() {
                 alt="MUUTAA Logo"
                 width={120}
                 height={32}
+                unoptimized
                 className="object-contain"
               />
             </div>
@@ -392,13 +403,9 @@ export function AppSidebar() {
               </Avatar>
               {!isCollapsed && (
                 <div className="flex flex-col items-start text-sm">
-                  <span className="font-medium">John Doe</span>
+                  <span className="font-medium">{userinfo.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {role === "rafed-admin"
-                      ? "Rafed Administrator"
-                      : role === "rafed-provider"
-                        ? "Rafed Provider"
-                        : "Supply Chain Manager"}
+                    {roleLabel}
                   </span>
                 </div>
               )}
