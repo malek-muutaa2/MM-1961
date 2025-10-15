@@ -1,14 +1,18 @@
-import {NextResponse} from "next/server"
-import {db} from "@/lib/db/dbpostgres"
-import {forecastData, products, classifications} from "@/lib/db/schema"
-import {eq, asc, ilike, or, and} from "drizzle-orm"
+import { NextResponse } from "next/server"
+import { db } from "@/lib/db/dbpostgres"
+import { forecastData, products, classifications } from "@/lib/db/schema"
+import { eq, asc, ilike, or, and } from "drizzle-orm"
+import { checkPermission } from "@/lib/casl/middleware"
 
 export async function GET(request: Request) {
+    const permissionCheck = await checkPermission( "read", "ForecastData")
+    if (permissionCheck) return permissionCheck
+
     try {
         if (!request?.url) {
-            return NextResponse.json({error: "Invalid request URL"}, {status: 400})
+            return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
         }
-        const {searchParams} = new URL(request.url)
+        const { searchParams } = new URL(request.url)
         const page = Number.parseInt(searchParams.get("page") || "1")
         const limit = Number.parseInt(searchParams.get("limit") || "10")
         const searchTerm = searchParams.get("search") || ""
@@ -81,12 +85,9 @@ export async function GET(request: Request) {
         // Créer les conditions pour récupérer les données complètes
         const combinationConditions = uniqueCombinations
             .map((combo) =>
-            combo?.productId ?
-            and(
-                eq(forecastData.productId, combo.productId),
-                eq(forecastData.date, combo.date)
-            ): "",
-        ).filter((condition) => condition !== "")
+                combo?.productId ? and(eq(forecastData.productId, combo.productId), eq(forecastData.date, combo.date)) : "",
+            )
+            .filter((condition) => condition !== "")
 
         const fullDataQuery = db
             .select({
@@ -122,6 +123,6 @@ export async function GET(request: Request) {
         })
     } catch (error) {
         console.error("Error fetching paginated forecast data:", error)
-        return NextResponse.json({error: "Failed to fetch forecast data"}, {status: 500})
+        return NextResponse.json({ error: "Failed to fetch forecast data" }, { status: 500 })
     }
 }
