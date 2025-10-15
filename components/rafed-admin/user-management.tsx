@@ -36,6 +36,7 @@ interface UserManagementProps {
     column: string;
     pathname: string;
     order: string;
+
 }
 
 
