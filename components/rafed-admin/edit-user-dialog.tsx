@@ -19,7 +19,7 @@ import type {  UserRole, UserStatus } from "@/types/rafed-types"
 import { UserType } from "@/lib/db/schema"
 import { useToast } from "@/hooks/use-toast"
 import { updateUser } from "@/lib/user"
-import { useState } from "react"
+import React, { useState } from "react"
 
 interface EditUserDialogProps {
   user: UserType
@@ -35,7 +35,7 @@ export function EditUserDialog({
     const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   const [role, setRole] = useState<UserRole>(user.role)
-  const [status, setStatus] = useState<UserStatus>(user.status)
+  const [status, setStatus] = useState<UserStatus>(user?.status)
   const [organization, setOrganization] = useState<any>(user.organization)
   const [isSubmitting, setIsSubmitting] = useState(false)
  let [isPending, startTransition] = React.useTransition();

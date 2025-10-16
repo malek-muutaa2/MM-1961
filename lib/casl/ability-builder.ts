@@ -1,10 +1,9 @@
-import { db } from "@/lib/db/dbpostgres"
+import {db} from "@/lib/db/dbpostgres"
 
-import { permission, rolePermission, userPermission, userRole } from "@/lib/db/schema"
+import {permission, rolePermission, userPermission, userRole} from "@/lib/db/schema"
 
-import { eq, and } from "drizzle-orm"
-
-import { defineAbilityFor } from "@/lib/casl/ability"
+import {eq, and} from "drizzle-orm"
+import {AppAbility, defineAbilityFor} from "@/lib/casl/ability"
 
 /**
 
@@ -16,77 +15,64 @@ import { defineAbilityFor } from "@/lib/casl/ability"
 
  */
 
-export async function buildAbilityForUser(userId: number) {
-
+export async function buildAbilityForUser(userId: number): Promise<AppAbility> {
+    console.log("fuction started")
+    console.log("User ID:", userId)
     try {
-       console.log("userIdd",userId)
         // 1. Get user's roles
+        if (!userId || userId === 0) {
+                console.log("No userId provided, returning empty ability")
+            return defineAbilityFor([])
+        }
+        const userRoles = await db
+            .select({role_id: userRole.role_id})
+            .from(userRole)
+            .where(eq(userRole.user_id, userId))
 
-        const userRoles = await db.select({ role_id: userRole.role_id }).from(userRole).where(eq(userRole.user_id, userId))
+        // console.log("userRoles :::", userRoles)
 
         const roleIds = userRoles.map((ur) => ur.role_id)
-
         // 2. Get permissions from roles
-
+        // console.log("roleIdss :", roleIds)
         const rolePermissions =
-
             roleIds.length > 0
-
                 ? await db
-
                     .select({
-
                         domain: permission.domain,
-
                         action: permission.action,
-
                         constraints: rolePermission.constraints,
-
                     })
-
                     .from(rolePermission)
-
                     .innerJoin(permission, eq(rolePermission.permission_id, permission.permission_id))
-
                     .where(and(...roleIds.map((roleId) => eq(rolePermission.role_id, roleId))))
-
                 : []
 
         // 3. Get direct user permissions (not revoked)
-
+        // console.log("rolePermissions :", rolePermissions)
         const directUserPermissions = await db
-
             .select({
-
                 domain: permission.domain,
-
                 action: permission.action,
-
                 constraints: userPermission.constraints,
-
             })
-
             .from(userPermission)
-
             .innerJoin(permission, eq(userPermission.permission_id, permission.permission_id))
-
             .where(and(eq(userPermission.user_id, userId), eq(userPermission.revoked, false)))
 
+        // console.log("directUserPermissions :", directUserPermissions)
         // 4. Combine all permissions
 
         const allPermissions = [...rolePermissions, ...directUserPermissions]
-
+        // console.log("allPermissions :", allPermissions)
         // 5. Build and return the ability
 
         return defineAbilityFor(allPermissions)
 
-    } catch (error) {
+    } catch (error: any) {
 
-        console.error(" Error building ability for user:", error)
-
+        console.error(" Error building ability for user:", error?.message)
         // Return an ability with no permissions on error
-
-        const { defineAbilityFor } = await import("@/lib/casl/ability")
+        const {defineAbilityFor} = await import("@/lib/casl/ability")
 
         return defineAbilityFor([])
 
