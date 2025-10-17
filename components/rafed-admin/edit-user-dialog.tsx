@@ -35,7 +35,7 @@ export function EditUserDialog({
     const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   const [role, setRole] = useState<UserRole>(user.role)
-  const [status, setStatus] = useState<UserStatus>(user?.status)
+  const [status, setStatus] = useState<UserStatus>(user.status)
   const [organization, setOrganization] = useState<any>(user.organization)
   const [isSubmitting, setIsSubmitting] = useState(false)
  let [isPending, startTransition] = React.useTransition();

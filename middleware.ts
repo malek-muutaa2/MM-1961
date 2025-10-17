@@ -26,7 +26,6 @@ export async function middleware(request: NextRequest) {
     }
     return NextResponse.rewrite(new URL(`/login`, request.url));
   }
-  // If token exists and user is trying to access auth pages, redirect to dashboard
   if (token && request.nextUrl.pathname.startsWith(`/login`)) {
     if(!request?.url) {
       return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
