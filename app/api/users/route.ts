@@ -13,9 +13,6 @@ export async function GET(request: NextRequest) {
         return permissionCheck // Returns 401 or 403 error response
     }
 
-    // Get current user for audit purposes
-    const user = await getCurrentUser()
-
     // Get all users
     const users: UserType[] = await getusers()
 
