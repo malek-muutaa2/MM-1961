@@ -131,7 +131,6 @@ export function PreviousUploads({searchQuery, yearFilter, monthFilter, statusFil
     return (
         <div className="rounded-md border">
             {ability.can('read', 'ForecastExecution') ?
-
                 (<Table>
                     <TableHeader>
                         <TableRow>
@@ -159,17 +158,19 @@ export function PreviousUploads({searchQuery, yearFilter, monthFilter, statusFil
                                 </TableCell>
                                 <TableCell>—</TableCell>
                                 <TableCell className="text-right">
-                                    <Button
-                                        asChild
-                                        variant="outline"
-                                        size="sm"
-                                        className="gap-1 border-primary text-primary hover:bg-primary/10"
-                                    >
-                                        <Link href={`/rafed-provider/history/${execution.id}`}>
-                                            <span>View Details</span>
-                                            <ExternalLink className="h-3.5 w-3.5"/>
-                                        </Link>
-                                    </Button>
+                                    <Can I="read" a="Forecast">
+                                        <Button
+                                            asChild
+                                            variant="outline"
+                                            size="sm"
+                                            className="gap-1 border-primary text-primary hover:bg-primary/10"
+                                        >
+                                            <Link href={`/rafed-provider/history/${execution.id}`}>
+                                                <span>View Details</span>
+                                                <ExternalLink className="h-3.5 w-3.5"/>
+                                            </Link>
+                                        </Button>
+                                    </Can>
                                 </TableCell>
                             </TableRow>
                         ))}

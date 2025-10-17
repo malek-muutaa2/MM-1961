@@ -29,7 +29,7 @@ const TableBody = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <tbody
-    ref={ref}
+    ref={ref ?? undefined}
     className={cn("[&_tr:last-child]:border-0", className)}
     {...props}
   />
