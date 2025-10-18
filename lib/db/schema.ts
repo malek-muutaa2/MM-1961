@@ -284,6 +284,7 @@ export const userRole = pgTable(
     }),
 )
 
+
 // Role Permission table
 export const rolePermission = pgTable(
     "role_permission",
@@ -557,6 +558,9 @@ export const organizationTypes = pgTable("organization_types", {
 })
 
 export type RoleType = typeof roles.$inferSelect
+export type NewRole = typeof roles.$inferInsert
+
+
 export type PermissionType = typeof permission.$inferSelect
 export type UserRoleType = typeof userRole.$inferSelect
 export type RolePermissionType = typeof rolePermission.$inferSelect

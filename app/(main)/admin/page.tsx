@@ -10,6 +10,8 @@ import { sql } from "drizzle-orm"
 import {getCurrentUser} from "@/lib/getCurrentUser";
 import {redirect} from "next/navigation";
 import {AdminPortalDashboard} from "@/components/admin-portal/admin-portal-dashboard";
+import {buildAbilityForUser} from "@/lib/casl/ability-builder";
+import {AccessDeniedPage} from "@/components/AccessDenied";
 export const metadata: Metadata = {
     title: "User Management | Rafed Admin",
     description: "Manage users, invite providers and suppliers, and add administrators",
@@ -69,9 +71,12 @@ export default async function AdminHome({
         redirect("/login")
     }
 
-    // Check if user has Admin role
-    if (currentUser.role !== "Admin") {
-        redirect("/dashboard")
+    // Build user's ability based on their roles and permissions
+    const ability = await buildAbilityForUser(currentUser.id)
+
+    // Check if user has admin access (read permission on Admin domain)
+    if (!ability.can("read", "Admin")) {
+        return <AccessDeniedPage/>
     }
 
     // Fetch admin statistics
