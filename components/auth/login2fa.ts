@@ -8,8 +8,7 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/dbpostgres";
 import { twoFactorAuth } from "@/lib/db/schema";
-import { findUniqueUser, generateTwoFactorToken } from "@/lib/user";
-import { generatePasswordResetToken } from "@/lib/reset";
+import {findUniqueUser, generatePasswordResetToken, generateTwoFactorToken} from "@/lib/user";
 import { LoginSchema } from "@/lib/zodschema";
 import { sendTwoFactorTokenEmail } from "@/lib/mail";
 
@@ -34,7 +33,7 @@ async function handlePasswordExpiry(user: any) {
 }
 
 async function handle2FACode(code: string, user: any) {
-  const [tokenData] = await db
+  const [tokenData]: any = await db
     .select()
     .from(twoFactorAuth)
     .where(eq(twoFactorAuth.userId, user.id));

@@ -2,10 +2,14 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db/dbpostgres"
 import { forecastData } from "@/lib/db/schema"
 import { eq, and, asc } from "drizzle-orm"
+import { checkPermission } from "@/lib/casl/middleware"
 
 export async function GET(request: Request) {
+  const permissionCheck = await checkPermission("read", "ForecastData")
+  if (permissionCheck) return permissionCheck
+
   try {
-    if(!request?.url) {
+    if (!request?.url) {
       return NextResponse.json({ error: "Invalid request URL" }, { status: 400 })
     }
     const { searchParams } = new URL(request.url)
@@ -26,17 +30,17 @@ export async function GET(request: Request) {
 
     // Query forecast data for the specified product and optionally execution, ordered by date
     const data = await db
-      .select({
-        id: forecastData.id,
-        type: forecastData.type,
-        forecastTypeId: forecastData.forecastTypeId,
-        forecastExecutionId: forecastData.forecastExecutionId,
-        date: forecastData.date,
-        value: forecastData.value,
-      })
-      .from(forecastData)
-      .where(and(...whereConditions))
-      .orderBy(asc(forecastData.date)) // Order by date ascending
+        .select({
+          id: forecastData.id,
+          type: forecastData.type,
+          forecastTypeId: forecastData.forecastTypeId,
+          forecastExecutionId: forecastData.forecastExecutionId,
+          date: forecastData.date,
+          value: forecastData.value,
+        })
+        .from(forecastData)
+        .where(and(...whereConditions))
+        .orderBy(asc(forecastData.date)) // Order by date ascending
 
     return NextResponse.json(data)
   } catch (error) {
@@ -46,6 +50,9 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const permissionCheck = await checkPermission( "update", "ForecastData")
+  if (permissionCheck) return permissionCheck
+
   try {
     const body = await request.json()
     const { productId, forecastTypeId, forecastExecutionId, date, value } = body
@@ -68,22 +75,22 @@ export async function PUT(request: Request) {
 
     // Check if the forecast data already exists
     const existingData = await db
-      .select()
-      .from(forecastData)
-      .where(and(...whereConditions))
+        .select()
+        .from(forecastData)
+        .where(and(...whereConditions))
 
     let result
 
     if (existingData.length > 0) {
       // Update existing forecast data
       result = await db
-        .update(forecastData)
-        .set({
-          value: value,
-          updatedAt: new Date(),
-        })
-        .where(and(...whereConditions))
-        .returning()
+          .update(forecastData)
+          .set({
+            value: value,
+            updatedAt: new Date(),
+          })
+          .where(and(...whereConditions))
+          .returning()
     } else {
       // Insert new forecast data
       const insertData: any = {

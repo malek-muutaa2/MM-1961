@@ -27,6 +27,8 @@ import {useToast} from "@/hooks/use-toast";
 import {ActivateUser, deleteUser} from "@/lib/user";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "../ui/dialog";
 import {EditUserDialog} from "./edit-user-dialog";
+import {Can, useAbility} from "@/lib/casl/permissions-provider";
+import {AppAbility} from "@/lib/casl/ability";
 
 interface UserManagementProps {
     users: UserType[],
@@ -36,7 +38,7 @@ interface UserManagementProps {
     column: string;
     pathname: string;
     order: string;
-
+    size: string;
 }
 
 
@@ -59,8 +61,6 @@ export function UserManagement({
 
     React.useEffect(() => {
         if (isPending) return;
-
-
     }, [isPending]);
     const [dialog, setDialog] = useState<any>({
         open: false,
@@ -68,7 +68,7 @@ export function UserManagement({
         action: "",
     });
     const [editingUser, setEditingUser] = useState<UserType | null>(null)
-
+    const ability: AppAbility = useAbility();
     const handleConfirm = () => {
         if (dialog.action === "activate") ActivateUserAction(dialog.userId, false);
         if (dialog.action === "deactivate") ActivateUserAction(dialog.userId, true);
@@ -107,7 +107,6 @@ export function UserManagement({
     const ActivateUserAction = async (userId: number, isActivate: boolean) => {
         // Simulate API call to activate user
         console.log(`Activating user with ID: ${userId}, isActivate: ${isActivate}`);
-
         startTransition(async () => {
             try {
                 await ActivateUser(isActivate, userId)
@@ -141,8 +140,6 @@ export function UserManagement({
                 id: "actions",
                 header: "Actions",
                 cell: ({row}: any) => { // NOSONAR
-                    console.log("row", row.original);
-
                     return (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -153,38 +150,44 @@ export function UserManagement({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => setEditingUser(row.original)}>
-                                    <UserCog className="mr-2 h-4 w-4"/>
-                                    Edit User
-                                </DropdownMenuItem>
+
+                                <Can I="update" a="User">
+                                    <DropdownMenuItem onClick={() => setEditingUser(row.original)}>
+                                        <UserCog className="mr-2 h-4 w-4"/>
+                                        Edit User
+                                    </DropdownMenuItem>
+                                </Can>
                                 <DropdownMenuSeparator/>
-                                <DropdownMenuItem
-                                    disabled={row.original.isDisabled === false}
-                                    onClick={() =>
-                                        setDialog({open: true, userId: row.original.id, action: "activate"})
-                                    }
-                                >
-                                    Activate
-                                </DropdownMenuItem>
-
-                                <DropdownMenuItem
-                                    disabled={row.original.isDisabled === true}
-                                    onClick={() =>
-                                        setDialog({open: true, userId: row.original.id, action: "deactivate"})
-                                    }
-                                >
-                                    Deactivate
-                                </DropdownMenuItem>
-
-                                <DropdownMenuItem
-                                    className="text-destructive focus:text-destructive"
-                                    onClick={() =>
-                                        setDialog({open: true, userId: row.original.id, action: "delete"})
-                                    }
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-
+                                <Can I="change_state" a="User">
+                                    <DropdownMenuItem
+                                        disabled={row.original.isDisabled === false}
+                                        onClick={() =>
+                                            setDialog({open: true, userId: row.original.id, action: "activate"})
+                                        }
+                                    >
+                                        Activate
+                                    </DropdownMenuItem>
+                                </Can>
+                                <Can I="change_state" a="User">
+                                    <DropdownMenuItem
+                                        disabled={row.original.isDisabled === true}
+                                        onClick={() =>
+                                            setDialog({open: true, userId: row.original.id, action: "deactivate"})
+                                        }
+                                    >
+                                        Deactivate
+                                    </DropdownMenuItem>
+                                </Can>
+                                <Can I="delete" a="User">
+                                    <DropdownMenuItem
+                                        className="text-destructive focus:text-destructive"
+                                        onClick={() =>
+                                            setDialog({open: true, userId: row.original.id, action: "delete"})
+                                        }
+                                    >
+                                        Delete
+                                    </DropdownMenuItem>
+                                </Can>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     );
@@ -225,41 +228,54 @@ export function UserManagement({
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            {/*<Can I="read" a="User"></Can>*/}
+            {ability.can('read', 'User') ? (
+                    <Tabs defaultValue="users">
+                        <div className="flex items-center justify-between">
+                            <TabsList>
+                                <TabsTrigger value="users">Users</TabsTrigger>
+                                <TabsTrigger value="invitations">Invitations</TabsTrigger>
+                            </TabsList>
+                            <div className="flex items-center gap-2">
+                                <div className="relative">
 
-            <Tabs defaultValue="users">
-                <div className="flex items-center justify-between">
-                    <TabsList>
-                        <TabsTrigger value="users">Users</TabsTrigger>
-                        <TabsTrigger value="invitations">Invitations</TabsTrigger>
-                    </TabsList>
-                    <div className="flex items-center gap-2">
-                        <div className="relative">
-
+                                </div>
+                                <Can I="create" a="User">
+                                    <Button onClick={() => setAddUserDialogOpen(true)}>
+                                        <Plus className="mr-2 h-4 w-4"/>
+                                        Add User
+                                    </Button>
+                                </Can>
+                            </div>
                         </div>
-
-                        <Button onClick={() => setAddUserDialogOpen(true)}>
-                            <Plus className="mr-2 h-4 w-4"/>
-                            Add User
-                        </Button>
+                        <TabsContent value="users" className="mt-6">
+                            <DataTable
+                                column={column}
+                                order={order}
+                                pathname={pathname}
+                                pageNumber={pageNumber}
+                                numberOfPages={numberOfPages}
+                                search={search}
+                                data={users}
+                                size={"10"}
+                                columns={allColumns}/>
+                            {/* <UsersList users={users} searchQuery={searchQuery} /> */}
+                        </TabsContent>
+                        <TabsContent value="invitations" className="mt-6">
+                            <InvitationsList searchQuery={searchQuery}/>
+                        </TabsContent>
+                    </Tabs>
+                ) :
+                (
+                    <div
+                        className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+                        <UserCog className="mb-2 h-10 w-10 text-muted-foreground"/>
+                        <h3 className="text-lg font-medium">Access Denied</h3>
+                        <p className="text-sm text-muted-foreground">You do not have permission to view this
+                            content.</p>
                     </div>
-                </div>
-                <TabsContent value="users" className="mt-6">
-                    <DataTable
-                        column={column}
-                        order={order}
-                        pathname={pathname}
-                        pageNumber={pageNumber}
-                        numberOfPages={numberOfPages}
-                        search={search}
-                        data={users}
-                        size={"10"}
-                        columns={allColumns}/>
-                    {/* <UsersList users={users} searchQuery={searchQuery} /> */}
-                </TabsContent>
-                <TabsContent value="invitations" className="mt-6">
-                    <InvitationsList searchQuery={searchQuery}/>
-                </TabsContent>
-            </Tabs>
+                )
+            }
 
             <InviteUserDialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}/>
             <AddUserDialog open={addUserDialogOpen} onOpenChange={setAddUserDialogOpen}/>

@@ -19,8 +19,7 @@ import type {  UserRole, UserStatus } from "@/types/rafed-types"
 import { UserType } from "@/lib/db/schema"
 import { useToast } from "@/hooks/use-toast"
 import { updateUser } from "@/lib/user"
-import { useState } from "react"
-import React from "react"
+import React, { useState } from "react"
 
 interface EditUserDialogProps {
   user: UserType

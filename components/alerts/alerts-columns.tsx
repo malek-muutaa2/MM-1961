@@ -132,7 +132,7 @@ export const createAlertsColumns = (
         enableSorting: true,
         sortingFn: "text",
         cell: ({ row }) => {
-            const severity = row.getValue("severity")
+            const severity: any = row.getValue("severity")
             return (
                 <Badge variant={getSeverityVariant(severity)} className="capitalize">
                     {getSeverityIcon(severity)}
@@ -156,7 +156,7 @@ export const createAlertsColumns = (
         enableSorting: true,
         sortingFn: "text",
         cell: ({ row }) => {
-            const status = row.getValue("status")
+            const status: any = row.getValue("status")
             return (
                 <Badge variant={getStatusVariant(status)} className="capitalize">
                     {status}
