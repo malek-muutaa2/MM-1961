@@ -92,7 +92,6 @@
     "next-themes": "latest",
     "nodemailer": "latest",
     "pg": "latest",
-    "pg-native": "^3.5.2",
     "postgres": "latest",
     "qrcode": "^1.5.4",
     "react": "^19",
