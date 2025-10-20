@@ -1,6 +1,7 @@
 import { AbilityBuilder, createMongoAbility, type MongoAbility } from "@casl/ability"
 
 // Define the structure of permissions
+
 export type Actions = "create" | "read" | "update" | "delete" | "manage" | string
 export type Subjects = "Forecast" | "ForecastData" | "ForecastType"  | "all" | string
 

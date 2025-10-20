@@ -199,10 +199,18 @@ export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton asChild tooltip="Admin Portal">
+                      <SidebarMenuButton asChild tooltip="User Management">
                         <Link href="/admin">
                           <Shield />
-                          <span>Admin Portal</span>
+                          <span>User Management</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip="Permissions & Roles Management">
+                        <Link href="/admin/permissions">
+                          <Shield />
+                          <span>Permissions & Roles Management</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -210,6 +218,7 @@ export function AppSidebar({ userinfo }: Readonly<{ userinfo: UserType }>) {
                 </SidebarGroupContent>
               </SidebarGroup>
           )}
+
           {/* Demand Sensing - Show for Obtivian only */}
           {role === "obtivian" && (
               <SidebarGroup>

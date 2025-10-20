@@ -22,13 +22,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import * as React from "react"
+import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { useCreateQueryString } from "@/lib/queryString"
 import { LoadingSpinner } from "@/components/Spinner"
@@ -79,8 +79,28 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-
   const [rowSelection, setRowSelection] = React.useState({})
+  const [rolesList, setRolesList] = useState<Array<{ role_id: number; name: string }>>([])
+  const [rolesLoading, setRolesLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await fetch("/api/roles")
+        if (response.ok) {
+          const data = await response.json()
+          setRolesList(data.roles || [])
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error)
+      } finally {
+        setRolesLoading(false)
+      }
+    }
+
+    fetchRoles()
+  }, [])
+
   const table = useReactTable({
     data,
     columns: columns,
@@ -173,14 +193,18 @@ export function DataTable<TData, TValue>({
                   onValueChange={(value) => {
                     table.getColumn("role")?.setFilterValue(value === "all" ? "" : value)
                   }}
+                  disabled={rolesLoading}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Filter by role" />
+                  <SelectValue placeholder={rolesLoading ? "Loading roles..." : "Filter by role"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="Admin">Admin</SelectItem>
-                  <SelectItem value="User">User</SelectItem>
+                  {rolesList.map((role) => (
+                      <SelectItem key={role.role_id} value={role.name}>
+                        {role.name}
+                      </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {isPending && <LoadingSpinner />}
@@ -264,8 +288,8 @@ export function DataTable<TData, TValue>({
                           pathname: pathname,
                           query: {
                             ...(search ? { search } : {}),
-                            ...(size ? { size } : {}),
                             page: pageNumber - 1,
+                            ...(size ? { size } : {}),
                           },
                         }}
                     />
