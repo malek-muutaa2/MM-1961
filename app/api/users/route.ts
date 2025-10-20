@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getCurrentUser } from "@/lib/getCurrentUser"
 import type { UserType } from "@/lib/db/schema"
 import { getusers } from "@/lib/user"
 import { checkPermission } from "@/lib/casl/middleware"
