@@ -250,7 +250,12 @@ export const roles = pgTable("roles", {
     name: varchar("name", { length: 100 }).notNull().unique(),
     description: varchar("description", { length: 255 }),
     is_builtin: boolean("is_builtin").default(false),
-    created_at: timestamp("created_at").defaultNow(),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+    deleted_at: timestamp("deleted_at"),
+    created_by: integer("created_by").references(() => users.id),
+    updated_by: integer("updated_by").references(() => users.id),
+    deleted_by: integer("deleted_by").references(() => users.id),
 })
 
 // Permission scope enum
@@ -261,7 +266,12 @@ export const permission = pgTable("permission", {
     permission_id: serial("permission_id").primaryKey(),
     domain: varchar("domain", { length: 100 }).notNull(),
     action: varchar("action", { length: 100 }).notNull(),
-    scope: permissionScopeEnum("scope"),
+    created_at: timestamp("created_at").defaultNow().notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+    deleted_at: timestamp("deleted_at"),
+    created_by: integer("created_by").references(() => users.id),
+    updated_by: integer("updated_by").references(() => users.id),
+    deleted_by: integer("deleted_by").references(() => users.id),
     description: varchar("description", { length: 255 }),
 })
 
@@ -278,6 +288,12 @@ export const userRole = pgTable(
             .references(() => roles.role_id, { onDelete: "cascade" }),
         granted_at: timestamp("granted_at").defaultNow(),
         granted_by: integer("granted_by"),
+        created_at: timestamp("created_at").defaultNow().notNull(),
+        updated_at: timestamp("updated_at").defaultNow().notNull(),
+        deleted_at: timestamp("deleted_at"),
+        created_by: integer("created_by").references(() => users.id),
+        updated_by: integer("updated_by").references(() => users.id),
+        deleted_by: integer("deleted_by").references(() => users.id),
     },
     (table) => ({
         userRoleUnique: index("user_role_unique").on(table.user_id, table.role_id),
@@ -296,6 +312,9 @@ export const rolePermission = pgTable(
         permission_id: integer("permission_id")
             .notNull()
             .references(() => permission.permission_id, { onDelete: "cascade" }),
+        created_at: timestamp("created_at").defaultNow().notNull(),
+        updated_at: timestamp("updated_at").defaultNow().notNull(),
+        updated_by: integer("updated_by").references(() => users.id),
         constraints: jsonb("constraints"),
     },
     (table) => ({

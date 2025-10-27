@@ -2,8 +2,7 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { db } from "@/lib/db/dbpostgres"
-import { roles } from "@/lib/db/schema"
-import {eq, isNotNull, isNull} from "drizzle-orm"
+import { rolePermission } from "@/lib/db/schema"
 
 export const dynamic = "force-dynamic"
 
@@ -19,12 +18,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 })
         }
 
-        const allRoles = await db.select().from(roles).where(isNull(roles.deleted_at));
+        const allRolePermissions = await db.select().from(rolePermission)
 
-        return NextResponse.json({ roles: allRoles }, { status: 200 })
+        return NextResponse.json({ rolePermissions: allRolePermissions }, { status: 200 })
     } catch (error) {
-        console.error("Error fetching roles:", error)
-        return NextResponse.json({ error: "Failed to fetch roles" }, { status: 500 })
+        console.error("Error fetching role permissions:", error)
+        return NextResponse.json({ error: "Failed to fetch role permissions" }, { status: 500 })
     }
 }
 
@@ -41,25 +40,24 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json()
-        const { name, description, is_builtin } = body
+        const { role_id, permission_id } = body
 
-        if (!name) {
-            return NextResponse.json({ error: "Role name is required" }, { status: 400 })
+        if (!role_id || !permission_id) {
+            return NextResponse.json({ error: "Role ID and Permission ID are required" }, { status: 400 })
         }
 
-        const newRole = await db
-            .insert(roles)
+        const newRolePermission = await db
+            .insert(rolePermission)
             .values({
-                name,
-                description: description || null,
-                is_builtin: is_builtin || false,
-                created_by: user.id,
+                role_id,
+                permission_id,
+                updated_by: user.id,
             })
             .returning()
 
-        return NextResponse.json({ role: newRole[0] }, { status: 201 })
+        return NextResponse.json({ rolePermission: newRolePermission[0] }, { status: 201 })
     } catch (error) {
-        console.error("Error creating role:", error)
-        return NextResponse.json({ error: "Failed to create role" }, { status: 500 })
+        console.error("Error creating role permission:", error)
+        return NextResponse.json({ error: "Failed to create role permission" }, { status: 500 })
     }
 }

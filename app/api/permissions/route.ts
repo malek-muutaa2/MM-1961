@@ -3,6 +3,8 @@ import { permission } from "@/lib/db/schema"
 import { getCurrentUser } from "@/lib/getCurrentUser"
 import { NextResponse } from "next/server"
 import { desc, asc, ilike, or, count } from "drizzle-orm"
+import type { NextRequest } from "next/server"
+import { eq } from "drizzle-orm"
 
 export async function GET(request: Request) {
     try {
@@ -57,5 +59,39 @@ export async function GET(request: Request) {
     } catch (error) {
         console.error("Error fetching permissions:", error)
         return NextResponse.json({ error: "Failed to fetch permissions" }, { status: 500 })
+    }
+}
+
+
+
+export async function POST(request: Request) {
+    try {
+        const user = await getCurrentUser()
+
+        if (!user || user.role !== "Admin") {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
+        const body = await request.json()
+        const { domain, action, description } = body
+
+        if (!domain || !action) {
+            return NextResponse.json({ error: "Domain and action are required" }, { status: 400 })
+        }
+
+        const newPermission = await db
+            .insert(permission)
+            .values({
+                domain,
+                action,
+                description: description || null,
+                created_by: user.id,
+            })
+            .returning()
+
+        return NextResponse.json({ permission: newPermission[0] }, { status: 201 })
+    } catch (error) {
+        console.error("Error creating permission:", error)
+        return NextResponse.json({ error: "Failed to create permission" }, { status: 500 })
     }
 }
