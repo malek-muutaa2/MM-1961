@@ -12,7 +12,7 @@ import { Loader2, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
 import type { UserType } from "@/lib/db/schema"
 import { Enable2fa } from "@/lib/user"
 import { useToast } from "../ui/use-toast"
-import type { twofactor } from "@/app/profile/page"
+import type { twofactor } from "@/app/(main)/profile/page"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { signOut } from "next-auth/react"
 
@@ -21,17 +21,14 @@ interface SecuritySettings {
   istwoFactorEnabled: twofactor[]
 }
 
-export function SecuritySettings({
-  UserInfo,
-  istwoFactorEnabled,
-}: Readonly<SecuritySettings>) {
-    const [isChangingPassword, setIsChangingPassword] = useState(false)
+export function SecuritySettings({ UserInfo, istwoFactorEnabled }: Readonly<SecuritySettings>) {
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isSaving2FA, setIsSaving2FA] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(
-      istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false,
+    istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false,
   )
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-   const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
@@ -70,7 +67,7 @@ export function SecuritySettings({
 
     if (!validatePassword(newPassword)) {
       setPasswordError(
-          "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
+        "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
       )
       return
     }
@@ -161,189 +158,190 @@ export function SecuritySettings({
   }
 
   return (
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Changer le mot de passe</CardTitle>
-            <CardDescription>Mettez à jour votre mot de passe pour maintenir la sécurité de votre compte</CardDescription>
-          </CardHeader>
-          <form onSubmit={handlePasswordSubmit}>
-            <CardContent className="space-y-4">
-              {passwordError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{passwordError}</AlertDescription>
-                  </Alert>
-              )}
-
-              {passwordSuccess && (
-                  <Alert className="border-green-200 bg-green-50 text-green-800">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">{passwordSuccess}</AlertDescription>
-                  </Alert>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="current-password">Mot de passe actuel</Label>
-                <div className="relative">
-                  <Input
-                      id="current-password"
-                      type={showCurrentPassword ? "text" : "password"}
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      required
-                  />
-                  <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  >
-                    {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="new-password">Nouveau mot de passe</Label>
-                <div className="relative">
-                  <Input
-                      id="new-password"
-                      type={showNewPassword ? "text" : "password"}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      required
-                  />
-                  <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un
-                  caractère spécial.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirmer le nouveau mot de passe</Label>
-                <div className="relative">
-                  <Input
-                      id="confirm-password"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                  />
-                  <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" disabled={isChangingPassword}>
-                {isChangingPassword ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Mise à jour...
-                    </>
-                ) : (
-                    "Mettre à jour le mot de passe"
-                )}
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Authentification à deux facteurs</CardTitle>
-            <CardDescription>Ajoutez une couche de sécurité supplémentaire à votre compte</CardDescription>
-          </CardHeader>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Changer le mot de passe</CardTitle>
+          <CardDescription>Mettez à jour votre mot de passe pour maintenir la sécurité de votre compte</CardDescription>
+        </CardHeader>
+        <form onSubmit={handlePasswordSubmit}>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="2fa">Authentification à deux facteurs</Label>
-                <p className="text-sm text-muted-foreground">
-                  Recevez un code de vérification par email ou application d'authentification lors de la connexion
-                </p>
+            {passwordError && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{passwordError}</AlertDescription>
+              </Alert>
+            )}
+
+            {passwordSuccess && (
+              <Alert className="border-green-200 bg-green-50 text-green-800">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800">{passwordSuccess}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="current-password">Mot de passe actuel</Label>
+              <div className="relative">
+                <Input
+                  id="current-password"
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
-              <Switch
-                  id="2fa"
-                  defaultChecked={istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false}
-                  checked={twoFactorEnabled}
-                  onCheckedChange={handle2FAToggle}
-                  disabled={isSaving2FA}
-              />
             </div>
 
-            <div className="pt-2">
-              <Button disabled={isPending} onClick={handleSubmit} variant="outline" size="sm">
-                {isPending ? (
-                    <div className="flex items-center">
-                      <span>Confirmer</span>
-                      <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                    </div>
-                ) : (
-                    "Confirmer"
-                )}
-              </Button>
+            <div className="space-y-2">
+              <Label htmlFor="new-password">Nouveau mot de passe</Label>
+              <div className="relative">
+                <Input
+                  id="new-password"
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un
+                caractère spécial.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirmer le nouveau mot de passe</Label>
+              <div className="relative">
+                <Input
+                  id="confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
           </CardContent>
-        </Card>
-        <Card className="border-red-200">
-  <CardHeader>
-    <CardTitle className="text-red-600">Delete Account</CardTitle>
-    <CardDescription>
-      Deleting your account will immediately deactivate your access. 
-      After 30 days, your account will be permanently deleted.
-    </CardDescription>
-  </CardHeader>
-  <CardContent>
-    <Button variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
-      Delete My Account
-    </Button>
-  </CardContent>
-</Card>
-{isDeleteModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
-      <h2 className="text-lg font-bold text-red-600">Delete Account</h2>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Your account will be immediately deactivated and permanently deleted after 30 days.
-      </p>
-      <div className="flex justify-end space-x-3 mt-6">
-        <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
-        <Button 
-          variant="destructive" 
-          onClick={async () => {
-            setIsDeleting(true)
-            try {
-              await fetch("/api/profile/delete", { method: "POST" })
-              // Optional: immediately log the user out after deactivation
-              window.location.href = "/logout"
-            } finally {
-              setIsDeleting(false)
-              signOut({
-                      callbackUrl: "/login",
-                    });
-            }
-          }}
-        >
-          {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+          <CardFooter>
+            <Button type="submit" disabled={isChangingPassword}>
+              {isChangingPassword ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Mise à jour...
+                </>
+              ) : (
+                "Mettre à jour le mot de passe"
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
 
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Authentification à deux facteurs</CardTitle>
+          <CardDescription>Ajoutez une couche de sécurité supplémentaire à votre compte</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="2fa">Authentification à deux facteurs</Label>
+              <p className="text-sm text-muted-foreground">
+                Recevez un code de vérification par email ou application d'authentification lors de la connexion
+              </p>
+            </div>
+            <Switch
+              id="2fa"
+              defaultChecked={istwoFactorEnabled ? istwoFactorEnabled[0]?.isTwoFactorEnabled : false}
+              checked={twoFactorEnabled}
+              onCheckedChange={handle2FAToggle}
+              disabled={isSaving2FA}
+            />
+          </div>
+
+          <div className="pt-2">
+            <Button disabled={isPending} onClick={handleSubmit} variant="outline" size="sm">
+              {isPending ? (
+                <div className="flex items-center">
+                  <span>Confirmer</span>
+                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                </div>
+              ) : (
+                "Confirmer"
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="border-red-200">
+        <CardHeader>
+          <CardTitle className="text-red-600">Delete Account</CardTitle>
+          <CardDescription>
+            Deleting your account will immediately deactivate your access. After 30 days, your account will be
+            permanently deleted.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
+            Delete My Account
+          </Button>
+        </CardContent>
+      </Card>
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-lg font-bold text-red-600">Delete Account</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your account will be immediately deactivated and permanently deleted after 30 days.
+            </p>
+            <div className="flex justify-end space-x-3 mt-6">
+              <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={async () => {
+                  setIsDeleting(true)
+                  try {
+                    await fetch("/api/profile/delete", { method: "POST" })
+                    // Optional: immediately log the user out after deactivation
+                    window.location.href = "/logout"
+                  } finally {
+                    setIsDeleting(false)
+                    signOut({
+                      callbackUrl: "/login",
+                    })
+                  }
+                }}
+              >
+                {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
